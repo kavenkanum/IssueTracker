@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker", "IssueTracke
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.Domain", "..\IssueTracker.Domain\IssueTracker.Domain.csproj", "{5CDD17BE-3143-4EBC-B754-EBF033B42160}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssueTracker.Tests", "..\IssueTracker.Tests\IssueTracker.Tests.csproj", "{1E00C8EC-F094-4D40-8CC9-3B019BF4E0DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssueTracker.Persistence", "..\IssueTracker.Persistence\IssueTracker.Persistence.csproj", "{81647C09-45AF-405F-8FEA-2FEDBD6F51C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{5CDD17BE-3143-4EBC-B754-EBF033B42160}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CDD17BE-3143-4EBC-B754-EBF033B42160}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CDD17BE-3143-4EBC-B754-EBF033B42160}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1E00C8EC-F094-4D40-8CC9-3B019BF4E0DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E00C8EC-F094-4D40-8CC9-3B019BF4E0DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E00C8EC-F094-4D40-8CC9-3B019BF4E0DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E00C8EC-F094-4D40-8CC9-3B019BF4E0DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81647C09-45AF-405F-8FEA-2FEDBD6F51C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81647C09-45AF-405F-8FEA-2FEDBD6F51C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81647C09-45AF-405F-8FEA-2FEDBD6F51C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81647C09-45AF-405F-8FEA-2FEDBD6F51C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

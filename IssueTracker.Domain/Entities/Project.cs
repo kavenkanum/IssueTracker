@@ -1,5 +1,4 @@
 ﻿using IssueTracker.Domain.Entities;
-using System;
 using System.Collections.Generic;
 
 namespace IssueTracker.Domain

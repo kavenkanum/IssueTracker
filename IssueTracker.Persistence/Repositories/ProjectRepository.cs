@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace IssueTracker.Domain.Repositories
+﻿namespace IssueTracker.Domain.Repositories
 {
-    public interface IProjectRepository
-    {
-        void Add(string name);
-        bool Delete(int projectId);
-        void Commit();
-    }
     public class ProjectRepository : IProjectRepository
     {
         private readonly IssueTrackerDbContext _issueTrackerDbContext;

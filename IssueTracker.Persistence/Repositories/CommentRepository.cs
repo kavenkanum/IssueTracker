@@ -1,16 +1,8 @@
 ﻿using IssueTracker.Domain.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace IssueTracker.Domain.Repositories
 {
-    public interface ICommentRepository
-    {
-        void Add(int userId, int taskId, string description);
-        bool Delete(int commentId);
-        void Commit();
-    }
     public class CommentRepository : ICommentRepository
     {
         private readonly IssueTrackerDbContext _issueTrackerDbContext;

@@ -1,16 +1,8 @@
 ﻿using IssueTracker.Domain.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace IssueTracker.Domain.Repositories
 {
-    public interface ITaskRepository
-    {
-        void Add(string name, DateTime deadline, string description, int userId, Priority priority, int startsAfterTaskId, int projectId);
-        bool Delete(int taskId);
-        void Commit();
-    }
     public class TaskRepository : ITaskRepository
     {
         private readonly IssueTrackerDbContext _issueTrackerDbContext;
