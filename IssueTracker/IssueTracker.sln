@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssueTracker.Commands", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssueTracker.Queries", "..\IssueTracker.Queries\IssueTracker.Queries.csproj", "{09C03AE6-3ADA-4EA3-B3B0-589AEF3E2100}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssueTracker.UnitTests", "..\IssueTracker.UnitTests\IssueTracker.UnitTests.csproj", "{2F842A03-C76E-4116-A4AB-FA9A90ACCB2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{09C03AE6-3ADA-4EA3-B3B0-589AEF3E2100}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09C03AE6-3ADA-4EA3-B3B0-589AEF3E2100}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09C03AE6-3ADA-4EA3-B3B0-589AEF3E2100}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F842A03-C76E-4116-A4AB-FA9A90ACCB2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F842A03-C76E-4116-A4AB-FA9A90ACCB2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F842A03-C76E-4116-A4AB-FA9A90ACCB2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F842A03-C76E-4116-A4AB-FA9A90ACCB2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
