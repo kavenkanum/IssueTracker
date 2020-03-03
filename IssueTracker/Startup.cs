@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
-using IssueTracker.Data;
 using IssueTracker.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using IssueTracker.Domain;
+using IssueTracker.Domain.Repositories;
 
 namespace IssueTracker
 {
@@ -29,6 +29,10 @@ namespace IssueTracker
         {
             services.AddDbContext<IssueTrackerDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("IssueTrackerDB")));
+
+            services.AddTransient<ICommentRepository, CommentRepository>();
+            services.AddTransient<IProjectRepository, ProjectRepository>();
+            services.AddTransient<ITaskRepository, TaskRepository>();
 
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<IssueTrackerDbContext>();
