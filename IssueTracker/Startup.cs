@@ -27,9 +27,7 @@ namespace IssueTracker
             services.AddDbContext<IssueTrackerDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("IssueTrackerDB")));
 
-            services.AddTransient<ICommentRepository, CommentRepository>();
             services.AddTransient<IProjectRepository, ProjectRepository>();
-            services.AddTransient<ITaskRepository, TaskRepository>();
 
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<IssueTrackerDbContext>();

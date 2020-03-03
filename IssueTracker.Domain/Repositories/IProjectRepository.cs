@@ -1,9 +1,12 @@
-﻿namespace IssueTracker.Domain.Repositories
+﻿using CSharpFunctionalExtensions;
+using System.Threading.Tasks;
+
+namespace IssueTracker.Domain.Repositories
 {
     public interface IProjectRepository
     {
-        void Add(string name);
-        bool Delete(int projectId);
-        void Commit();
+        Task<Maybe<Project>> GetAsync(int projectId);
+        Task<Result> SaveAsync(Project project);
+        Result Delete(Project project);
     }
 }

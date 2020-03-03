@@ -1,4 +1,7 @@
-﻿namespace IssueTracker.Domain.Repositories
+﻿using CSharpFunctionalExtensions;
+using System.Threading.Tasks;
+
+namespace IssueTracker.Domain.Repositories
 {
     public class ProjectRepository : IProjectRepository
     {
@@ -7,30 +10,27 @@
         {
             _issueTrackerDbContext = issueTrackerDbContext;
         }
-        public void Add(string name)
+
+        public Result Delete(Project project)
         {
-            var newProject = new Project();
-            newProject.Name = name;
-            _issueTrackerDbContext.Add(newProject);
-            _issueTrackerDbContext.SaveChanges();
+            _issueTrackerDbContext.Remove(project);
+            return Result.Ok();
         }
 
-        public void Commit()
+        public Task<Maybe<Project>> GetAsync(int projectId)
         {
-            _issueTrackerDbContext.SaveChanges();
+            throw new System.NotImplementedException();
         }
 
-        public bool Delete(int projectId)
+        public async Task<Result> SaveAsync(Project project)
         {
-            var project = _issueTrackerDbContext.Projects.Find(projectId);
-            if (project != null)
+            if (project.Id == default)
             {
-                _issueTrackerDbContext.Projects.Remove(project);
-                _issueTrackerDbContext.SaveChanges();
-                return true;
+                await _issueTrackerDbContext.Projects.AddAsync(project);
             }
-            return false;
-        }
 
+            await _issueTrackerDbContext.SaveChangesAsync();
+            return Result.Ok();
+        }
     }
 }
