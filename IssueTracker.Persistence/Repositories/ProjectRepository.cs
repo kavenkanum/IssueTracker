@@ -1,7 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
+using IssueTracker.Domain;
+using IssueTracker.Domain.Repositories;
 using System.Threading.Tasks;
 
-namespace IssueTracker.Domain.Repositories
+namespace IssueTracker.Persistence.Repositories
 {
     public class ProjectRepository : IProjectRepository
     {
@@ -19,7 +21,10 @@ namespace IssueTracker.Domain.Repositories
 
         public Task<Maybe<Project>> GetAsync(int projectId)
         {
-            throw new System.NotImplementedException();
+            Maybe<Project> project = _issueTrackerDbContext.Projects.Find(projectId);
+            //var project = _issueTrackerDbContext.Projects.Find(projectId);
+            //Maybe<Project> project2 = project != null ? Maybe<Project>.From(project) : Maybe<Project>.None;
+            return Task.FromResult(project);
         }
 
         public async Task<Result> SaveAsync(Project project)
