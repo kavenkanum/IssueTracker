@@ -6,4 +6,7 @@
     <PackageReference Include="CSharpFunctionalExtensions" Version="1.19.1" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.2" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IssueTracker.Domain.Language\IssueTracker.Domain.Language.csproj" />
+  </ItemGroup>
 </Project>
