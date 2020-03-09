@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using IssueTracker.Domain.Entities;
 using IssueTracker.Domain.Repositories;
 using MediatR;
 using System;
@@ -11,29 +12,42 @@ namespace IssueTracker.Commands
 {
     public class CreateCommentCommand : IRequest<Result>
     {
-        public CreateCommentCommand(int jobId, int userId, string description)
+        public CreateCommentCommand(int jobId, string userId, string description)
         {
             JobId = jobId;
             UserId = userId;
-            //DateOfCreate
+            Description = description;
         }
         public int JobId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public string Description { get; set; }
-        //DateOfCreate
     }
     public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, Result>
     {
         private readonly IJobRepository _jobRepository;
-        //IUserRepository
-        public CreateCommentCommandHandler(IJobRepository jobRepository)
+        private readonly IUserRepository _userRepository;
+        private readonly IDataProvider _dataProvider;
+
+        public CreateCommentCommandHandler(IJobRepository jobRepository, IUserRepository userRepository, IDataProvider dataProvider)
         {
             _jobRepository = jobRepository;
+            _userRepository = userRepository;
+            _dataProvider = dataProvider;
         }
-        public Task<Result> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
         {
-            var jobResult = _jobRepository.GetAsync(request.JobId);
-
+            var jobResult = await _jobRepository.GetAsync(request.JobId)
+                .ToResult($"Unable to find job with id: {request.JobId}");
+            //change to user user in the input, controller should get current user and pass
+            //it to the createcommentcommand to avoid adding comments by diffrent users than current user
+            var userResult = await _userRepository.GetAsync(request.UserId)
+                .ToResult($"Unable to find user with id: {request.UserId}");
+            var commentResult = Comment.Create(request.Description, request.JobId, request.UserId, _dataProvider.GetCurrentDate());
+            //below we are checking if every above operations were succesfull -> 
+            //-> if yes we are adding comment to the Job and we are assigning user to that comment ;
+            return await Result.Combine(jobResult, userResult, commentResult)
+                .OnSuccess(() => jobResult.Value.AddComment(commentResult.Value))
+                .OnSuccess(async () => await _jobRepository.SaveAsync(jobResult.Value));
         }
     }
 }
