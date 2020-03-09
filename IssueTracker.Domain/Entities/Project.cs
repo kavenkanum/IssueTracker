@@ -9,26 +9,26 @@ namespace IssueTracker.Domain
         private Project(string name)
         {
             Name = name;
-            Tasks = new List<Task>();
+            Jobs = new List<Job>();
         }
 
         public int Id { get; private set; }
         public string Name { get; private set; }
-        public List<Task> Tasks { get; private set; }
+        public List<Job> Jobs { get; private set; }
 
         public void ChangeName(string name)
         {
             Name = name;
         }
 
-        public void AddTask(Task task)
+        public void AddJob(Job job)
         {
-            Tasks.Add(task);
+            Jobs.Add(job);
         }
 
         public static Result<Project> Create(string name)
         {
-            return Result.Create(!string.IsNullOrWhiteSpace(name), "Project name cannot be empty")
+            return Result.Create(!string.IsNullOrWhiteSpace(name), "Project name cannot be empty or contain white spaces.")
                 .OnSuccess(() => new Project(name));
         }
     }
