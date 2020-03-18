@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using IssueTracker.Domain.Entities;
+using IssueTracker.Domain;
 
-namespace IssueTracker.Domain
+namespace IssueTracker.Persistence
 {
     public class IssueTrackerDbContext : ApiAuthorizationDbContext<User>
     {
@@ -15,8 +16,7 @@ namespace IssueTracker.Domain
         }
 
         public DbSet<Project> Projects { get; set; }
-        public DbSet<Task> Tasks { get; set; }
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Job> Jobs { get; set; }
     }
 
 }

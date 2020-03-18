@@ -2,6 +2,7 @@
 using IssueTracker.Domain;
 using IssueTracker.Domain.Entities;
 using IssueTracker.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,8 +25,7 @@ namespace IssueTracker.Persistence.Repositories
 
         public async Task<Maybe<Job>> GetAsync(int jobId)
         {
-            Maybe<Job> job = await _issueTrackerDbContext.Jobs.FindAsync(jobId);
-            return job;
+            return await _issueTrackerDbContext.Jobs.Include(j => j.Comments).FirstOrDefaultAsync(j => j.Id == jobId);
         }
 
         public async Task<Result> SaveAsync(Job job)
@@ -33,8 +33,8 @@ namespace IssueTracker.Persistence.Repositories
             if (job.Id == default)
             {
                 await _issueTrackerDbContext.AddAsync(job);
-                await _issueTrackerDbContext.SaveChangesAsync();
             }
+            await _issueTrackerDbContext.SaveChangesAsync();
             return Result.Ok();
         }
     }

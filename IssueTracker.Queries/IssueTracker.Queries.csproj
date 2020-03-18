@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IssueTracker.Domain.Language\IssueTracker.Domain.Language.csproj" />
     <ProjectReference Include="..\IssueTracker.Persistence\IssueTracker.Persistence.csproj" />
   </ItemGroup>
 

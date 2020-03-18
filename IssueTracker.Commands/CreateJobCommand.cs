@@ -13,34 +13,33 @@ namespace IssueTracker.Commands
         {
             ProjectId = projectId;
             Name = name;
-            //DateOfCreate
         }
         public int ProjectId { get; }
         public string Name { get; }
-        //DateOfCreate
     }
 
     public class CreateJobCommandHandler : IRequestHandler<CreateJobCommand, Result>
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IJobRepository _jobRepository;
+        private readonly IDataProvider _dataProvider;
 
-        public CreateJobCommandHandler(IProjectRepository projectRepository, IJobRepository jobRepository)
+        public CreateJobCommandHandler(IProjectRepository projectRepository, IJobRepository jobRepository, IDataProvider dataProvider)
         {
             _projectRepository = projectRepository;
             _jobRepository = jobRepository;
+            _dataProvider = dataProvider;
         }
 
         public async Task<Result> Handle(CreateJobCommand request, CancellationToken cancellationToken)
         {
-            var jobResult = Job.Create(request.Name);
+            var jobResult = Job.Create(request.Name, _dataProvider.GetCurrentDate());
             var projectResult = await _projectRepository.GetAsync(request.ProjectId)
                 .ToResult($"Unable to find project with id: {request.ProjectId}");
 
             return await Result.Combine(jobResult, projectResult)
                 .OnSuccess(() => projectResult.Value.AddJob(jobResult.Value))
                 .OnSuccess(() => _jobRepository.SaveAsync(jobResult.Value));
-            //return await combinedJobProjectResult.OnSuccess(() => _jobRepository.SaveAsync(jobResult.Value));
         }
     }
 }

@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
@@ -35,14 +37,9 @@
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Migrations\20200227135955_CommentProjectTaskTabels.cs" />
-    <Compile Remove="Migrations\20200227135955_CommentProjectTaskTabels.Designer.cs" />
-    <Compile Remove="Migrations\20200227140545_ProjectTaskCommentTabels.cs" />
-    <Compile Remove="Migrations\20200227140545_ProjectTaskCommentTabels.Designer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\IssueTracker.Domain\IssueTracker.Domain.csproj" />
+    <ProjectReference Include="..\IssueTracker.Commands\IssueTracker.Commands.csproj" />
     <ProjectReference Include="..\IssueTracker.Persistence\IssueTracker.Persistence.csproj" />
+    <ProjectReference Include="..\IssueTracker.Queries\IssueTracker.Queries.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />

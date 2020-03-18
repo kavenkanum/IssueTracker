@@ -1,4 +1,5 @@
 ﻿using IssueTracker.Domain;
+using IssueTracker.Persistence;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,10 @@ namespace IssueTracker.Queries
 {
     public class ProjectDto
     {
+        public ProjectDto(string name)
+        {
+            Name = name;
+        }
         public int Id { get; }
         public string Name { get; }
     }
@@ -18,10 +23,15 @@ namespace IssueTracker.Queries
 
     public class GetListOfProjectsQueryHandler : IRequestHandler<GetListOfProjectsQuery, ICollection<ProjectDto>>
     {
-        private readonly IssueTrackerDbContext _issueTrackerDbContext;
+        private readonly QueryDbContext _queryDbContext;
+        public GetListOfProjectsQueryHandler(QueryDbContext queryDbContext)
+        {
+            _queryDbContext = queryDbContext;
+        }
+
         public Task<ICollection<ProjectDto>> Handle(GetListOfProjectsQuery request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_issueTrackerDbContext.Projects.Select(p => new ProjectDto()).ToList() as ICollection<ProjectDto>);
+            return Task.FromResult(_queryDbContext.Projects.Select(p => new ProjectDto(p.Name)).ToList() as ICollection<ProjectDto>);
         }
     }
 }

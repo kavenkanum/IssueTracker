@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using IssueTracker.Domain;
 using IssueTracker.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace IssueTracker.Persistence.Repositories
@@ -19,12 +20,11 @@ namespace IssueTracker.Persistence.Repositories
             return Result.Ok();
         }
 
-        public Task<Maybe<Project>> GetAsync(int projectId)
+        public async Task<Maybe<Project>> GetAsync(int projectId)
         {
-            Maybe<Project> project = _issueTrackerDbContext.Projects.Find(projectId);
-            //var project = _issueTrackerDbContext.Projects.Find(projectId);
-            //Maybe<Project> project2 = project != null ? Maybe<Project>.From(project) : Maybe<Project>.None;
-            return Task.FromResult(project);
+            return await _issueTrackerDbContext.Projects
+                .Include(p => p.Jobs)
+                .SingleOrDefaultAsync(p => p.Id == projectId);
         }
 
         public async Task<Result> SaveAsync(Project project)
