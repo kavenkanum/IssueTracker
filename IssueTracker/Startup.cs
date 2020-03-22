@@ -4,16 +4,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using IssueTracker.Domain.Entities;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using IssueTracker.Domain;
 using IssueTracker.Domain.Repositories;
+using IssueTracker.Persistence;
+using IssueTracker.Persistence.Repositories;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using MediatR;
 using IssueTracker.Commands;
-using IssueTracker.Persistence.Repositories;
-using IssueTracker.Persistence;
-using System.Reflection;
 using IssueTracker.Queries;
 
 namespace IssueTracker
@@ -41,14 +39,27 @@ namespace IssueTracker
             services.AddMediatR(typeof(GetListOfProjectsQuery).Assembly);
             services.AddMediatR(typeof(CreateCommentCommand).Assembly);
 
-            services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<IssueTrackerDbContext>();
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = "Cookies";
+                    options.DefaultChallengeScheme = "oidc";
+                })
+                .AddCookie("Cookies")
+                //.AddOpenIdConnect("oidc", options =>
+                //    {
+                //        options.Authority = "http://localhost:5000";
+                //        options.RequireHttpsMetadata = false;
+                //        options.ClientId = "IssueTrackerApi";
+                //        options.ResponseType = "code";
+                //        options.SaveTokens = true;
+                //    })
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "https://localhost:5000";
+                    options.RequireHttpsMetadata = false;
 
-            services.AddIdentityServer()
-                .AddApiAuthorization<User, IssueTrackerDbContext>();
-
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
+                    options.Audience = "IssueTrackerApi";
+                });
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -80,15 +91,15 @@ namespace IssueTracker
             app.UseSpaStaticFiles();
 
             app.UseRouting();
-
+            app.UseCors("default");
             app.UseAuthentication();
-            app.UseIdentityServer();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}")
+                .RequireAuthorization();
                 endpoints.MapRazorPages();
             });
 
