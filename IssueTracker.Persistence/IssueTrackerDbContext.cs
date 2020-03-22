@@ -7,16 +7,16 @@ using IssueTracker.Domain;
 
 namespace IssueTracker.Persistence
 {
-    public class IssueTrackerDbContext : ApiAuthorizationDbContext<User>
+    public class IssueTrackerDbContext : DbContext
     {
         public IssueTrackerDbContext(
-            DbContextOptions options,
-            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
+            DbContextOptions<IssueTrackerDbContext> options) : base(options)
         {
         }
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<Job> Jobs { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 
 }
