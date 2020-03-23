@@ -39,20 +39,9 @@ namespace IssueTracker
             services.AddMediatR(typeof(GetListOfProjectsQuery).Assembly);
             services.AddMediatR(typeof(CreateCommentCommand).Assembly);
 
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultScheme = "Cookies";
-                    options.DefaultChallengeScheme = "oidc";
-                })
-                .AddCookie("Cookies")
-                //.AddOpenIdConnect("oidc", options =>
-                //    {
-                //        options.Authority = "http://localhost:5000";
-                //        options.RequireHttpsMetadata = false;
-                //        options.ClientId = "IssueTrackerApi";
-                //        options.ResponseType = "code";
-                //        options.SaveTokens = true;
-                //    })
+            services.AddControllers();
+
+            services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
                     options.Authority = "https://localhost:5000";
@@ -61,14 +50,23 @@ namespace IssueTracker
                     options.Audience = "IssueTrackerApi";
                 });
 
-            services.AddControllersWithViews();
-            services.AddRazorPages();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("default", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5002")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+            
+            //services.AddRazorPages();
 
             // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/build";
-            });
+            //services.AddSpaStaticFiles(configuration =>
+            //{
+            //    configuration.RootPath = "ClientApp/build";
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,8 +85,8 @@ namespace IssueTracker
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            //app.UseStaticFiles();
+            //app.UseSpaStaticFiles();
 
             app.UseRouting();
             app.UseCors("default");
@@ -100,18 +98,17 @@ namespace IssueTracker
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}")
                 .RequireAuthorization();
-                endpoints.MapRazorPages();
             });
 
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
+            //app.UseSpa(spa =>
+            //{
+            //    spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
+            //    if (env.IsDevelopment())
+            //    {
+            //        spa.UseReactDevelopmentServer(npmScript: "start");
+            //    }
+            //});
         }
     }
 }
