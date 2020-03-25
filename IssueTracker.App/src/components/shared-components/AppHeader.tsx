@@ -44,7 +44,7 @@ export const AppHeader: React.FC<AppHeaderProps> = (props: AppHeaderProps) => {
                     <Image size='mini' src={props.logo} as={Link} to="/" />
                 </Menu.Item>
                 <Menu.Item header>
-                    Scrooge
+                    PugTrack
                 </Menu.Item>
                 <Menu.Menu position='right'>
                     {isLoggedIn ?

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -15,6 +15,7 @@ import { Register } from './components/Register';
 import { ForgotPassword } from './components/ForgotPassword';
 import { AddProject } from './components/AddProject';
 import { NotFound } from './components/NotFound';
+import { Dashboard } from './components/Dashboard';
 import { Provider } from 'react-redux';
 import store, { persistor } from './store/index';
 import { AuthProvider } from './providers/AuthProvider';
