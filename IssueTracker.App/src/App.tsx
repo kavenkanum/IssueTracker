@@ -2,6 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
 import { AppHeader } from './components/shared-components/AppHeader';
 import { AppFooter } from './components/shared-components/AppFooter';
 import { Home } from './components/Home';
@@ -15,30 +16,32 @@ import { ForgotPassword } from './components/ForgotPassword';
 import { AddProject } from './components/AddProject';
 import { NotFound } from './components/NotFound';
 import { Provider } from 'react-redux';
-import store from './store/index';
+import store, { persistor } from './store/index';
 import { AuthProvider } from './providers/AuthProvider';
 
 export const App: React.FC = () => {
   return <Provider store={store}>
-    <AuthProvider>
-      <BrowserRouter>
-        <AppHeader logo={logo}></AppHeader>
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/login" exact component={Login} />
-          <Route path="/login/callback" exact component={LoginCallback} />
-          <Route path="/logout" exact component={Logout} />
-          <Route path="/logout/callback" exact component={LogoutCallback} />
-          <Route path="/silent-renew" exact component={SilentRenew} />
-          <Route path="/register" component={Register} />
-          <Route path="/forgot-password" component={ForgotPassword} />
-          <Route path="/project/add" exact component={AddProject} />
+    <PersistGate persistor={persistor}>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppHeader logo={logo}></AppHeader>
+          <Switch>
+            <Route path="/" exact component={Home} />
+            <Route path="/login" exact component={Login} />
+            <Route path="/login/callback" exact component={LoginCallback} />
+            <Route path="/logout" exact component={Logout} />
+            <Route path="/logout/callback" exact component={LogoutCallback} />
+            <Route path="/silent-renew" exact component={SilentRenew} />
+            <Route path="/register" component={Register} />
+            <Route path="/forgot-password" component={ForgotPassword} />
+            <Route path="/project/add" exact component={AddProject} />
 
-          <Route component={NotFound} />
-        </Switch>
-        <AppFooter logo={logo}></AppFooter>
-      </BrowserRouter>
-    </AuthProvider>
+            <Route component={NotFound} />
+          </Switch>
+          <AppFooter logo={logo}></AppFooter>
+        </BrowserRouter>
+      </AuthProvider>
+    </PersistGate>
   </Provider>
 }
 
