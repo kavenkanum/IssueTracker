@@ -25,10 +25,10 @@ interface UserLoadedEvent {
 export class AuthService {
   dispatch = useDispatch();
   public userManager: UserManager;
+  
 
   constructor() {
     this.userManager = new UserManager(IDENTITY_CONFIG);
-
     Log.logger = console;
     Log.level = Log.INFO;
 
@@ -36,11 +36,13 @@ export class AuthService {
       console.log("USER LOADED", user);
       this.dispatch(login(user.profile.given_name, user.profile.family_name,
         user.access_token, user.id_token));
+        localStorage.setItem('accessToken', user.access_token);
     });
 
     this.userManager.events.addUserUnloaded((user) => {
       console.log("USER UNLOADED", user);
       this.dispatch(logout());
+      localStorage.removeItem('accessToken');
     });
 
     this.userManager.events.addSilentRenewError((e: Error) => {
