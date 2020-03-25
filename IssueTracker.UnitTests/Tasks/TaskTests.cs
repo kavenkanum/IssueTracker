@@ -5,6 +5,7 @@ using IssueTracker.Domain;
 using IssueTracker.Domain.Entities;
 using IssueTracker.Domain.Repositories;
 using Moq;
+using System;
 using System.Threading;
 using Xunit;
 
@@ -16,7 +17,8 @@ namespace IssueTracker.UnitTests.Projects
         [Fact]
         public void ShouldCreateTask()
         {
-            var task = Job.Create("Some task");
+            var dateOfCreate = DateTime.Now;
+            var task = Job.Create("Some task", dateOfCreate);
 
             task.IsSuccess.Should().BeTrue();
         }
@@ -24,8 +26,9 @@ namespace IssueTracker.UnitTests.Projects
         [Fact]
         public void ShouldAddTaskToProject()
         {
+            var dateOfCreate = DateTime.Now;
             var project = Project.Create("Some project");
-            var task = Job.Create("Some task");
+            var task = Job.Create("Some task", dateOfCreate);
             project.Value.AddJob(task.Value);
 
             task.IsSuccess.Should().BeTrue();
@@ -54,7 +57,8 @@ namespace IssueTracker.UnitTests.Projects
         [Fact]
         public void ShouldNotCreateTaskWithEmptyName()
         {
-            var task = Job.Create(string.Empty);
+            var dateOfCreate = DateTime.Now;
+            var task = Job.Create(string.Empty, dateOfCreate);
 
             task.IsSuccess.Should().BeFalse();
         }

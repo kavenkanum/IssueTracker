@@ -33,6 +33,9 @@ export const Home: React.FC = () => {
 <Button primary as={Link} to="/project/add">
                                 Add project
 </Button>
+<Button primary as={Link} to="/dashboard">
+                                dashboard
+</Button>
                     {isLoggedIn ?
                         (
                             <Button primary as={Link} to="/logout">
