@@ -22,7 +22,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
-        public async Task<JobDto> Index()
+        public async Task<IActionResult> Index()
         {
 
             //var dupa2 = new CreateJobCommand(7, "jobtest3");
@@ -36,8 +36,8 @@ namespace IssueTracker.Controllers
             // var projectJobsQuery = await _mediator.Send(new GetListOfProjectJobsQuery(1));
             //var jobCommentsQuery = await _mediator.Send(new GetListOfJobCommentsQuery(1));
             var jobQuery = await _mediator.Send(new GetJobQuery(2));
-            
-            return jobQuery;
+           
+            return Ok(jobQuery);
         }
     }
 }

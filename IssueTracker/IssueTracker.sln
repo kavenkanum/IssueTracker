@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.Queries", "..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.UnitTests", "..\IssueTracker.UnitTests\IssueTracker.UnitTests.csproj", "{2F842A03-C76E-4116-A4AB-FA9A90ACCB2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssueTracker.Domain.Language", "..\IssueTracker.Domain.Language\IssueTracker.Domain.Language.csproj", "{95B2BFD8-7B06-421E-B53F-29A15FCC8762}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueTracker.Domain.Language", "..\IssueTracker.Domain.Language\IssueTracker.Domain.Language.csproj", "{95B2BFD8-7B06-421E-B53F-29A15FCC8762}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "..\IssueTracker.IdentityServer\IdentityServer.csproj", "{59928202-4C34-4882-B739-86F7F22D0FF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{95B2BFD8-7B06-421E-B53F-29A15FCC8762}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95B2BFD8-7B06-421E-B53F-29A15FCC8762}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95B2BFD8-7B06-421E-B53F-29A15FCC8762}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59928202-4C34-4882-B739-86F7F22D0FF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59928202-4C34-4882-B739-86F7F22D0FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59928202-4C34-4882-B739-86F7F22D0FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59928202-4C34-4882-B739-86F7F22D0FF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
