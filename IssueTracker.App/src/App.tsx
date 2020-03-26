@@ -36,7 +36,7 @@ export const App: React.FC = () => {
             <Route path="/register" component={Register} />
             <Route path="/forgot-password" component={ForgotPassword} />
             <Route path="/project/add" exact component={AddProject} />
-
+            <Route path="/dashboard" exact component={Dashboard} />
             <Route component={NotFound} />
           </Switch>
           <AppFooter logo={logo}></AppFooter>
