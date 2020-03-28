@@ -42,7 +42,10 @@ namespace IssueTracker.Queries
                 .Select(j => new ProjectJobDto()
                 {
                     JobId = j.Id,
-                    Name = j.Name
+                    Name = j.Name,
+                    Status = j.Status,
+                    AssignedUserId = j.AssignedUserId,
+                    Deadline = j.Deadline
                 })).ToList() as ICollection<ProjectJobDto>;
             return Task.FromResult(jobs);
         }
