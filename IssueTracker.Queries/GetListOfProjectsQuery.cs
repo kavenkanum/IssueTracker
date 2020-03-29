@@ -10,9 +10,10 @@ namespace IssueTracker.Queries
 {
     public class ProjectDto
     {
-        public ProjectDto(string name)
+        public ProjectDto(string name, int id)
         {
             Name = name;
+            Id = id;
         }
         public int Id { get; }
         public string Name { get; }
@@ -31,7 +32,7 @@ namespace IssueTracker.Queries
 
         public Task<ICollection<ProjectDto>> Handle(GetListOfProjectsQuery request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_queryDbContext.Projects.Select(p => new ProjectDto(p.Name)).ToList() as ICollection<ProjectDto>);
+            return Task.FromResult(_queryDbContext.Projects.Select(p => new ProjectDto(p.Name, p.Id)).ToList() as ICollection<ProjectDto>);
         }
     }
 }

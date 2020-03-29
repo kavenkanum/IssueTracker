@@ -1,5 +1,9 @@
-﻿using IssueTracker.Persistence;
+﻿using CSharpFunctionalExtensions;
+using IssueTracker.Domain.Entities;
+using IssueTracker.Domain.Repositories;
+using IssueTracker.Persistence;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +22,7 @@ namespace IssueTracker.Queries
         public DateTime Deadline { get; set; }
         public DateTime DateOfCreate { get; set; }
     }
-    public class GetJobQuery : IRequest<JobDto>
+    public class GetJobQuery : IRequest<Result<JobDto>>
     {
         public GetJobQuery(int jobId)
         {
@@ -27,25 +31,29 @@ namespace IssueTracker.Queries
         public int JobId { get; set; }
     }
 
-    public class GetJobQueryHandler : IRequestHandler<GetJobQuery, JobDto>
+    public class GetJobQueryHandler : IRequestHandler<GetJobQuery, Result<JobDto>>
     {
         private readonly QueryDbContext _queryDbContext;
         public GetJobQueryHandler(QueryDbContext queryDbContext)
         {
             _queryDbContext = queryDbContext;
         }
-        public Task<JobDto> Handle(GetJobQuery request, CancellationToken cancellationToken)
+        public async Task<Result<JobDto>> Handle(GetJobQuery request, CancellationToken cancellationToken)
         {
-            var job = _queryDbContext.Jobs.FirstOrDefault(j => j.Id == request.JobId);
-            return Task.FromResult(new JobDto()
-            {
-                JobId = job.Id,
-                Name = job.Name,
-                Description = job.Description,
-                AssignedUserID = job.AssignedUserId,
-                Deadline = job.Deadline,
-                DateOfCreate = job.DateOfCreate
-            });
+            Maybe<Job> job = await _queryDbContext.Jobs.FirstOrDefaultAsync(j => j.Id == request.JobId);
+
+            return job
+                .ToResult($"Unable to find job with id {request.JobId}.")
+                .OnSuccess(job => new JobDto()
+                {
+                    JobId = job.Id,
+                    Name = job.Name,
+                    Description = job.Description,
+                    AssignedUserID = job.AssignedUserId,
+                    Deadline = job.Deadline,
+                    DateOfCreate = job.DateOfCreate
+                });
+
         }
     }
 }

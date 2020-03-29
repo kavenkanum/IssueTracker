@@ -19,5 +19,6 @@ namespace IssueTracker.Persistence
 
         public IQueryable<Project> Projects => _issueTrackerDbContext.Projects.AsNoTracking();
         public IQueryable<Job> Jobs => _issueTrackerDbContext.Jobs.AsNoTracking();
+        public IQueryable<User> Users => _issueTrackerDbContext.Users.AsNoTracking();
     }
 }
