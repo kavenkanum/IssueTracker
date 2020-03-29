@@ -24,7 +24,7 @@ export const Dashboard: React.FC = () => {
 // }
     useEffect(() => {
       setLoading(true);
-      fetch('https://localhost:5001/HealthMonitor', {
+      fetch('https://localhost:5001/HealthMonitor/projects', {
         headers: {
           'Authorization': 'Bearer ' + token,
         }

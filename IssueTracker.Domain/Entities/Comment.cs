@@ -5,6 +5,7 @@ namespace IssueTracker.Domain.Entities
 {
     public class Comment
     {
+        //JobId, Userid
         private Comment(string description, int jobId, string userId, DateTime dateOfComment)
         {
             Description = description;

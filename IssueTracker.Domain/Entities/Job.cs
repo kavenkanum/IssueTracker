@@ -34,7 +34,7 @@ namespace IssueTracker.Domain.Entities
                 .OnSuccess(() => new Job(name, dateOfCreate, Status.New));
         }
 
-        public void AddProperties(string description, DateTime deadline, string assignedUserId, Priority priority)
+        public void EditProperties(string description, DateTime deadline, string assignedUserId, Priority priority)
         {
             Description = description;
             Deadline = deadline;
