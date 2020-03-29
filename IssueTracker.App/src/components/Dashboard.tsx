@@ -29,9 +29,9 @@ export const Dashboard: React.FC = () => {
           'Authorization': 'Bearer ' + token,
         }
       })
-        .then((data) => {
-            debugger;
-          setData(data);
+        .then(response => response.json())
+        .then(responseJson => {
+          setData(responseJson);
         })
         .catch((err) => {
           console.log('Error!', err);
@@ -46,8 +46,10 @@ export const Dashboard: React.FC = () => {
     return (
       <div>
           <ul>
-            Token: {token}
-            Data: {data.data}
+            <li>
+            Token: {token}</li>
+            <li>
+            Data: <pre>{JSON.stringify(data, null, 2) }</pre></li>
           </ul>
       </div>
     );
