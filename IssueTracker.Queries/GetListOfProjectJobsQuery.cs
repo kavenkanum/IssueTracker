@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using IssueTracker.Domain.Language;
+using IssueTracker.Domain.Language.ValueObjects;
 using IssueTracker.Domain.Repositories;
 using IssueTracker.Persistence;
 using MediatR;
@@ -16,9 +17,9 @@ namespace IssueTracker.Queries
     {
         public int JobId { get; set; }
         public string Name { get; set; }
-        public string AssignedUserId { get; set; }
+        public Guid AssignedUserId { get; set; }
         public Status Status { get; set; }
-        public DateTime Deadline { get; set; }
+        public Deadline Deadline { get; set; }
     }
     public class GetListOfProjectJobsQuery : IRequest<ICollection<ProjectJobDto>>
     {

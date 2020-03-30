@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using MediatR;
 using IssueTracker.Commands;
 using IssueTracker.Queries;
+using IssueTracker.Domain.Language.ValueObjects;
 
 namespace IssueTracker
 {
@@ -34,7 +35,7 @@ namespace IssueTracker
             services.AddTransient<IProjectRepository, ProjectRepository>();
             services.AddTransient<IJobRepository, JobRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IDataProvider, DataProvider>();
+            services.AddTransient<IDateTimeProvider, DateTimeProvider>();
             services.AddTransient<QueryDbContext>();
             services.AddMediatR(typeof(GetListOfProjectsQuery).Assembly);
             services.AddMediatR(typeof(CreateCommentCommand).Assembly);

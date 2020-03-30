@@ -1,7 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using IssueTracker.Domain.Entities;
+using IssueTracker.Domain.Language.ValueObjects;
 using IssueTracker.Domain.Repositories;
 using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,18 +24,18 @@ namespace IssueTracker.Commands
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IJobRepository _jobRepository;
-        private readonly IDataProvider _dataProvider;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public CreateJobCommandHandler(IProjectRepository projectRepository, IJobRepository jobRepository, IDataProvider dataProvider)
+        public CreateJobCommandHandler(IProjectRepository projectRepository, IJobRepository jobRepository, IDateTimeProvider dateTimeProvider)
         {
             _projectRepository = projectRepository;
             _jobRepository = jobRepository;
-            _dataProvider = dataProvider;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Result> Handle(CreateJobCommand request, CancellationToken cancellationToken)
         {
-            var jobResult = Job.Create(request.Name, _dataProvider.GetCurrentDate());
+            var jobResult = Job.Create(request.Name, _dateTimeProvider.GetCurrentDate());
             var projectResult = await _projectRepository.GetAsync(request.ProjectId)
                 .ToResult($"Unable to find project with id: {request.ProjectId}");
 

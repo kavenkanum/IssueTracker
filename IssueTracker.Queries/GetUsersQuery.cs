@@ -11,12 +11,12 @@ namespace IssueTracker.Queries
 {
     public class UserDto
     {
-        public UserDto(string userId, string fullName)
+        public UserDto(Guid userId, string fullName)
         {
             UserId = userId;
             FullName = fullName;
         }
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public string FullName { get; set; }
     }
     public class GetUsersQuery : IRequest<ICollection<UserDto>>
