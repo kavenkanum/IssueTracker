@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using IssueTracker.Domain.Language;
+using IssueTracker.Domain.Language.ValueObjects;
 using System;
 using System.Collections.Generic;
 
@@ -19,10 +20,10 @@ namespace IssueTracker.Domain.Entities
         public int ProjectId { get; private set; }
         public string Name { get; private set; }
         public DateTime DateOfCreate { get; private set; }
-        public DateTime Deadline { get; private set; }
+        public Deadline Deadline { get; private set; }
         public string Description { get; private set; }
         public Status Status { get; private set; }
-        public string AssignedUserId { get; private set; }
+        public Guid AssignedUserId { get; private set; }
         public Priority Priority { get; private set; }
         public List<Comment> Comments { get; set; }
         public int StartsAfterJobId { get; set; }
@@ -34,7 +35,7 @@ namespace IssueTracker.Domain.Entities
                 .OnSuccess(() => new Job(name, dateOfCreate, Status.New));
         }
 
-        public void EditProperties(string description, DateTime deadline, string assignedUserId, Priority priority)
+        public void EditProperties(string description, Deadline deadline, Guid assignedUserId, Priority priority)
         {
             Description = description;
             Deadline = deadline;
@@ -56,15 +57,16 @@ namespace IssueTracker.Domain.Entities
         {
             Status = newStatus;
         }
-        public void ChangeDeadline(DateTime newDeadline)
+        public Result ChangeDeadline(Deadline newDeadline)
         {
             Deadline = newDeadline;
+            return Result.Ok();
         }
         public void ChangeDescription(string newDescription)
         {
             Description = newDescription;
         }
-        public void ChangeAssignedUser(string newAssignedUserId)
+        public void ChangeAssignedUser(Guid newAssignedUserId)
         {
             AssignedUserId = newAssignedUserId;
         }

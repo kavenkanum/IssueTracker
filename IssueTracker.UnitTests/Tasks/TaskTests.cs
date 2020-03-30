@@ -3,6 +3,7 @@ using FluentAssertions;
 using IssueTracker.Commands;
 using IssueTracker.Domain;
 using IssueTracker.Domain.Entities;
+using IssueTracker.Domain.Language.ValueObjects;
 using IssueTracker.Domain.Repositories;
 using Moq;
 using System;
@@ -61,6 +62,51 @@ namespace IssueTracker.UnitTests.Projects
             var task = Job.Create(string.Empty, dateOfCreate);
 
             task.IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ShouldChangeDeadlineInJob()
+        {
+            var currentDate = DateTime.Now;
+            var newDeadline = DateTime.Now.AddDays(10);
+
+            var deadline = Deadline.Create(newDeadline, currentDate);
+
+            var job = Job.Create("Test Job", currentDate);
+            var changedDeadline = job.Value.ChangeDeadline(deadline.Value);
+            changedDeadline.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ShouldNotSetDeadline()
+        {
+            var currentDate = DateTime.Now;
+            var newDeadline = DateTime.Now.AddDays(-1);
+
+            var deadline = Deadline.Create(newDeadline, currentDate);
+
+            deadline.IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ShouldNotSetDeadlineAtTheSameDay()
+        {
+            var currentDate = DateTime.Now;
+            var newDeadline = DateTime.Now;
+
+            var deadline = Deadline.Create(newDeadline, currentDate);
+
+            deadline.IsSuccess.Should().BeFalse();
+        }
+        [Fact]
+        public void ShouldSetDeadline()
+        {
+            var currentDate = DateTime.Now;
+            var newDeadline = DateTime.Now.AddDays(+1);
+
+            var deadline = Deadline.Create(newDeadline, currentDate);
+
+            deadline.IsSuccess.Should().BeTrue();
         }
     }
 }
