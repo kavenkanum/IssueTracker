@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace IssueTracker.Commands
+namespace IssueTracker.Domain.Language.ValueObjects
 {
-    public interface IDataProvider
+    public interface IDateTimeProvider
     {
         DateTime GetCurrentDate();
     }
-    public class DataProvider : IDataProvider
+    public class DateTimeProvider : IDateTimeProvider
     {
         public DateTime GetCurrentDate()
         {

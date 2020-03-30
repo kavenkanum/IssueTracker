@@ -28,7 +28,7 @@ namespace IssueTracker.Controllers
 
         [HttpPost]
         [Route("{jobId}/AddComment")]
-        public async Task<IActionResult> AddComment(int jobId, string userId, string description)
+        public async Task<IActionResult> AddComment(int jobId, Guid userId, string description)
         {
             var newCommentResult = await _mediator.Send(new CreateCommentCommand(jobId, userId, description));
             return Ok(newCommentResult);

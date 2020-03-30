@@ -11,16 +11,16 @@ namespace IssueTracker.Queries
 {
     public class AssignedUserDto
     {
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public string FullName { get; set; }
     }
     public class GetAssignedUserQuery : IRequest<AssignedUserDto>
     {
-        public GetAssignedUserQuery(string userId)
+        public GetAssignedUserQuery(Guid userId)
         {
             UserId = userId;
         }
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
     }
 
     public class GetAssignedUserQueryHandler : IRequestHandler<GetAssignedUserQuery, AssignedUserDto>

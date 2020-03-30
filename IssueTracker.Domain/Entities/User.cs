@@ -7,7 +7,7 @@ namespace IssueTracker.Domain.Entities
 {
     public class User 
     {
-        private User(string userId, string fullName, string email)
+        private User(Guid userId, string fullName, string email)
         {
             UserId = userId;
             FullName = fullName;
@@ -18,9 +18,9 @@ namespace IssueTracker.Domain.Entities
         public string Email { get; private set; }
         public List<Job> AssignedTasks { get; set; }
 
-        public static Result<User> Create(string userId, string fullName, string email)
+        public static Result<User> Create(Guid userId, string fullName, string email)
         {
-            return Result.Create(!string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(userId), "User id, full name and email cannot be empty.")
+            return Result.Create(userId != default && !string.IsNullOrEmpty(fullName) && !string.IsNullOrEmpty(email), "User id, full name and email cannot be empty.")
                 .OnSuccess(() => new User(userId, fullName, email));
         }
 
