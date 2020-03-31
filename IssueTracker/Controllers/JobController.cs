@@ -6,6 +6,8 @@ using System.Linq;
 using IssueTracker.Commands;
 using IssueTracker.Queries;
 using System.Threading.Tasks;
+using IssueTracker.Models;
+using CSharpFunctionalExtensions;
 
 namespace IssueTracker.Controllers
 {
@@ -39,6 +41,32 @@ namespace IssueTracker.Controllers
         {
             var jobQuery = await _mediator.Send(new GetJobQuery(jobId));
             return Ok(jobQuery);
+        }
+
+        [HttpGet]
+        [Route("Job/Edit/{jobId}")]
+        public async Task<IActionResult> EditJob(int jobId)
+        {
+            var result = await _mediator.Send(new GetJobToEditQuery(jobId));
+
+            return result.IsSuccess ? Ok(new EditJobModel()
+            {
+                JobId = result.Value.JobId,
+                Name = result.Value.Name,
+                Description = result.Value.Description,
+                Deadline = result.Value.Deadline,
+                Priority = result.Value.Priority,
+                UserId = result.Value.AssignedUserID
+            }) as IActionResult : NotFound();
+        }
+
+        [HttpPost]
+        [Route("Job/Edit/{jobId}")]
+        public async Task<IActionResult> EditJob(EditJobModel model)
+        {
+            var jobToEditResult = await _mediator.Send(new EditJobCommand(model.JobId, model.Name, model.Description, model.UserId, model.Deadline, model.Priority));
+
+            return Ok(jobToEditResult);
         }
     }
 }
