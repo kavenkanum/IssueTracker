@@ -1,13 +1,30 @@
-﻿using System;
+﻿using CSharpFunctionalExtensions;
+using IssueTracker.Domain.Language.ValueObjects;
+using System;
 
 namespace IssueTracker.Domain.Entities
 {
     public class Comment
     {
-        public int Id { get; set; }
-        public int TaskId { get; set; }
-        public string Description { get; set; }
-        public int UserId { get; set; }
-        public DateTime DateOfComment { get; set; }
+        //JobId, Userid
+        private Comment(string description, int jobId, Guid userId, DateTime dateOfComment)
+        {
+            Description = description;
+            JobId = jobId;
+            UserId = userId;
+            DateOfComment = dateOfComment;
+        }
+        public int Id { get; private set; }
+        public int JobId { get; private set; }
+        public string Description { get; private set; }
+        public Guid UserId { get; private set; }
+        public DateTime DateOfComment { get; private set; }
+
+        public static Result<Comment> Create(string description, int jobId, Guid userId, DateTime dateOfComment)
+        {
+            return Result.Create(!string.IsNullOrEmpty(description), "Comment cannot be empty")
+                .OnSuccess(() => new Comment(description, jobId, userId, dateOfComment));
+        }
+
     }
 }

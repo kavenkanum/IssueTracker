@@ -10,6 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
@@ -17,12 +20,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,16 +38,9 @@
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Migrations\20200227135955_CommentProjectTaskTabels.cs" />
-    <Compile Remove="Migrations\20200227135955_CommentProjectTaskTabels.Designer.cs" />
-    <Compile Remove="Migrations\20200227140545_ProjectTaskCommentTabels.cs" />
-    <Compile Remove="Migrations\20200227140545_ProjectTaskCommentTabels.Designer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\IssueTracker.Domain\IssueTracker.Domain.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\IssueTracker.Commands\IssueTracker.Commands.csproj" />
+    <ProjectReference Include="..\IssueTracker.Persistence\IssueTracker.Persistence.csproj" />
+    <ProjectReference Include="..\IssueTracker.Queries\IssueTracker.Queries.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
