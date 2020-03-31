@@ -5,6 +5,7 @@
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="1.19.1" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.2" />
+    <PackageReference Include="Stateless" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IssueTracker.Domain.Language\IssueTracker.Domain.Language.csproj" />

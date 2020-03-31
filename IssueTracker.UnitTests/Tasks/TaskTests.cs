@@ -3,6 +3,7 @@ using FluentAssertions;
 using IssueTracker.Commands;
 using IssueTracker.Domain;
 using IssueTracker.Domain.Entities;
+using IssueTracker.Domain.Language;
 using IssueTracker.Domain.Language.ValueObjects;
 using IssueTracker.Domain.Repositories;
 using Moq;
@@ -63,6 +64,14 @@ namespace IssueTracker.UnitTests.Projects
 
             task.IsSuccess.Should().BeFalse();
         }
+        [Fact]
+        public void ShouldBeNewStatusInNewJob()
+        {
+            var currentDate = DateTime.Now;
+            var job = Job.Create("Test Job", currentDate);
+            var expectedStatus = Status.New;
+            job.Value.Status.Should().Be(expectedStatus);
+        }
 
         [Fact]
         public void ShouldChangeDeadlineInJob()
@@ -75,6 +84,36 @@ namespace IssueTracker.UnitTests.Projects
             var job = Job.Create("Test Job", currentDate);
             var changedDeadline = job.Value.ChangeDeadline(deadline.Value);
             changedDeadline.IsSuccess.Should().BeTrue();
+            job.Value.Deadline.Should().Be(deadline.Value);
+        }
+
+        [Fact]
+        public void ShouldStartJob()
+        {
+            var currentDate = DateTime.Now;
+            var job = Job.Create("Test Job", currentDate);
+            job.Value.StartJob();
+            var expectedStatus = Status.InProgress;
+            job.Value.Status.Should().Be(expectedStatus);
+        }
+
+        [Fact]
+        public void ShouldFinishJob()
+        {
+            var currentDate = DateTime.Now;
+            var job = Job.Create("Test Job", currentDate);
+            job.Value.StartJob();
+            job.Value.FinishJob();
+            var expectedStatus = Status.Done;
+            job.Value.Status.Should().Be(expectedStatus);
+        }
+        [Fact]
+        public void ShouldNotFinishJob()
+        {
+            var currentDate = DateTime.Now;
+            var job = Job.Create("Test Job", currentDate);
+            var result = job.Value.FinishJob();
+            result.IsSuccess.Should().BeFalse();
         }
 
         [Fact]
