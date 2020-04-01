@@ -32,7 +32,7 @@ namespace IssueTracker.Queries
         }
         public Task<ICollection<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
         {
-            var users = _queryDbContext.Users.Select(u => new UserDto(u.UserId, u.FullName)).ToList() as ICollection<UserDto>;
+            var users = _queryDbContext.Users.Select(u => new UserDto(u.Id, u.FullName)).ToList() as ICollection<UserDto>;
             return Task.FromResult(users);
         }
     }
