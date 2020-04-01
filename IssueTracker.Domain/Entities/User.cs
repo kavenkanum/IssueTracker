@@ -7,13 +7,13 @@ namespace IssueTracker.Domain.Entities
 {
     public class User 
     {
-        private User(Guid userId, string fullName, string email)
+        private User(Guid id, string fullName, string email)
         {
-            UserId = userId;
+            Id = id;
             FullName = fullName;
             Email = email;
         }
-        public Guid UserId { get; private set; }
+        public Guid Id { get; private set; }
         public string FullName { get; private set; }
         public string Email { get; private set; }
         public List<Job> AssignedTasks { get; set; }
