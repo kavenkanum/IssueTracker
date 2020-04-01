@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using IssueTracker.Domain.Entities;
 using IssueTracker.Domain;
+using IssueTracker.Persistence.Configurations;
 
 namespace IssueTracker.Persistence
 {
@@ -12,6 +13,11 @@ namespace IssueTracker.Persistence
         public IssueTrackerDbContext(
             DbContextOptions<IssueTrackerDbContext> options) : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new JobConfiguration());
         }
 
         public DbSet<Project> Projects { get; set; }
