@@ -14,6 +14,8 @@ using MediatR;
 using IssueTracker.Commands;
 using IssueTracker.Queries;
 using IssueTracker.Domain.Language.ValueObjects;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IssueTracker
 {
@@ -59,6 +61,15 @@ namespace IssueTracker
                     .AllowAnyHeader()
                     .AllowAnyMethod();
                 });
+            });
+
+            services.AddMvc(options =>
+            {
+                var authenticatedUserPolicy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
+
+                options.Filters.Add(new AuthorizeFilter(authenticatedUserPolicy));
             });
             
             //services.AddRazorPages();
