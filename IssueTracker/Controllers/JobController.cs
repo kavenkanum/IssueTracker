@@ -8,6 +8,7 @@ using IssueTracker.Queries;
 using System.Threading.Tasks;
 using IssueTracker.Models;
 using CSharpFunctionalExtensions;
+using IssueTracker.Domain.Language;
 
 namespace IssueTracker.Controllers
 {
@@ -24,7 +25,7 @@ namespace IssueTracker.Controllers
         [Route("{projectId}/Jobs")]
         public async Task<IActionResult> GetJobsOfProject(int projectId)
         {
-            var jobsQuery = await _mediator.Send(new GetListOfProjectJobsQuery(projectId));
+            var jobsQuery = await _mediator.Send(new GetListOfProjectJobsQuery(projectId, Status.New));
             return Ok(jobsQuery);
         }
         [HttpPost]
@@ -61,12 +62,21 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPost]
-        [Route("Job/Edit/{jobId}")]
+        [Route("Job/{jobId}/Edit")]
         public async Task<IActionResult> EditJob(EditJobModel model)
         {
             var jobToEditResult = await _mediator.Send(new EditJobCommand(model.JobId, model.Name, model.Description, model.UserId, model.Deadline, model.Priority));
 
             return Ok(jobToEditResult);
+        }
+
+        [HttpPost]
+        [Route("Job/{jobId}/AssignUser")]
+        public IActionResult AssignUser(int jobId, Guid userId)
+        {
+            var assignUserResult = _mediator.Send(new AssignUserCommand(jobId, userId));
+
+            return Ok(assignUserResult);
         }
     }
 }
