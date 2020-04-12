@@ -23,11 +23,13 @@ namespace IssueTracker.Queries
     }
     public class GetListOfProjectJobsQuery : IRequest<ICollection<ProjectJobDto>>
     {
-        public GetListOfProjectJobsQuery(int projectId)
+        public GetListOfProjectJobsQuery(int projectId, Status status)
         {
             ProjectId = projectId;
+            Status = status;
         }
         public int ProjectId { get; set; }
+        public Status Status { get; set; }
     }
     public class GetListOfProjectJobsQueryHandler : IRequestHandler<GetListOfProjectJobsQuery, ICollection<ProjectJobDto>>
     {
@@ -39,7 +41,9 @@ namespace IssueTracker.Queries
 
         public Task<ICollection<ProjectJobDto>> Handle(GetListOfProjectJobsQuery request, CancellationToken cancellationToken)
         {
-            var jobs = (_queryDbContext.Jobs.Where(j => j.ProjectId == request.ProjectId)
+            if (request.Status == Status.None)
+            {
+                var jobs = (_queryDbContext.Jobs.Where(j => j.ProjectId == request.ProjectId)
                 .Select(j => new ProjectJobDto()
                 {
                     JobId = j.Id,
@@ -48,7 +52,21 @@ namespace IssueTracker.Queries
                     AssignedUserId = j.AssignedUserId,
                     Deadline = j.Deadline
                 })).ToList() as ICollection<ProjectJobDto>;
-            return Task.FromResult(jobs);
+                return Task.FromResult(jobs);
+            }
+            else
+            {
+                var jobs = (_queryDbContext.Jobs.Where(j => j.ProjectId == request.ProjectId && j.Status == request.Status)
+                .Select(j => new ProjectJobDto()
+                {
+                    JobId = j.Id,
+                    Name = j.Name,
+                    Status = j.Status,
+                    AssignedUserId = j.AssignedUserId,
+                    Deadline = j.Deadline
+                })).ToList() as ICollection<ProjectJobDto>;
+                return Task.FromResult(jobs);
+            }
         }
     }
 
