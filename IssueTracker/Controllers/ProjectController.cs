@@ -1,15 +1,16 @@
 ﻿using CSharpFunctionalExtensions;
 using IssueTracker.Commands;
+using IssueTracker.Domain.Language;
 using IssueTracker.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace IssueTracker.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     public class ProjectController : ControllerBase
     {
@@ -20,15 +21,19 @@ namespace IssueTracker.Controllers
             _mediator = mediator;
         }
 
-        [Route("Project/GetProjects")]
+        [Authorize(Policy = "IsAdmin")]
+        [Route("Projects")]
         [HttpGet]
         public async Task<IActionResult> GetProjects()
         {
-            var projectsQuery = await _mediator.Send(new GetListOfProjectsQuery());
-            return Ok(projectsQuery);
+            return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
+            //var newJob = await _mediator.Send(new CreateJobCommand(3, "new task"));
+            //return Ok(newJob);
+            //var projectsQuery = await _mediator.Send(new GetListOfProjectsQuery());
+            //return Ok(projectsQuery);
         }
 
-        [Route("Project/AddProject")]
+        [Route("Projects/AddProject")]
         [HttpPost]
         public async Task<IActionResult> AddProject(string projectName)
         {

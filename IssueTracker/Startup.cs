@@ -52,7 +52,11 @@ namespace IssueTracker
 
                     options.Audience = "IssueTrackerApi";
                 });
-
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsAdmin", p =>
+                    p.RequireRole("admin"));
+            });
             services.AddCors(options =>
             {
                 options.AddPolicy("default", policy =>
