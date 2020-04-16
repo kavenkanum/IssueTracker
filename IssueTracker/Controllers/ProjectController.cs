@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using IssueTracker.Commands;
 using IssueTracker.Domain.Language;
+using IssueTracker.Policies;
 using IssueTracker.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -15,22 +16,42 @@ namespace IssueTracker.Controllers
     public class ProjectController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IAuthorizationService _authorization;
 
-        public ProjectController(IMediator mediator)
+        public ProjectController(IMediator mediator, IAuthorizationService authorization)
         {
             _mediator = mediator;
+            _authorization = authorization;
         }
 
-        [Authorize(Policy = "IsAdmin")]
+        //[Authorize(Policy = "IsAdmin")]
         [Route("Projects")]
         [HttpGet]
         public async Task<IActionResult> GetProjects()
         {
-            return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
+            var projectsResult = await _mediator.Send(new GetListOfProjectsQuery());
+            return Ok(projectsResult);
+
+            //var req = new DeleteJobRequirement
+            //{
+            //    JobId = 1
+            //};
+
+            //var allowed = await _authorization.AuthorizeAsync(User, "IsAdmin");
+            //var allowed = await _authorization.AuthorizeAsync(User, null, req);
+
+            //if (allowed.Succeeded)
+            //{
+            //    return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
+            //}
+            //else
+            //{
+            //    return Challenge();
+            //}
+
             //var newJob = await _mediator.Send(new CreateJobCommand(3, "new task"));
             //return Ok(newJob);
-            //var projectsQuery = await _mediator.Send(new GetListOfProjectsQuery());
-            //return Ok(projectsQuery);
+
         }
 
         [Route("Projects/AddProject")]

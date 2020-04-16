@@ -22,7 +22,7 @@ namespace IdentityServer
                     new Claim(JwtClaimTypes.Email, "AliceSmith@email.com"),
                     new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
                     new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
-                    new Claim(JwtClaimTypes.Role, "superuser"),
+                    new Claim(JwtClaimTypes.Role, "admin"),
                     new Claim(JwtClaimTypes.Role, "user"),
                     new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json)
                 }
@@ -37,6 +37,20 @@ namespace IdentityServer
                     new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
                     new Claim(JwtClaimTypes.WebSite, "http://bob.com"),
                     new Claim(JwtClaimTypes.Role, "admin"),
+                    new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json),
+                    new Claim("location", "somewhere")
+                }
+            },
+            new TestUser{SubjectId = "DB96EF56-E6CB-4678-B097-2FBFC29520DF", Username = "test", Password = "test",
+                Claims =
+                {
+                    new Claim(JwtClaimTypes.Name, "Test User"),
+                    new Claim(JwtClaimTypes.GivenName, "Test"),
+                    new Claim(JwtClaimTypes.FamilyName, "User"),
+                    new Claim(JwtClaimTypes.Email, "testuser@email.com"),
+                    new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                    new Claim(JwtClaimTypes.WebSite, "http://test.com"),
+                    new Claim(JwtClaimTypes.Role, "user"),
                     new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json),
                     new Claim("location", "somewhere")
                 }
