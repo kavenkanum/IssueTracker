@@ -17,6 +17,7 @@ namespace IssueTracker.Domain.Entities
             Name = name;
             DateOfCreate = dateOfCreate;
             Status = status;
+            JobDeleted = false;
             Comments = new List<Comment>();
         }
         public Job()
@@ -51,6 +52,8 @@ namespace IssueTracker.Domain.Entities
         public Priority Priority { get; private set; }
         public List<Comment> Comments { get; set; }
         public int StartsAfterJobId { get; set; }
+        public bool JobDeleted { get; set; }
+        public Guid CreatorId { get; set; }
 
         public static Result<Job> Create(string name, DateTime dateOfCreate)
         {
@@ -138,6 +141,14 @@ namespace IssueTracker.Domain.Entities
 
             Priority = newPriority;
             _machine.Fire(Trigger.ChangePriority);
+            return Result.Ok();
+        }
+
+        public Result Delete(CurrentUser user)
+        {
+            if (!user.HasPermission(Permission.DeleteJob))
+                return Result.Fail("No authorization to delete job");
+            JobDeleted = true;
             return Result.Ok();
         }
 
