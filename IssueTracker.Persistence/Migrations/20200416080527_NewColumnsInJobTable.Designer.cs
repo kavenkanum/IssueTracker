@@ -4,14 +4,16 @@ using IssueTracker.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IssueTracker.Migrations
 {
     [DbContext(typeof(IssueTrackerDbContext))]
-    partial class IssueTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200416080527_NewColumnsInJobTable")]
+    partial class NewColumnsInJobTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
