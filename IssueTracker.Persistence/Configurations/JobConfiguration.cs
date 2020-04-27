@@ -16,10 +16,6 @@ namespace IssueTracker.Persistence.Configurations
                     .Property(d => d.DeadlineDate)
                     .HasColumnName("Deadline");
             });
-            builder.Property(j => j.AssignedUserId)
-                .HasDefaultValue(Guid.Empty);
         }
-
-        
     }
 }
