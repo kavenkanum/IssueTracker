@@ -7,15 +7,15 @@ namespace IssueTracker.Domain.Language.ValueObjects
 {
     public class UserId
     {
-        private UserId(Guid id)
+        private UserId(long id)
         {
             Id = id;
         }
-        public Guid Id { get;}
+        public long Id { get;}
 
         public static Result<UserId> Create()
         {
-            return Result.Ok(new UserId(Guid.NewGuid()));
+            return Result.Ok(new UserId(default));
         }
     }
 }

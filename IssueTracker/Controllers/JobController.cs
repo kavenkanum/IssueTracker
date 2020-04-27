@@ -70,6 +70,8 @@ namespace IssueTracker.Controllers
             return Ok(jobToEditResult);
         }
 
+        [HttpGet]
+        [Route("Job/{jobId}/GetUsersToAssign")]
         public async Task<IActionResult> GetUsersToAssign()
         {
             var usersToAssignQuery = await _mediator.Send(new GetUsersToJobAssignQuery());
@@ -78,18 +80,18 @@ namespace IssueTracker.Controllers
 
         [HttpPost]
         [Route("Job/{jobId}/AssignUser")]
-        public IActionResult AssignUser(int jobId, Guid userId)
+        public IActionResult AssignUser(int jobId, long userId)
         {
             var assignUserResult = _mediator.Send(new AssignUserCommand(jobId, userId));
 
             return Ok(assignUserResult);
         }
 
-        public async Task<IActionResult> DeleteJob(int jobId)
-        {
-            //authorization to delete method in Job entity
-            var deleteJobResult = await _mediator.Send(new DeleteJobCommand(9));
-            return Ok(deleteJobResult);
-        }
+        //public async Task<IActionResult> DeleteJob(int jobId)
+        //{
+        //    //authorization to delete method in Job entity
+        //    var deleteJobResult = await _mediator.Send(new DeleteJobCommand(9));
+        //    return Ok(deleteJobResult);
+        //}
     }
 }

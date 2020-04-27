@@ -33,7 +33,7 @@ namespace IssueTracker.Domain.Language
             Id = GetId(user);
         }
 
-        public string Id { get; }
+        public long Id { get; }
         public bool HasPermission(Permission permission) => _permissions.Contains(permission);
 
         private IReadOnlyCollection<Permission> AssignPermissions(ClaimsPrincipal user)
@@ -42,9 +42,18 @@ namespace IssueTracker.Domain.Language
             return dictionary.Where(e => roles.Contains(e.Key)).SelectMany(kv => kv.Value).Distinct().ToList();
         }
 
-        private string GetId(ClaimsPrincipal user)
+        private long GetId(ClaimsPrincipal user)
         {
-            return user.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+            var userId = user.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+            var success = Int64.TryParse(userId, out long result);
+            if (success)
+            {
+                return result;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid userId value");
+            }
         }
     }
 }

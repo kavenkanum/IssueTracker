@@ -17,7 +17,7 @@ namespace IssueTracker.Queries
         public int CommentId { get; set; }
         public string Description { get; set; }
         public DateTime DateOfCreate { get; set; }
-        public Guid UserId { get; set; }
+        public long UserId { get; set; }
     }
     public class GetListOfJobCommentsQuery : IRequest<Result<ICollection<CommentDto>>>
     {

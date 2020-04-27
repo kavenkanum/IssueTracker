@@ -11,13 +11,13 @@ namespace IssueTracker.Commands
 {
     public class AssignUserCommand : IRequest<Result>
     {
-        public AssignUserCommand(int jobId, Guid userId)
+        public AssignUserCommand(int jobId, long userId)
         {
             JobId = jobId;
             UserId = userId;
         }
         public int JobId { get; set; }
-        public Guid UserId { get; set; }
+        public long UserId { get; set; }
     }
 
     public class AssignUserCommandHandler : IRequestHandler<AssignUserCommand, Result>

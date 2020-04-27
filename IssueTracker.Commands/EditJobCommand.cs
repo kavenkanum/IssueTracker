@@ -14,7 +14,7 @@ namespace IssueTracker.Commands
 {
     public class EditJobCommand : IRequest<Result>
     {
-        public EditJobCommand(int jobId, string name, string description, Guid assignedUserId, DateTime deadline, Priority priority)
+        public EditJobCommand(int jobId, string name, string description, long assignedUserId, DateTime deadline, Priority priority)
         {
             JobId = jobId;
             Name = name;
@@ -26,7 +26,7 @@ namespace IssueTracker.Commands
         public int JobId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public Guid AssignedUserId { get; set; }
+        public long AssignedUserId { get; set; }
         public DateTime Deadline { get; set; }
         public Priority Priority { get; set; }
     }

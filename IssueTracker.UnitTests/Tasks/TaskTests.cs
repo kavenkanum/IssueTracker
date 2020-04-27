@@ -124,7 +124,7 @@ namespace IssueTracker.UnitTests.Projects
             var name = "New name";
             var description = "some description of the task";
             var deadline = Deadline.Create(DateTime.Now.AddDays(10), currentDate);
-            Guid userId = default;
+            long userId = default;
             Priority priority = default;
             var result = job.Value.EditProperties(name, description, deadline.Value, userId, priority);
 

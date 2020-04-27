@@ -10,6 +10,6 @@ namespace IssueTracker.Domain.Repositories
     public interface IUserRepository
     {
         Result Delete(User user);
-        Task<Maybe<User>> GetAsync(Guid userId);
+        Task<Maybe<User>> GetAsync(long userId);
     }
 }

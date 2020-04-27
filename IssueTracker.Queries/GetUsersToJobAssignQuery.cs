@@ -12,12 +12,12 @@ namespace IssueTracker.Queries
 {
     public class UserToJobAssignDto
     {
-        public UserToJobAssignDto(Guid userId, string fullName)
+        public UserToJobAssignDto(long userId, string fullName)
         {
             UserId = userId;
             FullName = fullName;
         }
-        public Guid UserId { get; set; }
+        public long UserId { get; set; }
         public string FullName { get; set; }
     }
     public class GetUsersToJobAssignQuery : IRequest<ICollection<UserToJobAssignDto>>
@@ -41,7 +41,7 @@ namespace IssueTracker.Queries
                 var users = _queryDbContext.Users.Select(u => new UserToJobAssignDto(u.Id, u.FullName)).ToList() as ICollection<UserToJobAssignDto>;
                 return Task.FromResult(users);
             }
-            return _queryDbContext.Users.Where(u => u.Id == _currentUser.Id).Select(u => new UserToJobAssignDto(u.Id, u.FullName)).ToList() as ICollection<UserToJobAssignDto>;
+            return Task.FromResult(_queryDbContext.Users.Where(u => u.Id == _currentUser.Id).Select(u => new UserToJobAssignDto(u.Id, u.FullName)).ToList() as ICollection<UserToJobAssignDto>);
         }
     }
 }

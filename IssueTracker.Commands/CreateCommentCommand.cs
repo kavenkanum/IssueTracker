@@ -13,14 +13,14 @@ namespace IssueTracker.Commands
 {
     public class CreateCommentCommand : IRequest<Result>
     {
-        public CreateCommentCommand(int jobId, Guid userId, string description)
+        public CreateCommentCommand(int jobId, long userId, string description)
         {
             JobId = jobId;
             UserId = userId;
             Description = description;
         }
         public int JobId { get; set; }
-        public Guid UserId { get; set; }
+        public long UserId { get; set; }
         public string Description { get; set; }
     }
     public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, Result>
