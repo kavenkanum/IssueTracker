@@ -1,9 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
 using IssueTracker.Domain.Entities;
+using IssueTracker.Domain.Language;
 using IssueTracker.Domain.Language.ValueObjects;
 using IssueTracker.Domain.Repositories;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +24,7 @@ namespace IssueTracker.Commands
         }
         public int ProjectId { get; }
         public string Name { get; }
+
     }
 
     public class CreateJobCommandHandler : IRequestHandler<CreateJobCommand, Result>
@@ -43,5 +50,16 @@ namespace IssueTracker.Commands
                 .OnSuccess(() => projectResult.Value.AddJob(jobResult.Value))
                 .OnSuccess(() => _jobRepository.SaveAsync(jobResult.Value));
         }
-    }
+
+            //aggregateRepository.Get(7)
+            //    .OnSuccess(aggregate => aggregate.Delete(User));
+
+
+            //Delete(CurrentUser user){
+            //    if (user.HasPermission("DeleteJob") || Creator = user)
+            //        AggregateDeleted = true;
+
+            //    else
+            //        "Not authorized";
+        }
 }

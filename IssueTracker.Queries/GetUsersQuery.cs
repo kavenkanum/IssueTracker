@@ -11,12 +11,12 @@ namespace IssueTracker.Queries
 {
     public class UserDto
     {
-        public UserDto(Guid userId, string fullName)
+        public UserDto(long userId, string fullName)
         {
             UserId = userId;
             FullName = fullName;
         }
-        public Guid UserId { get; set; }
+        public long UserId { get; set; }
         public string FullName { get; set; }
     }
     public class GetUsersQuery : IRequest<ICollection<UserDto>>
@@ -32,7 +32,7 @@ namespace IssueTracker.Queries
         }
         public Task<ICollection<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
         {
-            var users = _queryDbContext.Users.Select(u => new UserDto(u.UserId, u.FullName)).ToList() as ICollection<UserDto>;
+            var users = _queryDbContext.Users.Select(u => new UserDto(u.Id, u.FullName)).ToList() as ICollection<UserDto>;
             return Task.FromResult(users);
         }
     }

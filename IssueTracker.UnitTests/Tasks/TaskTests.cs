@@ -117,6 +117,21 @@ namespace IssueTracker.UnitTests.Projects
         }
 
         [Fact]
+        public void ShouldEditJobWithNullInputProperties()
+        {
+            var currentDate = DateTime.Now;
+            var job = Job.Create("Test Job", currentDate);
+            var name = "New name";
+            var description = "some description of the task";
+            var deadline = Deadline.Create(DateTime.Now.AddDays(10), currentDate);
+            long userId = default;
+            Priority priority = default;
+            var result = job.Value.EditProperties(name, description, deadline.Value, userId, priority);
+
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
         public void ShouldNotSetDeadline()
         {
             var currentDate = DateTime.Now;

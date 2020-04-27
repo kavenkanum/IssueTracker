@@ -4,11 +4,10 @@ using System.Text;
 
 namespace IssueTracker.Domain.Language
 {
-    public enum Status
+    public enum Permission
     {
-        None,
-        New,
-        InProgress,
-        Done
+        DeleteJob,
+        AddJob,
+        AssignUsersToJob
     }
 }

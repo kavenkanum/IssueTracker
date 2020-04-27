@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using IssueTracker.Domain.Entities;
+using IssueTracker.Domain.Language;
 using IssueTracker.Domain.Language.ValueObjects;
 using IssueTracker.Domain.Repositories;
 using IssueTracker.Persistence;
@@ -14,47 +15,46 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.Queries
 {
-    public class JobDto
+    public class JobToEditDto
     {
         public int JobId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public long AssignedUserID { get; set; }
-        public Deadline Deadline { get; set; }
-        public DateTime DateOfCreate { get; set; }
+        public DateTime Deadline { get; set; }
+        public Priority Priority { get; set; }
     }
-    public class GetJobQuery : IRequest<Result<JobDto>>
+    public class GetJobToEditQuery : IRequest<Result<JobToEditDto>>
     {
-        public GetJobQuery(int jobId)
+        public GetJobToEditQuery(int jobId)
         {
             JobId = jobId;
         }
         public int JobId { get; set; }
     }
 
-    public class GetJobQueryHandler : IRequestHandler<GetJobQuery, Result<JobDto>>
+    public class GetJobToEditQueryHandler : IRequestHandler<GetJobToEditQuery, Result<JobToEditDto>>
     {
         private readonly QueryDbContext _queryDbContext;
-        public GetJobQueryHandler(QueryDbContext queryDbContext)
+        public GetJobToEditQueryHandler(QueryDbContext queryDbContext)
         {
             _queryDbContext = queryDbContext;
         }
-        public async Task<Result<JobDto>> Handle(GetJobQuery request, CancellationToken cancellationToken)
+        public async Task<Result<JobToEditDto>> Handle(GetJobToEditQuery request, CancellationToken cancellationToken)
         {
             Maybe<Job> job = await _queryDbContext.Jobs.FirstOrDefaultAsync(j => j.Id == request.JobId);
 
             return job
                 .ToResult($"Unable to find job with id {request.JobId}.")
-                .OnSuccess(job => new JobDto()
+                .OnSuccess(job => new JobToEditDto()
                 {
                     JobId = job.Id,
                     Name = job.Name,
                     Description = job.Description,
                     AssignedUserID = job.AssignedUserId,
-                    Deadline = job.Deadline,
-                    DateOfCreate = job.DateOfCreate
+                    Deadline = job.Deadline.DeadlineDate,
+                    Priority = job.Priority
                 });
-
         }
     }
 }

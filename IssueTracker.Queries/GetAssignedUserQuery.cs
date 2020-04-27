@@ -11,16 +11,16 @@ namespace IssueTracker.Queries
 {
     public class AssignedUserDto
     {
-        public Guid UserId { get; set; }
+        public long UserId { get; set; }
         public string FullName { get; set; }
     }
     public class GetAssignedUserQuery : IRequest<AssignedUserDto>
     {
-        public GetAssignedUserQuery(Guid userId)
+        public GetAssignedUserQuery(long userId)
         {
             UserId = userId;
         }
-        public Guid UserId { get; set; }
+        public long UserId { get; set; }
     }
 
     public class GetAssignedUserQueryHandler : IRequestHandler<GetAssignedUserQuery, AssignedUserDto>
@@ -33,10 +33,10 @@ namespace IssueTracker.Queries
 
         public Task<AssignedUserDto> Handle(GetAssignedUserQuery request, CancellationToken cancellationToken)
         {
-            var assignedUser = _queryDbContext.Users.FirstOrDefault(u => u.UserId == request.UserId);
+            var assignedUser = _queryDbContext.Users.FirstOrDefault(u => u.Id == request.UserId);
             return Task.FromResult(new AssignedUserDto
             {
-                UserId = assignedUser.UserId,
+                UserId = assignedUser.Id,
                 FullName = assignedUser.FullName
             });
         }

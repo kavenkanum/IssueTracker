@@ -17,6 +17,7 @@ namespace IssueTracker.Domain.Entities
             Name = name;
             DateOfCreate = dateOfCreate;
             Status = status;
+            JobDeleted = false;
             Comments = new List<Comment>();
         }
         public Job()
@@ -47,10 +48,12 @@ namespace IssueTracker.Domain.Entities
         public Deadline Deadline { get; private set; }
         public string Description { get; private set; }
         public Status Status { get; private set; }
-        public Guid AssignedUserId { get; private set; }
+        public long AssignedUserId { get; private set; }
         public Priority Priority { get; private set; }
         public List<Comment> Comments { get; set; }
         public int StartsAfterJobId { get; set; }
+        public bool JobDeleted { get; set; }
+        public long CreatorId { get; set; }
 
         public static Result<Job> Create(string name, DateTime dateOfCreate)
         {
@@ -58,11 +61,12 @@ namespace IssueTracker.Domain.Entities
                 .OnSuccess(() => new Job(name, dateOfCreate, Status.New));
         }
 
-        public Result EditProperties(string description, Deadline deadline, Guid assignedUserId, Priority priority)
+        public Result EditProperties(string name, string description, Deadline deadline, long assignedUserId, Priority priority)
         {
             if (!_machine.CanFire(Trigger.EditProperties))
                 return Result.Fail("Unable to edit properties in that state (In progress / Done).");
 
+            Name = name;
             Description = description;
             Deadline = deadline;
             AssignedUserId = assignedUserId;
@@ -121,7 +125,7 @@ namespace IssueTracker.Domain.Entities
             _machine.Fire(Trigger.ChangeDescription);
             return Result.Ok();
         }
-        public Result ChangeAssignedUser(Guid newAssignedUserId)
+        public Result ChangeAssignedUser(long newAssignedUserId)
         {
             if (!_machine.CanFire(Trigger.ChangeAssignedUser))
                 return Result.Fail("Unable to change assigned user in that state (In progress / Done)");
@@ -137,6 +141,14 @@ namespace IssueTracker.Domain.Entities
 
             Priority = newPriority;
             _machine.Fire(Trigger.ChangePriority);
+            return Result.Ok();
+        }
+
+        public Result Delete(CurrentUser user)
+        {
+            if (!user.HasPermission(Permission.DeleteJob))
+                return Result.Fail("No authorization to delete job");
+            JobDeleted = true;
             return Result.Ok();
         }
 

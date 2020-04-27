@@ -18,7 +18,7 @@ namespace IssueTracker.Controllers
             _mediator = mediator;
         }
         [HttpGet]
-        [Route("User/GetUsers")]
+        [Route("Users")]
         public async Task<IActionResult> GetUsers()
         {
             var usersQuery = await _mediator.Send(new GetUsersQuery());
