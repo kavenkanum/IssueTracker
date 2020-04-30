@@ -20,3 +20,11 @@
 .App-link {
   color: #09d3ac;
 }
+
+.main-display {
+  min-height: calc(100vh - 500px);
+}
+
+.top-menu {
+  width: 100vw;
+}
