@@ -7,7 +7,7 @@ import {
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { isUserLogged, getUserFullName } from './../../features/users/selectors';
+import { isUserLogged, getUserFullName} from './../../features/users/selectors';
 
 const menuStyle = {
     border: 'none',
@@ -32,13 +32,8 @@ export const AppHeader: React.FC<AppHeaderProps> = (props: AppHeaderProps) => {
     const isLoggedIn = useSelector(isUserLogged);
     const userFullName = useSelector(getUserFullName);
 
-    return <Visibility
-        onBottomPassed={() => setTopMenuFixed(true)}
-        onBottomVisible={() => setTopMenuFixed(false)}
-        once={false}>
-        <Menu borderless
-            fixed={topMenuFixed ? 'top' : undefined}
-            style={topMenuFixed ? fixedMenuStyle : menuStyle}>
+    return <div className="top-menu">
+        <Menu borderless>
             <Container text>
                 <Menu.Item>
                     <Image size='mini' src={props.logo} as={Link} to="/" />
@@ -62,5 +57,5 @@ export const AppHeader: React.FC<AppHeaderProps> = (props: AppHeaderProps) => {
                 </Menu.Menu>
             </Container>
         </Menu>
-    </Visibility>
+    </div>
 }
