@@ -22,14 +22,14 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
-        [Route("{projectId}/Jobs")]
+        [Route("projects/{projectId}/jobs")]
         public async Task<IActionResult> GetJobsOfProject(int projectId)
         {
             var jobsQuery = await _mediator.Send(new GetListOfProjectJobsQuery(projectId, Status.New));
             return Ok(jobsQuery);
         }
         [HttpPost]
-        [Route("{projectId}/AddJob")]
+        [Route("projects/{projectId}/jobs")]
         public async Task<IActionResult> AddJob(int projectId, string jobName)
         {
             var newJobResult = await _mediator.Send(new CreateJobCommand(projectId, jobName));
