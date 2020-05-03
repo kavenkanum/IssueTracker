@@ -1,6 +1,6 @@
 import { Log, UserManager } from 'oidc-client';
 import { useDispatch } from 'react-redux'
-import { login, logout } from './../features/users/actions';
+import slice from '../features/users/slice';
 
 export const IDENTITY_CONFIG = {
   authority: process.env.REACT_APP_AUTH_URL,
@@ -34,14 +34,16 @@ export class AuthService {
 
     this.userManager.events.addUserLoaded((user: UserLoadedEvent) => {
       console.log("USER LOADED", user);
-      this.dispatch(login(user.profile.given_name, user.profile.family_name,
-        user.access_token, user.id_token));
+      this.dispatch(slice.actions.login(user));
+        // this.dispatch(login(user.profile.given_name, user.profile.family_name, user.profile.role,
+        //   user.access_token, user.id_token));
         localStorage.setItem('accessToken', user.access_token);
     });
 
     this.userManager.events.addUserUnloaded((user) => {
       console.log("USER UNLOADED", user);
-      this.dispatch(logout());
+      this.dispatch(slice.actions.logout());
+      //this.dispatch(logout());
       localStorage.removeItem('accessToken');
     });
 
