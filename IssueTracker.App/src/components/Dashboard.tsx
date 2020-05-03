@@ -2,14 +2,17 @@ import React, {  } from "react";
 import { Grid } from "semantic-ui-react";
 import {ProjectDisplay} from "./ProjectDisplay";
 import {JobDisplay} from "./JobDisplay";
+import { useParams } from "react-router-dom";
 
 const dashboardSegment = {
   padding: "1em 0em"
 };
 
 export const Dashboard: React.FC = () => {
-  const projectId = 1;
-
+  const { project } = useParams();
+  //const projectId = useSelector(getProjectId);
+  const projectId = (project ? parseInt(project) : 0)
+  
   return (
     <Grid divided="vertically" style={dashboardSegment}>
       <Grid.Row columns={2}>

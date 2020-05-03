@@ -13,7 +13,8 @@ import {
   Field,
   FieldProps,
 } from "formik";
-import { addProject, Project } from "./API";
+import { addProject} from "./API";
+import {Project} from "../features/projects/slice";
 
 export const AddProject: React.FC = () => {
   const initialValues: Project = { id: 0, name: "" };

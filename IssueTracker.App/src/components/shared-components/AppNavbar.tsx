@@ -6,15 +6,10 @@ import {
   Visibility,
   MenuItemProps,
 } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import {
-  isUserLogged,
-  getUserFullName,
-  getUserRole,
-} from "./../../features/users/selectors";
-import {getProjects, Project} from "../API";
-
+import { Link, useHistory, useParams } from "react-router-dom";
+import { useSelector, connect, useDispatch } from "react-redux";
+import slice, {loadProjects, Project} from "../../features/projects/slice";
+import { RootState } from "../../store/root-reducer";
 
 const menuStyle = {
   border: "none",
@@ -24,44 +19,44 @@ const menuStyle = {
   width: "90%",
   height: "800px",
   backgroundColor: "white",
-  padding: "1em 0em"
+  padding: "1em 0em",
 };
 
 const fixedMenuStyle = {
   backgroundColor: "#fff",
   border: "1px solid #ddd",
   boxShadow: "0px 3px 5px rgba(0, 0, 0, 0.2)",
-  width: "100%"
+  width: "100%",
 };
 
-interface AppNavbarProps {
-  logo: any;
-}
+export const AppNavbar: React.FC = (props) => {
+  const { project } = useParams();
+  const projectId = (project ? parseInt(project) : 0);
+  const history = useHistory();
+  const projects = useSelector((state: RootState) => state.project.projectList);
+  const dispatch = useDispatch();
 
-export const AppNavbar: React.FC<AppNavbarProps> = (props: AppNavbarProps) => {
-  const [activeItem, setActiveItem] = useState<any>(1);
-  const [projects, setProjects] = useState<Array<Project>>([])
-  const isLoggedIn = useSelector(isUserLogged);
-  
-  useEffect( () => {
-    getProjects().then(res => setProjects(res));
+  useEffect(() => {
+    dispatch(loadProjects());
   }, []);
 
-  const handleItemClick = (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    { index }: MenuItemProps
-  ) => setActiveItem(index);
+  const handleItemClick = (el: Project) => {
+    dispatch(slice.actions.selectProject(el.id));
+    history.push(`/dashboard/${el.id}`);
+  };
 
   return (
     <Container style={menuStyle}>
       <Menu pointing vertical style={fixedMenuStyle}>
-        {projects.map(p => <Menu.Item
-          key={p.id}
-          name={p.name}
-          index={p.id}
-          active={activeItem === p.id}
-          onClick={handleItemClick}
-        />)}
+        {projects ? projects.map((p) => (
+          <Menu.Item
+            key={p.id}
+            name={p.name}
+            index={p.id}
+            active={projectId === p.id}
+            onClick={() => handleItemClick(p)}
+          />
+        )) : null}
       </Menu>
     </Container>
   );

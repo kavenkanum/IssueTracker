@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
+import {Project} from "../features/projects/slice";
 
 enum Status {
   None,
   New,
   InProgress,
   Done,
-}
-
-export interface Project {
-  id: number;
-  name: string;
 }
 
 export interface Job {
