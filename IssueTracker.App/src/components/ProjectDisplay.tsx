@@ -20,7 +20,7 @@ export const ProjectDisplay = (props: any) => {
 
 useEffect(() => {
   getJobs(props.projectId).then(resp => setJobs(resp));
-}, []);
+}, [props.projectId]);
 
   return (
     <Container style={segmentDisplay}>
