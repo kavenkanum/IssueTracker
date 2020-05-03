@@ -9,7 +9,7 @@ import {
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { isUserLogged } from "../features/users/selectors";
+import { isUserLogged } from "../features/users/slice";
 
 export const Home: React.FC = () => {
   const isLoggedIn = useSelector(isUserLogged);

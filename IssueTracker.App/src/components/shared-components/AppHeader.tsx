@@ -7,7 +7,7 @@ import {
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { isUserLogged, getUserFullName} from './../../features/users/selectors';
+import { isUserLogged, getUserFullName} from './../../features/users/slice';
 
 const menuStyle = {
     border: 'none',
