@@ -8,6 +8,12 @@ enum Status {
   Done,
 }
 
+export interface NewJob {
+  id: number;
+  name: string;
+  projectId: number;
+}
+
 export interface Job {
   id: number;
   name: string;
@@ -46,5 +52,18 @@ export const getJobs = (projectId: number): Promise<Job[]> => {
     headers: {
       Authorization: "Bearer " + token,
     },
+  }).then((response) => response.json());
+};
+
+export const addJob = (projectId: number, jobName: string): Promise<number> => {
+  const token = localStorage.getItem("accessToken");
+
+  return fetch(`https://localhost:5001/projects/${projectId}/jobs`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ projectId ,jobName }),
   }).then((response) => response.json());
 };

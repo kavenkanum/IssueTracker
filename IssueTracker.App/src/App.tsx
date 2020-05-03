@@ -17,6 +17,7 @@ import { ForgotPassword } from "./components/ForgotPassword";
 import { AddProject } from "./components/AddProject";
 import { NotFound } from "./components/NotFound";
 import { Dashboard } from "./components/Dashboard";
+import { AddJob } from "./components/AddJob";
 import { Provider } from "react-redux";
 import store, { persistor } from "./store/index";
 import { AuthProvider } from "./providers/AuthProvider";
@@ -63,6 +64,7 @@ export const App: React.FC = () => {
                       <Route path="/project/add" exact component={AddProject} />
                       <Route path="/dashboard" exact component={Dashboard} />
                       <Route path="/dashboard/:project" exact component={Dashboard} />
+                      <Route path="/job/addJob" exact component={AddJob} />
                       <Route component={NotFound} />
                     </Switch>
                   </Grid.Column>

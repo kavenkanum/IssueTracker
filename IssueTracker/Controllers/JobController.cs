@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 using IssueTracker.Models;
 using CSharpFunctionalExtensions;
 using IssueTracker.Domain.Language;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IssueTracker.Controllers
 {
+   
     [ApiController]
     public class JobController : ControllerBase
     {
@@ -30,9 +32,9 @@ namespace IssueTracker.Controllers
         }
         [HttpPost]
         [Route("projects/{projectId}/jobs")]
-        public async Task<IActionResult> AddJob(int projectId, string jobName)
+        public async Task<IActionResult> AddJob([FromBody] AddJobModel newJob)
         {
-            var newJobResult = await _mediator.Send(new CreateJobCommand(projectId, jobName));
+            var newJobResult = await _mediator.Send(new CreateJobCommand(newJob.ProjectId, newJob.JobName));
             return Ok(newJobResult);
         }
 
@@ -93,5 +95,11 @@ namespace IssueTracker.Controllers
         //    var deleteJobResult = await _mediator.Send(new DeleteJobCommand(9));
         //    return Ok(deleteJobResult);
         //}
+    }
+
+    public class AddJobModel
+    {
+        public int ProjectId { get; set; }
+        public string JobName { get; set; }
     }
 }

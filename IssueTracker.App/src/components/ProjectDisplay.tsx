@@ -1,7 +1,8 @@
 import React, { useState, Props, useEffect } from "react";
-import { Container, Header, Menu, MenuItemProps, Label } from "semantic-ui-react";
+import { Container, Header, Menu, MenuItemProps, Label, Button } from "semantic-ui-react";
 import {Job, getJobs} from "./API";
 import HeaderSubHeader from "semantic-ui-react/dist/commonjs/elements/Header/HeaderSubheader";
+import { Link } from "react-router-dom";
 
 const segmentDisplay = {
   backgroundColor: "white",
@@ -24,6 +25,7 @@ useEffect(() => {
 
   return (
     <Container style={segmentDisplay}>
+      <Button primary as={Link} to="/job/addJob">Add task</Button>
       <Header>Project Name will be here</Header>
       <HeaderSubHeader>Jobs' list</HeaderSubHeader>
       <Menu vertical>
