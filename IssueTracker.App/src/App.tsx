@@ -33,7 +33,7 @@ export const App: React.FC = () => {
               <Grid>
                 <Grid.Row>
                   <Grid.Column floated="left" width={4}>
-                    <AppNavbar logo={logo}></AppNavbar>
+                    <AppNavbar></AppNavbar>
                   </Grid.Column>
                   <Grid.Column width={12}>
                     <Switch>
@@ -62,6 +62,7 @@ export const App: React.FC = () => {
                       />
                       <Route path="/project/add" exact component={AddProject} />
                       <Route path="/dashboard" exact component={Dashboard} />
+                      <Route path="/dashboard/:project" exact component={Dashboard} />
                       <Route component={NotFound} />
                     </Switch>
                   </Grid.Column>
