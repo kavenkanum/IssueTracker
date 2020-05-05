@@ -35,15 +35,15 @@ namespace IssueTracker.Controllers
         public async Task<IActionResult> AddJob([FromBody] AddJobModel newJob)
         {
             var newJobResult = await _mediator.Send(new CreateJobCommand(newJob.ProjectId, newJob.JobName));
-            return Ok(newJobResult);
+            return newJobResult.IsSuccess ? Ok(newJobResult.Value) : BadRequest(newJobResult.Error) as IActionResult;
         }
 
         [HttpGet]
-        [Route("Job/{jobId}")]
+        [Route("jobs/{jobId}")]
         public async Task<IActionResult> GetJob(int jobId)
         {
             var jobQuery = await _mediator.Send(new GetJobQuery(jobId));
-            return Ok(jobQuery);
+            return Ok(jobQuery.Value);
         }
 
         [HttpGet]
