@@ -3,6 +3,8 @@ import { Container, Header, Menu, MenuItemProps, Label, Button } from "semantic-
 import {Job, getJobs} from "./API";
 import HeaderSubHeader from "semantic-ui-react/dist/commonjs/elements/Header/HeaderSubheader";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import slice, { loadJobDetails } from "../features/jobs/slice";
 
 const segmentDisplay = {
   backgroundColor: "white",
@@ -14,10 +16,12 @@ const segmentDisplay = {
 export const ProjectDisplay = (props: any) => {
   const [activeItem, setActiveItem] = useState<any>(0);
   const [jobs, setJobs] = useState<Array<Job>>([]);
-  const handleItemClick = (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    { index }: MenuItemProps
-  ) => setActiveItem(index);
+  const dispatch = useDispatch();
+  const handleItemClick = (jobId: number) => {
+    setActiveItem(jobId);
+    dispatch(slice.actions.selectJob(jobId));
+    dispatch(loadJobDetails(jobId));
+  }
 
 useEffect(() => {
   getJobs(props.projectId).then(resp => setJobs(resp));
@@ -31,9 +35,9 @@ useEffect(() => {
       <Menu vertical>
       {jobs?.map(j => <Menu.Item
           name={j.name}
-          index={j.id}
-          active={activeItem === j.id}
-          onClick={handleItemClick}
+          index={j.jobId}
+          active={activeItem === j.jobId}
+          onClick={() => handleItemClick(j.jobId)}
         ><Label>{j.status}</Label>{j.name}</Menu.Item>
         )}
       </Menu>
