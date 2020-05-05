@@ -9,6 +9,7 @@ import { Formik, Form, Field } from "formik";
 import { NewJob, addJob } from "./API";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/root-reducer";
+import { Link, Redirect, useHistory } from "react-router-dom";
 
 
 export const AddJob: React.FC = () => {
@@ -17,6 +18,8 @@ export const AddJob: React.FC = () => {
   );
   const initialValues = { id: 0, name: "", projectId: 0 };
   const [newJobId, setNewJobId] = useState<number>(0);
+  const [isSubmitted, setSubmit] = useState(false);
+  const history = useHistory();
 
   return (
     <Container>
@@ -25,8 +28,9 @@ export const AddJob: React.FC = () => {
         initialValues={initialValues}
         onSubmit={(value) => {
           addJob(currentProjectId, value.name).then((resp) =>
-          setNewJobId(resp)
-          );
+          setNewJobId(resp));
+          setSubmit(true);
+          history.push(`/dashboard/${currentProjectId}`);
         }}
         render={(formikBag) => (
           <Form>
@@ -41,7 +45,7 @@ export const AddJob: React.FC = () => {
                   </SemanticForm.Field>
                 )}
               />
-              <Button>Save</Button>
+              <Button disabled={isSubmitted}>Save</Button>
             </SemanticForm>
           </Form>
         )}
