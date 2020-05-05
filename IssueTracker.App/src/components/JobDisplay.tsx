@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Header, Menu, MenuItemProps } from "semantic-ui-react";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/root-reducer";
+import { JobComments } from "./JobComments";
 
 const segmentDisplay = {
     backgroundColor: "white",
@@ -9,16 +12,15 @@ const segmentDisplay = {
   };
   
 export const JobDisplay = (props: any) => {
-  const [activeItem, setActiveItem] = useState<any>(0);
-  const handleItemClick = (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    { index }: MenuItemProps
-  ) => setActiveItem(index);
+  const currentJobDetails = useSelector((state: RootState) => state.job.jobDetails);
+  const currentJobId = useSelector((state: RootState) => state.job.selectedJobId);
 
-  return (
-    <Container style={segmentDisplay}>
-      <Header>Job Name will be here</Header>
-        <p>Description of the job</p>
-    </Container>
+  return (currentJobId !== 0 ? 
+    (<Container style={segmentDisplay}>
+      <Header>{currentJobDetails?.name}</Header>
+  <p>{currentJobDetails?.descritpion}</p>
+  <p>Comments:</p>
+  <JobComments/>
+    </Container>) : <Container style={segmentDisplay}></Container>
   );
 };

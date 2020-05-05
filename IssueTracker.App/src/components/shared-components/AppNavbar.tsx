@@ -10,6 +10,7 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { useSelector, connect, useDispatch } from "react-redux";
 import slice, {loadProjects, Project} from "../../features/projects/slice";
 import { RootState } from "../../store/root-reducer";
+import jobSlice from "../../features/jobs/slice";
 
 const menuStyle = {
   border: "none",
@@ -42,6 +43,7 @@ export const AppNavbar: React.FC = (props) => {
 
   const handleItemClick = (el: Project) => {
     dispatch(slice.actions.selectProject(el.id));
+    dispatch(jobSlice.actions.removeSelectedJob());
     history.push(`/dashboard/${el.id}`);
   };
 
