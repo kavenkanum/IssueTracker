@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
-import {Project} from "../features/projects/slice";
+import { Project } from "../features/projects/slice";
 
 enum Status {
   None,
   New,
   InProgress,
   Done,
+}
+
+export interface JobComment {
+  description: string;
+  userId: number;
+  dateOfCreate: Date;
 }
 
 export interface NewJob {
@@ -15,8 +21,9 @@ export interface NewJob {
 }
 
 export interface Job {
-  id: number;
+  jobId: number;
   name: string;
+  descritpion: string;
   assignedUserId: number;
   status: Status;
   deadline: Date;
@@ -55,6 +62,16 @@ export const getJobs = (projectId: number): Promise<Job[]> => {
   }).then((response) => response.json());
 };
 
+export const getJob = (jobId: number): Promise<Job> => {
+  const token = localStorage.getItem("accessToken");
+
+  return fetch(`https://localhost:5001/jobs/${jobId}`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  }).then((response) => response.json());
+};
+
 export const addJob = (projectId: number, jobName: string): Promise<number> => {
   const token = localStorage.getItem("accessToken");
 
@@ -64,6 +81,32 @@ export const addJob = (projectId: number, jobName: string): Promise<number> => {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ projectId ,jobName }),
+    body: JSON.stringify({ projectId, jobName }),
+  }).then((response) => response.json());
+};
+
+export const getComments = (jobId: number): Promise<JobComment[]> => {
+  const token = localStorage.getItem("accessToken");
+
+  return fetch(`https://localhost:5001/jobs/${jobId}/comments`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  }).then((response) => response.json());
+};
+
+export const addComment = (
+  jobId?: number,
+  description?: string
+): Promise<number> => {
+  const token = localStorage.getItem("accessToken");
+
+  return fetch(`https://localhost:5001/jobs/${jobId}/comments`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ jobId, description }),
   }).then((response) => response.json());
 };
