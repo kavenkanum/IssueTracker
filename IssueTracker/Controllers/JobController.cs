@@ -47,7 +47,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
-        [Route("Job/Edit/{jobId}")]
+        [Route("jobs/{jobId}/edit")]
         public async Task<IActionResult> EditJob(int jobId)
         {
             var result = await _mediator.Send(new GetJobToEditQuery(jobId));
@@ -59,21 +59,21 @@ namespace IssueTracker.Controllers
                 Description = result.Value.Description,
                 Deadline = result.Value.Deadline,
                 Priority = result.Value.Priority,
-                UserId = result.Value.AssignedUserID
+                AssignedUserId = result.Value.AssignedUserID
             }) as IActionResult : NotFound();
         }
 
         [HttpPost]
-        [Route("Job/{jobId}/Edit")]
+        [Route("jobs/{jobId}/edit")]
         public async Task<IActionResult> EditJob(EditJobModel model)
         {
-            var jobToEditResult = await _mediator.Send(new EditJobCommand(model.JobId, model.Name, model.Description, model.UserId, model.Deadline, model.Priority));
+            var jobToEditResult = await _mediator.Send(new EditJobCommand(model.JobId, model.Name, model.Description, model.AssignedUserId, model.Deadline, model.Priority));
 
             return Ok(jobToEditResult);
         }
 
         [HttpGet]
-        [Route("Job/{jobId}/GetUsersToAssign")]
+        [Route("jobs/{jobId}/edit/getUsers")]
         public async Task<IActionResult> GetUsersToAssign()
         {
             var usersToAssignQuery = await _mediator.Send(new GetUsersToJobAssignQuery());
