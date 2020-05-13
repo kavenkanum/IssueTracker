@@ -61,14 +61,14 @@ namespace IssueTracker.Domain.Entities
                 .OnSuccess(() => new Job(name, dateOfCreate, Status.New));
         }
 
-        public Result EditProperties(string name, string description, Deadline deadline, long assignedUserId, Priority priority)
+        public Result EditProperties(string name, string description, Maybe<Deadline> deadline, long assignedUserId, Priority priority)
         {
             if (!_machine.CanFire(Trigger.EditProperties))
                 return Result.Fail("Unable to edit properties in that state (In progress / Done).");
 
             Name = name;
             Description = description;
-            Deadline = deadline;
+            Deadline = deadline.HasValue ? deadline.Value : null;
             AssignedUserId = assignedUserId;
             Priority = priority;
 

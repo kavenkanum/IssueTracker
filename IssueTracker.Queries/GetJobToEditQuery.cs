@@ -21,7 +21,7 @@ namespace IssueTracker.Queries
         public string Name { get; set; }
         public string Description { get; set; }
         public long AssignedUserID { get; set; }
-        public DateTime Deadline { get; set; }
+        public DateTime? Deadline { get; set; }
         public Priority Priority { get; set; }
     }
     public class GetJobToEditQuery : IRequest<Result<JobToEditDto>>
@@ -52,7 +52,7 @@ namespace IssueTracker.Queries
                     Name = job.Name,
                     Description = job.Description,
                     AssignedUserID = job.AssignedUserId,
-                    Deadline = job.Deadline.DeadlineDate,
+                    Deadline = job.Deadline?.DeadlineDate,
                     Priority = job.Priority
                 });
         }
