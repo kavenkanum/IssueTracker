@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Container, Header, Menu, MenuItemProps } from "semantic-ui-react";
+import { Container, Header, Button, MenuItemProps } from "semantic-ui-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/root-reducer";
 import { JobComments } from "./JobComments";
+import { Link } from "react-router-dom";
 
 const segmentDisplay = {
     backgroundColor: "white",
@@ -18,6 +19,7 @@ export const JobDisplay = (props: any) => {
   return (currentJobId !== 0 ? 
     (<Container style={segmentDisplay}>
       <Header>{currentJobDetails?.name}</Header>
+      <Button primary as={Link} to="/job/editJob">Edit task</Button>
   <p>{currentJobDetails?.descritpion}</p>
   <p>Comments:</p>
   <JobComments/>

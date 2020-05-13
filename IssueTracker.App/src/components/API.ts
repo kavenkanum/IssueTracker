@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Project } from "../features/projects/slice";
 
-enum Status {
+export enum Status {
   None,
   New,
   InProgress,
@@ -10,7 +10,7 @@ enum Status {
 
 export interface JobComment {
   description: string;
-  userId: number;
+  userFullName: string;
   dateOfCreate: Date;
 }
 
@@ -18,6 +18,14 @@ export interface NewJob {
   id: number;
   name: string;
   projectId: number;
+}
+
+export interface EditedJob {
+  jobId: number;
+  name: string;
+  description: string;
+  assignedUserId: number;
+  deadline: Date;
 }
 
 export interface Job {
@@ -72,6 +80,43 @@ export const getJob = (jobId: number): Promise<Job> => {
   }).then((response) => response.json());
 };
 
+export const getEditJob = (jobId: number): Promise<EditedJob> => {
+  const token = localStorage.getItem("accessToken");
+
+  return fetch(`https://localhost:5001/jobs/${jobId}/edit`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  }).then((response) => response.json());
+}
+
+// export const editJob = (editedJob: EditedJob): Promise<void> => {
+//   const token = localStorage.getItem("accessToken");
+
+//   return fetch(`https://localhost:5001/jobs/${editedJob.jobId}/edit`, {
+//     method: "POST",
+//     headers: {
+//       Authorization: "Bearer " + token,
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ editedJob  }),
+//   }).then((response) => response.json());
+// }
+
+export const editJob = (jobId: number, name: string, description: string, assignedUserId: number, deadline: string): Promise<void> => {
+  const token = localStorage.getItem("accessToken");
+
+  return fetch(`https://localhost:5001/jobs/${jobId}/edit`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ jobId, name, description, assignedUserId, deadline }),
+  }).then((response) => response.json());
+}
+
+
 export const addJob = (projectId: number, jobName: string): Promise<number> => {
   const token = localStorage.getItem("accessToken");
 
@@ -110,3 +155,18 @@ export const addComment = (
     body: JSON.stringify({ jobId, description }),
   }).then((response) => response.json());
 };
+
+export const getUsers = (jobId: number): Promise<User[]> => {
+  const token = localStorage.getItem("accessToken");
+
+  return fetch(`https://localhost:5001/jobs/${jobId}/edit/getUsers`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  }).then((response) => response.json());
+}
+
+export interface User {
+  userId: number;
+  fullName: string;
+}
