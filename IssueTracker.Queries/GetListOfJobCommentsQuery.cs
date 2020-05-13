@@ -17,8 +17,9 @@ namespace IssueTracker.Queries
         public int CommentId { get; set; }
         public string Description { get; set; }
         public DateTime DateOfCreate { get; set; }
-        public long UserId { get; set; }
+        public string UserFullName { get; set; }
     }
+
     public class GetListOfJobCommentsQuery : IRequest<Result<ICollection<CommentDto>>>
     {
         public GetListOfJobCommentsQuery(int jobId)
@@ -39,12 +40,12 @@ namespace IssueTracker.Queries
         {
             Maybe<Job> job = await _queryDbContext.Jobs.Include(j => j.Comments).FirstOrDefaultAsync(j => j.Id == request.JobId);
             return job.ToResult($"Unable to find job with id {request.JobId}.")
-                .OnSuccess(job => job.Comments.Select(c => new CommentDto
+                .OnSuccess(job => job.Comments.Select(c =>  new CommentDto
                 {
                     CommentId = c.Id,
                     Description = c.Description,
                     DateOfCreate = c.DateOfComment,
-                    UserId = c.UserId
+                    UserFullName = _queryDbContext.Users.FirstOrDefault(u => u.Id == c.UserId).FullName
                 }).ToList() as ICollection<CommentDto>);
         }
     }

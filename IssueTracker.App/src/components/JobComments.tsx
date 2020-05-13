@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Comment, Header, Form, Button, Container } from "semantic-ui-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/root-reducer";
@@ -18,7 +18,7 @@ export const JobComments = () => {
         {commentList.map((c) => (
           <Comment>
             <Comment.Content>
-              <Comment.Author as="a">FUTURE AUTHOR NAME</Comment.Author>
+              <Comment.Author as="a">{c.userFullName}</Comment.Author>
               <Comment.Metadata>
                 <span>{moment(c.dateOfCreate).format("MMMM Do YYYY")}</span>
               </Comment.Metadata>
