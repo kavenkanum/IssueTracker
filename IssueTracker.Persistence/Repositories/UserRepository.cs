@@ -22,7 +22,7 @@ namespace IssueTracker.Persistence.Repositories
             _issueTrackerDbContext.Remove(user);
             return Result.Ok();
         }
-        public async Task<Maybe<User>> GetAsync(Guid userId)
+        public async Task<Maybe<User>> GetAsync(long userId)
         {
             Maybe<User> user = await _issueTrackerDbContext.Users.FindAsync(userId);
             return user;

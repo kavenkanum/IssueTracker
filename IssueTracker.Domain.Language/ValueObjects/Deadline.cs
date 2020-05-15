@@ -13,10 +13,13 @@ namespace IssueTracker.Domain.Language.ValueObjects
         }
         public DateTime DeadlineDate { get; }
 
-        public static Result<Deadline> Create(DateTime deadlineDate, DateTime currentDate)
+        public static Result<Maybe<Deadline>> CreateOptional(DateTime? deadlineDate, DateTime currentDate)
         {
+            if (!deadlineDate.HasValue)
+                return Result.Ok(Maybe<Deadline>.None);
+
             return Result.Create(deadlineDate > currentDate.AddDays(1), "Deadline cannot be earlier than now")
-                .OnSuccess(() => new Deadline(deadlineDate));
+                .OnSuccess(() => Maybe<Deadline>.From(new Deadline(deadlineDate.Value)));
         }
     }
 }

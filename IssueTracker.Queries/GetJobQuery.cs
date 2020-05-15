@@ -19,7 +19,7 @@ namespace IssueTracker.Queries
         public int JobId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public Guid AssignedUserID { get; set; }
+        public long AssignedUserID { get; set; }
         public Deadline Deadline { get; set; }
         public DateTime DateOfCreate { get; set; }
     }

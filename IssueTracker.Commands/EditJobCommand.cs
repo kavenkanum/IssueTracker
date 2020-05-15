@@ -14,20 +14,20 @@ namespace IssueTracker.Commands
 {
     public class EditJobCommand : IRequest<Result>
     {
-        public EditJobCommand(int jobId, string name, string description, Guid assignedUserId, DateTime deadline, Priority priority)
+        public EditJobCommand(int jobId, string name, string description, long assignedUserId, DateTime? deadline, int priority)
         {
             JobId = jobId;
             Name = name;
             Description = description;
             AssignedUserId = assignedUserId;
             Deadline = deadline;
-            Priority = priority;
+            Priority = (Priority)priority;
         }
         public int JobId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public Guid AssignedUserId { get; set; }
-        public DateTime Deadline { get; set; }
+        public long AssignedUserId { get; set; }
+        public DateTime? Deadline { get; set; }
         public Priority Priority { get; set; }
     }
 
@@ -44,12 +44,12 @@ namespace IssueTracker.Commands
         {
             var jobResult = await _jobRepository.GetAsync(request.JobId)
                 .ToResult($"Unable to find job with id: {request.JobId}.");
-            var deadlineResult = Deadline.Create(request.Deadline, _dateTimeProvider.GetCurrentDate());
+
+            var deadlineResult = Deadline.CreateOptional(request.Deadline.Value, _dateTimeProvider.GetCurrentDate());
 
             return await Result.Combine(jobResult, deadlineResult)
                 .OnSuccess(() => jobResult.Value.EditProperties(request.Name, request.Description, deadlineResult.Value, request.AssignedUserId, request.Priority))
                 .OnSuccess(async () => await _jobRepository.SaveAsync(jobResult.Value));
-
         }
     }
 }

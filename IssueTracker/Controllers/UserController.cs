@@ -18,11 +18,19 @@ namespace IssueTracker.Controllers
             _mediator = mediator;
         }
         [HttpGet]
-        [Route("User/GetUsers")]
+        [Route("users")]
         public async Task<IActionResult> GetUsers()
         {
             var usersQuery = await _mediator.Send(new GetUsersQuery());
             return Ok(usersQuery);
+        }
+
+        [HttpGet]
+        [Route("users/{userId}")]
+        public async Task<IActionResult> GetAssignedUser(long userId)
+        {
+            var assignedUserQuery = await _mediator.Send(new GetAssignedUserQuery(userId));
+            return assignedUserQuery.IsSuccess ? Ok(assignedUserQuery) : BadRequest(assignedUserQuery.Error) as IActionResult;
         }
     }
 }

@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200426100215_SwapUserIdToLong.cs" />
+    <Compile Remove="Migrations\20200426100215_SwapUserIdToLong.Designer.cs" />
+    <Compile Remove="Migrations\20200426150108_ChangeUserIdToLong.cs" />
+    <Compile Remove="Migrations\20200426150108_ChangeUserIdToLong.Designer.cs" />
+    <Compile Remove="Migrations\20200426152948_ChangeUserIdToLong.cs" />
+    <Compile Remove="Migrations\20200426152948_ChangeUserIdToLong.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="1.19.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2">

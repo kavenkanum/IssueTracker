@@ -6,6 +6,7 @@ namespace IssueTracker.Domain.Language
 {
     public enum Status
     {
+        None,
         New,
         InProgress,
         Done

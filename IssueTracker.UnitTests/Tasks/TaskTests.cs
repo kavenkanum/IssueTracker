@@ -79,12 +79,12 @@ namespace IssueTracker.UnitTests.Projects
             var currentDate = DateTime.Now;
             var newDeadline = DateTime.Now.AddDays(10);
 
-            var deadline = Deadline.Create(newDeadline, currentDate);
+            var deadline = Deadline.CreateOptional(newDeadline, currentDate);
 
             var job = Job.Create("Test Job", currentDate);
-            var changedDeadline = job.Value.ChangeDeadline(deadline.Value);
+            var changedDeadline = job.Value.ChangeDeadline(deadline.Value.Value);
             changedDeadline.IsSuccess.Should().BeTrue();
-            job.Value.Deadline.Should().Be(deadline.Value);
+            job.Value.Deadline.Should().Be(deadline.Value.Value);
         }
 
         [Fact]
@@ -123,12 +123,28 @@ namespace IssueTracker.UnitTests.Projects
             var job = Job.Create("Test Job", currentDate);
             var name = "New name";
             var description = "some description of the task";
-            var deadline = Deadline.Create(DateTime.Now.AddDays(10), currentDate);
-            Guid userId = default;
+            var deadline = Deadline.CreateOptional(DateTime.Now.AddDays(10), currentDate);
+            long userId = default;
             Priority priority = default;
             var result = job.Value.EditProperties(name, description, deadline.Value, userId, priority);
 
             result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ShouldNotEditJobWithEmptyName()
+        {
+            var currentDate = DateTime.Now;
+            var job = Job.Create("Test Job", currentDate);
+            var name = "";
+            var description = "some description of the task";
+            var deadline = Deadline.CreateOptional(DateTime.Now.AddDays(10), currentDate);
+            long userId = default;
+            Priority priority = default;
+
+            var result = job.Value.EditProperties(name, description, deadline.Value, userId, priority);
+
+            result.IsSuccess.Should().BeFalse();
         }
 
         [Fact]
@@ -137,7 +153,7 @@ namespace IssueTracker.UnitTests.Projects
             var currentDate = DateTime.Now;
             var newDeadline = DateTime.Now.AddDays(-1);
 
-            var deadline = Deadline.Create(newDeadline, currentDate);
+            var deadline = Deadline.CreateOptional(newDeadline, currentDate);
 
             deadline.IsSuccess.Should().BeFalse();
         }
@@ -148,7 +164,7 @@ namespace IssueTracker.UnitTests.Projects
             var currentDate = DateTime.Now;
             var newDeadline = DateTime.Now;
 
-            var deadline = Deadline.Create(newDeadline, currentDate);
+            var deadline = Deadline.CreateOptional(newDeadline, currentDate);
 
             deadline.IsSuccess.Should().BeFalse();
         }
@@ -158,7 +174,7 @@ namespace IssueTracker.UnitTests.Projects
             var currentDate = DateTime.Now;
             var newDeadline = DateTime.Now.AddDays(+1);
 
-            var deadline = Deadline.Create(newDeadline, currentDate);
+            var deadline = Deadline.CreateOptional(newDeadline, currentDate);
 
             deadline.IsSuccess.Should().BeTrue();
         }

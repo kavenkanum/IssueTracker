@@ -14,6 +14,13 @@ using MediatR;
 using IssueTracker.Commands;
 using IssueTracker.Queries;
 using IssueTracker.Domain.Language.ValueObjects;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using IssueTracker.Policies;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using IssueTracker.Domain.Language;
+using System.Security.Principal;
 
 namespace IssueTracker
 {
@@ -32,10 +39,15 @@ namespace IssueTracker
             services.AddDbContext<IssueTrackerDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("IssueTrackerDB")));
 
+            services.AddHttpContextAccessor();
+
             services.AddTransient<IProjectRepository, ProjectRepository>();
             services.AddTransient<IJobRepository, JobRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IDateTimeProvider, DateTimeProvider>();
+            services.AddTransient<ClaimsPrincipal>(s =>
+                s.GetService<IHttpContextAccessor>().HttpContext.User);
+            services.AddScoped<CurrentUser>();
             services.AddTransient<QueryDbContext>();
             services.AddMediatR(typeof(GetListOfProjectsQuery).Assembly);
             services.AddMediatR(typeof(CreateCommentCommand).Assembly);
@@ -50,7 +62,11 @@ namespace IssueTracker
 
                     options.Audience = "IssueTrackerApi";
                 });
-
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsAdmin", p =>
+                    p.RequireRole("admin"));
+            });
             services.AddCors(options =>
             {
                 options.AddPolicy("default", policy =>
@@ -60,14 +76,16 @@ namespace IssueTracker
                     .AllowAnyMethod();
                 });
             });
-            
-            //services.AddRazorPages();
 
-            // In production, the React files will be served from this directory
-            //services.AddSpaStaticFiles(configuration =>
-            //{
-            //    configuration.RootPath = "ClientApp/build";
-            //});
+
+            services.AddMvc(options =>
+            {
+                var authenticatedUserPolicy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
+
+                options.Filters.Add(new AuthorizeFilter(authenticatedUserPolicy));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,8 +104,6 @@ namespace IssueTracker
             }
 
             app.UseHttpsRedirection();
-            //app.UseStaticFiles();
-            //app.UseSpaStaticFiles();
 
             app.UseRouting();
             app.UseCors("default");
@@ -100,16 +116,6 @@ namespace IssueTracker
                     pattern: "{controller}/{action=Index}/{id?}")
                 .RequireAuthorization();
             });
-
-            //app.UseSpa(spa =>
-            //{
-            //    spa.Options.SourcePath = "ClientApp";
-
-            //    if (env.IsDevelopment())
-            //    {
-            //        spa.UseReactDevelopmentServer(npmScript: "start");
-            //    }
-            //});
         }
     }
 }

@@ -27,15 +27,14 @@ namespace IssueTracker.Persistence.Repositories
                 .SingleOrDefaultAsync(p => p.Id == projectId);
         }
 
-        public async Task<Result> SaveAsync(Project project)
+        public async Task<Result<int>> SaveAsync(Project project)
         {
             if (project.Id == default)
             {
                 await _issueTrackerDbContext.Projects.AddAsync(project);
             }
-
             await _issueTrackerDbContext.SaveChangesAsync();
-            return Result.Ok();
+            return Result.Ok(project.Id);
         }
     }
 }
