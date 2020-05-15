@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Container, Header, Button, MenuItemProps } from "semantic-ui-react";
+import React, {  } from "react";
+import { Container, Header, Button } from "semantic-ui-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/root-reducer";
 import { JobComments } from "./JobComments";
@@ -12,7 +12,7 @@ const segmentDisplay = {
     margin: "0em 2em"
   };
   
-export const JobDisplay = (props: any) => {
+export const JobDisplay = () => {
   const currentJobDetails = useSelector((state: RootState) => state.job.jobDetails);
   const currentJobId = useSelector((state: RootState) => state.job.selectedJobId);
 

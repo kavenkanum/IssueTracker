@@ -1,5 +1,5 @@
-import React, { useState, Props, useEffect } from "react";
-import { Container, Header, Menu, MenuItemProps, Label, Button } from "semantic-ui-react";
+import React, { useState, useEffect } from "react";
+import { Container, Header, Menu, Label, Button } from "semantic-ui-react";
 import {Job, getJobs} from "./API";
 import HeaderSubHeader from "semantic-ui-react/dist/commonjs/elements/Header/HeaderSubheader";
 import { Link } from "react-router-dom";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Container,
   Input,
@@ -7,11 +7,8 @@ import {
 } from "semantic-ui-react";
 import {
   Formik,
-  FormikHelpers,
-  FormikProps,
   Form,
   Field,
-  FieldProps,
 } from "formik";
 import { addProject} from "./API";
 import {Project} from "../features/projects/slice";
@@ -19,27 +16,23 @@ import {Project} from "../features/projects/slice";
 export const AddProject: React.FC = () => {
   const initialValues: Project = { id: 0, name: "" };
   const [newProjectId, setNewProjectId] = useState<number>();
-  // const saveNewProject = () => {
-  //   useEffect(() => {
-  //   addProject("SecondTRY").then(resp => setNewProjectId(resp));
-  // }, [])}
 
   return (
     <Container>
       <div style={{ maxWidth: "33%" }}>
-        <h1>My Example</h1>
+        <h1>Add new project</h1>
         <Formik<Project>
           initialValues={initialValues}
           onSubmit={(value) => {
             addProject(value.name).then((resp) => setNewProjectId(resp));
           }}
-          render={(formikBag) => (
+          render={() => (
             <Form>
               <SemanticForm>
                 <Field
                   name="name"
                   required
-                  render={({ field, form, meta }: any) => (
+                  render={({ field, meta }: any) => (
                     <SemanticForm.Field>
                       <Input
                         type="text"

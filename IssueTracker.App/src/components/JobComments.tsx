@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Comment, Header, Form, Button, Container } from "semantic-ui-react";
+import React from "react";
+import { Comment, Header, Container } from "semantic-ui-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/root-reducer";
 import { CommentReplay } from "./CommentReplay";
@@ -7,7 +7,6 @@ import moment from "moment";
 
 export const JobComments = () => {
   const commentList = useSelector((state: RootState) => state.job.commentsList);
-  const jobId = useSelector((state: RootState) => state.job.jobDetails?.jobId);
 
   return (
     <Container style={{ padding: "10px" }}>

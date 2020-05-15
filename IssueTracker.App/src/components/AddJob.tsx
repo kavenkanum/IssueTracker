@@ -9,7 +9,7 @@ import { Formik, Form, Field } from "formik";
 import { NewJob, addJob } from "./API";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/root-reducer";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 
 export const AddJob: React.FC = () => {
@@ -32,13 +32,13 @@ export const AddJob: React.FC = () => {
           setSubmit(true);
           history.push(`/dashboard/${currentProjectId}`);
         }}
-        render={(formikBag) => (
+        render={() => (
           <Form>
             <SemanticForm>
               <Field
                 name="name"
                 required
-                render={({ field, form, meta }: any) => (
+                render={({ field, meta }: any) => (
                   <SemanticForm.Field>
                     <Input type="text" {...field} placeholder="Task name" />
                     {meta.touched && meta.error && meta.error}
