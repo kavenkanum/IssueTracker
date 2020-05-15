@@ -58,7 +58,7 @@ namespace IssueTracker.Controllers
                 Name = result.Value.Name,
                 Description = result.Value.Description,
                 Deadline = result.Value.Deadline,
-                Priority = result.Value.Priority,
+                Priority = (int)result.Value.Priority,
                 AssignedUserId = result.Value.AssignedUserID
             }) as IActionResult : NotFound();
         }

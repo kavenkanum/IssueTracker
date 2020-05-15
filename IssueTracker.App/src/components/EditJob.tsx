@@ -1,8 +1,7 @@
-import React, { useEffect, useState, SyntheticEvent } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Button,
-  Form as SemanticForm,
   Input,
   Dropdown,
   DropdownItemProps,
@@ -12,29 +11,23 @@ import { RootState } from "../store/root-reducer";
 import { Formik, Form, Field } from "formik";
 import {
   EditedJob,
-  Status,
+  Priority,
   getEditJob,
-  addProject,
   editJob,
   getUsers,
   User,
 } from "./API";
 import Calendar from "react-calendar";
-import moment, { utc } from "moment";
+import moment from "moment";
 
 export const EditJob: React.FC = () => {
   const selectedJobId = useSelector(
     (state: RootState) => state.job.selectedJobId
   );
   const [usersToAssign, setUsersToAssign] = useState<User[]>([]);
-  const [users, setUsers] = useState<DropdownItemProps[]>([]);
+  const [] = useState<DropdownItemProps[]>([]);
   const usersDropdown = (users: User[]): DropdownItemProps[] =>
     users.map((u) => ({ key: u.userId, text: u.fullName, value: u.userId }));
-
-  // const usersDropdown = [
-  //   { key: 88421113, text: "Bob Smith", value: "Bob Smith" },
-  //   { key: 818727, text: "Alice Smith", value: "Alice Smith" },
-  // ];
 
   const [editedJobValues, setEditedJobValues] = useState<EditedJob>({
     name: "",
@@ -42,6 +35,7 @@ export const EditJob: React.FC = () => {
     assignedUserId: 0,
     jobId: selectedJobId,
     deadline: new Date(),
+    priority: Priority.None,
   });
   const initialValues: EditedJob = {
     name: editedJobValues.name,
@@ -49,6 +43,7 @@ export const EditJob: React.FC = () => {
     assignedUserId: editedJobValues.assignedUserId,
     jobId: editedJobValues.jobId,
     deadline: editedJobValues.deadline,
+    priority: editedJobValues.priority,
   };
   useEffect(() => {
     getEditJob(selectedJobId).then((resp) => setEditedJobValues(resp));
@@ -61,20 +56,24 @@ export const EditJob: React.FC = () => {
         initialValues={initialValues}
         onSubmit={(value) => {
           let deadline = moment(value.deadline).format();
+          let priority = +value.priority;
+          console.log(typeof(priority));
           editJob(
             value.jobId,
             value.name,
             value.description,
             value.assignedUserId,
-            deadline
+            deadline,
+            priority
           ).then((resp) => resp);
         }}
-        render={(formikBag) => (
+        render={() => (
           <Form>
             <NameInput initialValues={initialValues} />
             <DescriptionInput initialValues={initialValues} />
             <AssignedUserInput usersDropdown={usersDropdown(usersToAssign)} />
             <CalendarInput />
+            <PriorityInput />
             <Button>Save</Button>
           </Form>
         )}
@@ -87,7 +86,7 @@ const DescriptionInput = (props: any) => (
   <Field
     name="description"
     required
-    render={({ field, form, meta }: any) => (
+    render={({ field, meta }: any) => (
       <>
         <Input
           type="text"
@@ -108,7 +107,7 @@ const NameInput = (props: any) => (
   <Field
     name="name"
     required
-    render={({ field, form, meta }: any) => (
+    render={({ field, meta }: any) => (
       <>
         <Input type="text" {...field} placeholder={props.initialValues?.name} />
         {meta.touched && meta.error && meta.error}
@@ -130,7 +129,7 @@ const CalendarInput = () => (
 
 const AssignedUserInput = (props: any) => (
   <Field name="assignedUserId" as="select" placeholder="Assign user">
-    {({ field: { value }, form: { setFieldValue } }: any) => (
+    {({ form: { setFieldValue } }: any) => (
       <Dropdown
         placeholder="Select user"
         fluid
@@ -139,5 +138,14 @@ const AssignedUserInput = (props: any) => (
         onChange={(e, { value }) => setFieldValue("assignedUserId", value)}
       />
     )}
+  </Field>
+);
+
+const PriorityInput = () => (
+  <Field name="priority" as="select" placeholder="Choose Priority">
+        <option value={Priority.None}>{Priority[Priority.None]}</option>
+        <option value={Priority.Low}>{Priority[Priority.Low]}</option>
+        <option value={Priority.Medium}>{Priority[Priority.Medium]}</option>
+        <option value={Priority.High}>{Priority[Priority.High]}</option>
   </Field>
 );

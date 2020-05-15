@@ -14,14 +14,14 @@ namespace IssueTracker.Commands
 {
     public class EditJobCommand : IRequest<Result>
     {
-        public EditJobCommand(int jobId, string name, string description, long assignedUserId, DateTime? deadline, Priority priority)
+        public EditJobCommand(int jobId, string name, string description, long assignedUserId, DateTime? deadline, int priority)
         {
             JobId = jobId;
             Name = name;
             Description = description;
             AssignedUserId = assignedUserId;
             Deadline = deadline;
-            Priority = priority;
+            Priority = (Priority)priority;
         }
         public int JobId { get; set; }
         public string Name { get; set; }
