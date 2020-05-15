@@ -65,6 +65,9 @@ namespace IssueTracker.Domain.Entities
         {
             if (!_machine.CanFire(Trigger.EditProperties))
                 return Result.Fail("Unable to edit properties in that state (In progress / Done).");
+            
+            if (string.IsNullOrEmpty(name))
+                return Result.Fail("Task name cannot be empty.");
 
             Name = name;
             Description = description;
