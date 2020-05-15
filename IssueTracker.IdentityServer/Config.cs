@@ -54,7 +54,8 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "IssueTrackerApi"
-                    }
+                    },
+                    AllowOfflineAccess = true    
                 }
             };
 

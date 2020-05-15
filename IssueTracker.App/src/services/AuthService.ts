@@ -9,12 +9,13 @@ export const IDENTITY_CONFIG = {
   silent_redirect_uri: `${process.env.REACT_APP_URL}silent-renew`,
   post_logout_redirect_uri: `${process.env.REACT_APP_URL}logout/callback`,
   response_type: 'code',
-  scope: 'openid profile IssueTrackerApi'
+  scope: 'openid profile IssueTrackerApi offline_access',
+  automaticSilentRenew: true
 }
 
 interface UserLoadedEvent {
   access_token: string;
-  id_token: string;
+  id_token: string; 
   profile: {
     family_name: string;
     given_name: string;
@@ -25,7 +26,6 @@ interface UserLoadedEvent {
 export class AuthService {
   dispatch = useDispatch();
   public userManager: UserManager;
-  
 
   constructor() {
     this.userManager = new UserManager(IDENTITY_CONFIG);
@@ -55,9 +55,9 @@ export class AuthService {
     this.userManager.events.addAccessTokenExpired(() => {
       console.log("ACCESS TOKEN EXPIRED");
       //TODO: Refresh token
-    })
-  }
+    });
 
+  }
 
   public createSignInRequest = async () => {
     await this.userManager.createSigninRequest();
