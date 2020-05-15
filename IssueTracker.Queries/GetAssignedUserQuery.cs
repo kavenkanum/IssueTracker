@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using CSharpFunctionalExtensions;
+using IssueTracker.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace IssueTracker.Queries
 {
@@ -14,7 +17,7 @@ namespace IssueTracker.Queries
         public long UserId { get; set; }
         public string FullName { get; set; }
     }
-    public class GetAssignedUserQuery : IRequest<AssignedUserDto>
+    public class GetAssignedUserQuery : IRequest<Result<AssignedUserDto>>
     {
         public GetAssignedUserQuery(long userId)
         {
@@ -23,7 +26,7 @@ namespace IssueTracker.Queries
         public long UserId { get; set; }
     }
 
-    public class GetAssignedUserQueryHandler : IRequestHandler<GetAssignedUserQuery, AssignedUserDto>
+    public class GetAssignedUserQueryHandler : IRequestHandler<GetAssignedUserQuery, Result<AssignedUserDto>>
     {
         private readonly QueryDbContext _queryDbContext;
         public GetAssignedUserQueryHandler(QueryDbContext queryDbContext)
@@ -31,14 +34,16 @@ namespace IssueTracker.Queries
             _queryDbContext = queryDbContext;
         }
 
-        public Task<AssignedUserDto> Handle(GetAssignedUserQuery request, CancellationToken cancellationToken)
+        public async Task<Result<AssignedUserDto>> Handle(GetAssignedUserQuery request, CancellationToken cancellationToken)
         {
-            var assignedUser = _queryDbContext.Users.FirstOrDefault(u => u.Id == request.UserId);
-            return Task.FromResult(new AssignedUserDto
-            {
-                UserId = assignedUser.Id,
-                FullName = assignedUser.FullName
-            });
+            Maybe<User> assignedUser = await _queryDbContext.Users.FirstOrDefaultAsync(u => u.Id == request.UserId);
+            return assignedUser
+                .ToResult($"Unable to find user with id {request.UserId}.")
+                .OnSuccess(assignedUser => new AssignedUserDto
+                {
+                    UserId = assignedUser.Id,
+                    FullName = assignedUser.FullName
+                });
         }
     }
 }

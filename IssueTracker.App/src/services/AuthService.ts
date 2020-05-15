@@ -1,6 +1,6 @@
 import { Log, UserManager } from 'oidc-client';
 import { useDispatch } from 'react-redux'
-import { login, logout } from './../features/users/actions';
+import slice from '../features/users/slice';
 
 export const IDENTITY_CONFIG = {
   authority: process.env.REACT_APP_AUTH_URL,
@@ -9,12 +9,13 @@ export const IDENTITY_CONFIG = {
   silent_redirect_uri: `${process.env.REACT_APP_URL}silent-renew`,
   post_logout_redirect_uri: `${process.env.REACT_APP_URL}logout/callback`,
   response_type: 'code',
-  scope: 'openid profile IssueTrackerApi'
+  scope: 'openid profile IssueTrackerApi offline_access',
+  automaticSilentRenew: true
 }
 
 interface UserLoadedEvent {
   access_token: string;
-  id_token: string;
+  id_token: string; 
   profile: {
     family_name: string;
     given_name: string;
@@ -25,7 +26,6 @@ interface UserLoadedEvent {
 export class AuthService {
   dispatch = useDispatch();
   public userManager: UserManager;
-  
 
   constructor() {
     this.userManager = new UserManager(IDENTITY_CONFIG);
@@ -34,14 +34,16 @@ export class AuthService {
 
     this.userManager.events.addUserLoaded((user: UserLoadedEvent) => {
       console.log("USER LOADED", user);
-      this.dispatch(login(user.profile.given_name, user.profile.family_name,
-        user.access_token, user.id_token));
+      this.dispatch(slice.actions.login(user));
+        // this.dispatch(login(user.profile.given_name, user.profile.family_name, user.profile.role,
+        //   user.access_token, user.id_token));
         localStorage.setItem('accessToken', user.access_token);
     });
 
     this.userManager.events.addUserUnloaded((user) => {
       console.log("USER UNLOADED", user);
-      this.dispatch(logout());
+      this.dispatch(slice.actions.logout());
+      //this.dispatch(logout());
       localStorage.removeItem('accessToken');
     });
 
@@ -53,9 +55,9 @@ export class AuthService {
     this.userManager.events.addAccessTokenExpired(() => {
       console.log("ACCESS TOKEN EXPIRED");
       //TODO: Refresh token
-    })
-  }
+    });
 
+  }
 
   public createSignInRequest = async () => {
     await this.userManager.createSigninRequest();

@@ -6,12 +6,15 @@ using IssueTracker.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace IssueTracker.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     public class ProjectController : ControllerBase
     {
@@ -25,10 +28,11 @@ namespace IssueTracker.Controllers
         }
 
         //[Authorize(Policy = "IsAdmin")]
-        [Route("Projects")]
+        [Route("projects")]
         [HttpGet]
         public async Task<IActionResult> GetProjects()
         {
+
             var projectsResult = await _mediator.Send(new GetListOfProjectsQuery());
             return Ok(projectsResult);
 
@@ -54,12 +58,35 @@ namespace IssueTracker.Controllers
 
         }
 
-        [Route("Projects/AddProject")]
-        [HttpPost]
-        public async Task<IActionResult> AddProject(string projectName)
+
+        [Route("projects/{projectId}")]
+        [HttpGet]
+        public async Task<IActionResult> GetProject([FromQuery]int projectId)
         {
-            var newProjectResult = await _mediator.Send(new CreateProjectCommand(projectName));
-            return Ok(newProjectResult);
+            var projectQuery = await _mediator.Send(new GetProjectQuery(projectId));
+            return projectQuery.IsSuccess ?
+                Ok(projectQuery.Value) :
+                BadRequest(projectQuery.Error) as IActionResult;
+        }
+
+        //JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+        //    {
+        //        ContractResolver = new CamelCasePropertyNamesContractResolver()
+        //    };
+
+        [Route("projects")]
+        [HttpPost]
+        public async Task<IActionResult> AddProject([FromBody]AddProjectModel newProject)
+        {
+            var newProjectResult = await _mediator.Send(new CreateProjectCommand(newProject.Name));
+            return newProjectResult.IsSuccess ?
+                Ok(new { id = newProjectResult.Value }) :
+                BadRequest(newProjectResult.Error) as IActionResult;
         }
     }
+    public class AddProjectModel
+    {
+        public string Name { get; set; }
+    }
+
 }

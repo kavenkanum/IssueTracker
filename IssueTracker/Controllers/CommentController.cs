@@ -19,19 +19,25 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
-        [Route("{jobId}/GetComments")]
+        [Route("jobs/{jobId}/comments")]
         public async Task<IActionResult> GetComments(int jobId)
         {
             var commentsQuery = await _mediator.Send(new GetListOfJobCommentsQuery(jobId));
-            return Ok(commentsQuery);
+            return Ok(commentsQuery.Value);
         }
 
         [HttpPost]
-        [Route("{jobId}/AddComment")]
-        public async Task<IActionResult> AddComment(int jobId, long userId, string description)
+        [Route("jobs/{jobId}/comments")]
+        public async Task<IActionResult> AddComment([FromBody]NewCommentModel newComment)
         {
-            var newCommentResult = await _mediator.Send(new CreateCommentCommand(jobId, userId, description));
-            return Ok(newCommentResult);
+            var newCommentResult = await _mediator.Send(new CreateCommentCommand(newComment.JobId, newComment.Description));
+            return newCommentResult.IsSuccess ? Ok() : BadRequest(newCommentResult.Error) as IActionResult;
         }
+    }
+
+    public class NewCommentModel
+    {
+        public int JobId { get; set; }
+        public string Description { get; set; }
     }
 }

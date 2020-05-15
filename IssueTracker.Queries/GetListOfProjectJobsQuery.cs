@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using IssueTracker.Domain.Entities;
 using IssueTracker.Domain.Language;
 using IssueTracker.Domain.Language.ValueObjects;
 using IssueTracker.Domain.Repositories;
@@ -41,32 +42,22 @@ namespace IssueTracker.Queries
 
         public Task<ICollection<ProjectJobDto>> Handle(GetListOfProjectJobsQuery request, CancellationToken cancellationToken)
         {
-            if (request.Status == Status.None)
+            var jobsQuery = _queryDbContext.Jobs.Where(j => j.ProjectId == request.ProjectId);
+            if (request.Status != Status.None)
             {
-                var jobs = (_queryDbContext.Jobs.Where(j => j.ProjectId == request.ProjectId)
-                .Select(j => new ProjectJobDto()
-                {
-                    JobId = j.Id,
-                    Name = j.Name,
-                    Status = j.Status,
-                    AssignedUserId = j.AssignedUserId,
-                    Deadline = j.Deadline
-                })).ToList() as ICollection<ProjectJobDto>;
-                return Task.FromResult(jobs);
+                jobsQuery = jobsQuery.Where(j => j.Status == request.Status);
             }
-            else
+
+            var jobs = jobsQuery.Select(j => new ProjectJobDto()
             {
-                var jobs = (_queryDbContext.Jobs.Where(j => j.ProjectId == request.ProjectId && j.Status == request.Status)
-                .Select(j => new ProjectJobDto()
-                {
-                    JobId = j.Id,
-                    Name = j.Name,
-                    Status = j.Status,
-                    AssignedUserId = j.AssignedUserId,
-                    Deadline = j.Deadline
-                })).ToList() as ICollection<ProjectJobDto>;
-                return Task.FromResult(jobs);
-            }
+                JobId = j.Id,
+                Name = j.Name,
+                Status = j.Status,
+                AssignedUserId = j.AssignedUserId,
+                Deadline = j.Deadline
+            }).ToList() as ICollection<ProjectJobDto>;
+
+            return Task.FromResult(jobs);
         }
     }
 

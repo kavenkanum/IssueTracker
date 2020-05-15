@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.Commands
 {
-    public class CreateJobCommand : IRequest<Result>
+    public class CreateJobCommand : IRequest<Result<int>>
     {
         public CreateJobCommand(int projectId, string name)
         {
@@ -27,7 +27,7 @@ namespace IssueTracker.Commands
 
     }
 
-    public class CreateJobCommandHandler : IRequestHandler<CreateJobCommand, Result>
+    public class CreateJobCommandHandler : IRequestHandler<CreateJobCommand, Result<int>>
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IJobRepository _jobRepository;
@@ -40,7 +40,7 @@ namespace IssueTracker.Commands
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<Result> Handle(CreateJobCommand request, CancellationToken cancellationToken)
+        public async Task<Result<int>> Handle(CreateJobCommand request, CancellationToken cancellationToken)
         {
             var jobResult = Job.Create(request.Name, _dateTimeProvider.GetCurrentDate());
             var projectResult = await _projectRepository.GetAsync(request.ProjectId)
