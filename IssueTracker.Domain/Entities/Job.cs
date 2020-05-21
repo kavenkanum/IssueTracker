@@ -5,6 +5,7 @@ using Stateless;
 using Stateless.Graph;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IssueTracker.Domain.Entities
 {
@@ -19,6 +20,7 @@ namespace IssueTracker.Domain.Entities
             Status = status;
             JobDeleted = false;
             Comments = new List<Comment>();
+            StartsAfterJobs = new List<StartsAfterJob>();
         }
         public Job()
         {
@@ -51,7 +53,7 @@ namespace IssueTracker.Domain.Entities
         public long AssignedUserId { get; private set; }
         public Priority Priority { get; private set; }
         public List<Comment> Comments { get; set; }
-        public int StartsAfterJobId { get; set; }
+        public List<StartsAfterJob> StartsAfterJobs { get; set; }
         public bool JobDeleted { get; set; }
         public long CreatorId { get; set; }
 
@@ -88,6 +90,10 @@ namespace IssueTracker.Domain.Entities
         {
             if (!_machine.CanFire(Trigger.ChangeName))
                 return Result.Fail("Unable to change name in that state (In progress / Done).");
+
+            if (string.IsNullOrEmpty(newName))
+                return Result.Fail("Task name cannot be empty.");
+
             Name = newName;
             _machine.Fire(Trigger.ChangeName);
             return Result.Ok();
@@ -155,5 +161,34 @@ namespace IssueTracker.Domain.Entities
             return Result.Ok();
         }
 
+        public void AddPreviousJobs(List<StartsAfterJob> startsAfterJobs)
+        {
+            foreach (var startsAfterJob in startsAfterJobs)
+            {
+                StartsAfterJobs.Add(startsAfterJob);
+            }
+        }
+
+        public Result CheckPrevJobs(List<int> startsAfter, List<int> jobsQueue, List<Job> allJobsWithPrevJobs)
+        {
+            foreach (var prevJobId in startsAfter)
+            {
+                if (!jobsQueue.Contains(prevJobId))
+                {
+                    jobsQueue.Add(prevJobId);
+                    var prevJob = allJobsWithPrevJobs.FirstOrDefault(j => j.Id == prevJobId);
+
+                    if (prevJob != default)
+                    {
+                        CheckPrevJobs(prevJob.StartsAfterJobs.Select(j => j.StartsAfterJobId).ToList(), jobsQueue, allJobsWithPrevJobs);
+                    }
+                }
+                else
+                {
+                    return Result.Fail($"Fail (infinite loop) at current job id: {prevJobId}.");
+                }
+            }
+            return Result.Ok();
+        }
     }
 }

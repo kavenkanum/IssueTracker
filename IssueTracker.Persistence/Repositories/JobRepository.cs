@@ -5,6 +5,7 @@ using IssueTracker.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +27,11 @@ namespace IssueTracker.Persistence.Repositories
         public async Task<Maybe<Job>> GetAsync(int jobId)
         {
             return await _issueTrackerDbContext.Jobs.Include(j => j.Comments).FirstOrDefaultAsync(j => j.Id == jobId);
+        }
+
+        public async Task<List<Job>> GetJobsWithPrevJobs()
+        {
+            return await _issueTrackerDbContext.Jobs.Include(j => j.StartsAfterJobs).Where(j => j.StartsAfterJobs.Any()).Select(j => j).ToListAsync();
         }
 
         public async Task<Result<int>> SaveAsync(Job job)
