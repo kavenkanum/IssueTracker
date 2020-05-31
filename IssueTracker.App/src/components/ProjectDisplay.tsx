@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Header, Menu, Label, Button } from "semantic-ui-react";
-import {Job, getJobs} from "./API";
+import { Job, getJobs } from "./API";
 import HeaderSubHeader from "semantic-ui-react/dist/commonjs/elements/Header/HeaderSubheader";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -10,7 +10,7 @@ const segmentDisplay = {
   backgroundColor: "white",
   border: "1px solid #ddd",
   height: "600px",
-  margin: "0em 2em"
+  margin: "0em 2em",
 };
 
 export const ProjectDisplay = (props: any) => {
@@ -21,25 +21,32 @@ export const ProjectDisplay = (props: any) => {
     setActiveItem(jobId);
     dispatch(slice.actions.selectJob(jobId));
     dispatch(loadJobDetails(jobId));
-  }
+  };
 
-useEffect(() => {
-  getJobs(props.projectId).then(resp => setJobs(resp));
-}, [props.projectId]);
+  useEffect(() => {
+    getJobs(props.projectId).then((resp) => setJobs(resp));
+  }, [props.projectId]);
 
   return (
     <Container style={segmentDisplay}>
-      <Button primary as={Link} to="/job/addJob">Add task</Button>
+      <Button primary as={Link} to="/job/addJob">
+        Add task
+      </Button>
       <Header>Project Name will be here</Header>
       <HeaderSubHeader>Jobs' list</HeaderSubHeader>
       <Menu vertical>
-      {jobs?.map(j => <Menu.Item
-          name={j.name}
-          index={j.jobId}
-          active={activeItem === j.jobId}
-          onClick={() => handleItemClick(j.jobId)}
-        ><Label>{j.status}</Label>{j.name}</Menu.Item>
-        )}
+        {jobs?.map((j) => (
+          <Menu.Item
+            key={j.jobId}
+            name={j.name}
+            index={j.jobId}
+            active={activeItem === j.jobId}
+            onClick={() => handleItemClick(j.jobId)}
+          >
+            <Label>{j.status}</Label>
+            {j.name}
+          </Menu.Item>
+        ))}
       </Menu>
     </Container>
   );

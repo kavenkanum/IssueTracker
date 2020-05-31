@@ -14,8 +14,8 @@ export const JobComments = () => {
         <Header as="h3" dividing>
           Comments
         </Header>
-        {commentList.map((c) => (
-          <Comment>
+        {commentList.map((c, index) => (
+          <Comment key={index}>
             <Comment.Content>
               <Comment.Author as="a">{c.userFullName}</Comment.Author>
               <Comment.Metadata>
