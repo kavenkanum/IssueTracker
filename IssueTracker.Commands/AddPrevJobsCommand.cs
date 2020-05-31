@@ -4,6 +4,7 @@ using IssueTracker.Domain.Repositories;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading;
@@ -43,13 +44,14 @@ namespace IssueTracker.Commands
                 }
             }
 
-            var allJobsWithPrevJobs = _jobRepository.GetJobsWithPrevJobs().Result;
+            var allJobsWithPrevJobs = _jobRepository.GetJobsWithPrevJobs(currentJobResult.Value.ProjectId).Result;
             var jobsQueue = new List<int>();
+            var failureList = new List<int>();
             jobsQueue.Add(request.JobId);
 
-            var prevJobsResult = currentJobResult.Value.CheckPrevJobs(request.StartsAfterJobsId, jobsQueue, allJobsWithPrevJobs);
-            if (prevJobsResult.IsFailure)
-                return Result.Fail(prevJobsResult.Error);
+            var prevJobsResult = currentJobResult.Value.CheckPrevJobs(request.StartsAfterJobsId, jobsQueue, allJobsWithPrevJobs, failureList);
+            if (prevJobsResult.Any())
+                return Result.Fail($"Infinite loop, at job/jobs id: {string.Join(", ", prevJobsResult.ToArray())}.");
 
             var startsAfterJobsResult = new List<StartsAfterJob>();
 
@@ -58,7 +60,7 @@ namespace IssueTracker.Commands
                 StartsAfterJob.Create(startsAfterJobId).OnSuccess(startAfterJobResult => startsAfterJobsResult.Add(startAfterJobResult));
             }
 
-            return await Result.Create(startsAfterJobsResult.Count != request.StartsAfterJobsId.Count, "Couldn't create one or more StartsAfterJob.")
+            return await Result.Create(startsAfterJobsResult.Count == request.StartsAfterJobsId.Count, "Couldn't create one or more StartsAfterJob.")
                     .OnSuccess(() => currentJobResult.Value.AddPreviousJobs(startsAfterJobsResult))
                     .OnSuccess(() => _jobRepository.SaveAsync(currentJobResult.Value));
         }

@@ -67,7 +67,7 @@ namespace IssueTracker.Domain.Entities
         {
             if (!_machine.CanFire(Trigger.EditProperties))
                 return Result.Fail("Unable to edit properties in that state (In progress / Done).");
-            
+
             if (string.IsNullOrEmpty(name))
                 return Result.Fail("Task name cannot be empty.");
 
@@ -169,8 +169,10 @@ namespace IssueTracker.Domain.Entities
             }
         }
 
-        public Result CheckPrevJobs(List<int> startsAfter, List<int> jobsQueue, List<Job> allJobsWithPrevJobs)
+        public List<int> CheckPrevJobs(List<int> startsAfter, List<int> jobsQueue, List<Job> allJobsWithPrevJobs, List<int> failureList)
         {
+            //any fail will be added to the failureList -> after end of recuperation if there is anything in that list it means that we have infinite loop. 
+            //List also will contain job/jobs id which cause that loop.
             foreach (var prevJobId in startsAfter)
             {
                 if (!jobsQueue.Contains(prevJobId))
@@ -180,15 +182,16 @@ namespace IssueTracker.Domain.Entities
 
                     if (prevJob != default)
                     {
-                        CheckPrevJobs(prevJob.StartsAfterJobs.Select(j => j.StartsAfterJobId).ToList(), jobsQueue, allJobsWithPrevJobs);
+                        CheckPrevJobs(prevJob.StartsAfterJobs.Select(j => j.StartsAfterJobId).ToList(), jobsQueue, allJobsWithPrevJobs, failureList);
                     }
                 }
                 else
                 {
-                    return Result.Fail($"Fail (infinite loop) at current job id: {prevJobId}.");
+                    failureList.Add(prevJobId);
                 }
             }
-            return Result.Ok();
+
+            return failureList;
         }
     }
 }
