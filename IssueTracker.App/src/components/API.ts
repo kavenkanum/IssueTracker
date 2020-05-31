@@ -45,6 +45,11 @@ export interface Job {
   deadline: Date;
 }
 
+export interface PreviousJob {
+  prevJobId: number;
+  name: string;
+}
+
 export const getProjects = (): Promise<Project[]> => {
   const token = localStorage.getItem("accessToken");
 
@@ -135,6 +140,29 @@ export const addJob = (projectId: number, jobName: string): Promise<number> => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ projectId, jobName }),
+  }).then((response) => response.json());
+};
+
+export const addPrevJobs = (jobId: number, prevJobsId: number[]): Promise<void> => {
+  const token = localStorage.getItem("accessToken");
+
+  return fetch(`https://localhost:5001/jobs/${jobId}/prevJobs`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ jobId, prevJobsId }),
+  }).then((response) => response.json());
+};
+
+export const getPrevJobs = (jobId: number): Promise<PreviousJob[]> => {
+  const token = localStorage.getItem("accessToken");
+
+  return fetch(`https://localhost:5001/jobs/${jobId}/prevJobs`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
   }).then((response) => response.json());
 };
 
