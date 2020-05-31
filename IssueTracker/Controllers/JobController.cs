@@ -81,10 +81,26 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPost]
-        [Route("Job/{jobId}/AssignUser")]
-        public IActionResult AssignUser(int jobId, long userId)
+        [Route("jobs/{jobId}/prevJobs")]
+        public async Task<IActionResult> AddPrevJobs(AddPrevJobsModel model)
         {
-            var assignUserResult = _mediator.Send(new AssignUserCommand(jobId, userId));
+            var prevJobsToAdd = await _mediator.Send(new AddPrevJobsCommand(model.JobId, model.PrevJobsId.ToList()));
+            return Ok(prevJobsToAdd);
+        }
+
+        [HttpGet]
+        [Route("jobs/{jobId}/prevJobs")]
+        public async Task<IActionResult> GetPrevJobs(int jobId)
+        {
+            var prevJobsResult = await _mediator.Send(new GetPrevJobsQuery(jobId));
+            return Ok(prevJobsResult);
+        }
+
+        [HttpPost]
+        [Route("Job/{jobId}/AssignUser")]
+        public async Task<IActionResult> AssignUser(int jobId, long userId)
+        {
+            var assignUserResult = await _mediator.Send(new AssignUserCommand(jobId, userId));
 
             return Ok(assignUserResult);
         }
@@ -101,5 +117,11 @@ namespace IssueTracker.Controllers
     {
         public int ProjectId { get; set; }
         public string JobName { get; set; }
+    }
+
+    public class AddPrevJobsModel
+    {
+        public int JobId { get; set; }
+        public int[] PrevJobsId { get; set; }
     }
 }
