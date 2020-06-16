@@ -39,8 +39,8 @@ export interface EditedJob {
 export interface Job {
   jobId: number;
   name: string;
-  descritpion: string;
-  assignedUserId: number;
+  description: string;
+  assignedUserID: number;
   status: Status;
   deadline: Date;
 }
@@ -73,10 +73,14 @@ export const addProject = (name: string): Promise<number> => {
   }).then((response) => response.json());
 };
 
-export const getJobs = (projectId: number): Promise<Job[]> => {
+export const getJobs = (
+  projectId: number,
+  signal?: AbortSignal
+): Promise<Job[]> => {
   const token = localStorage.getItem("accessToken");
 
   return fetch(`https://localhost:5001/projects/${projectId}/jobs`, {
+    signal: signal,
     headers: {
       Authorization: "Bearer " + token,
     },
@@ -130,6 +134,22 @@ export const editJob = (
   }).then((response) => response.json());
 };
 
+export const changeJobStatus = (
+  jobId: number,
+  requestedStatus: Status
+): Promise<void> => {
+  const token = localStorage.getItem("accessToken");
+return fetch(`https://localhost:5001/jobs/${jobId}/changeJobStatus`, {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer " + token,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ jobId, requestedStatus }),
+}).then((response) => response.json());
+
+};
+
 export const addJob = (projectId: number, jobName: string): Promise<number> => {
   const token = localStorage.getItem("accessToken");
 
@@ -143,7 +163,10 @@ export const addJob = (projectId: number, jobName: string): Promise<number> => {
   }).then((response) => response.json());
 };
 
-export const addPrevJobs = (jobId: number, prevJobsId: number[]): Promise<void> => {
+export const addPrevJobs = (
+  jobId: number,
+  prevJobsId: number[]
+): Promise<void> => {
   const token = localStorage.getItem("accessToken");
 
   return fetch(`https://localhost:5001/jobs/${jobId}/prevJobs`, {
@@ -153,7 +176,7 @@ export const addPrevJobs = (jobId: number, prevJobsId: number[]): Promise<void> 
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ jobId, prevJobsId }),
-  }).then((response) => response.json());
+  }).then((resp) => resp.json());
 };
 
 export const getPrevJobs = (jobId: number): Promise<PreviousJob[]> => {
