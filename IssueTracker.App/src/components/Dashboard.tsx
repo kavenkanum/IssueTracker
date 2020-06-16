@@ -5,7 +5,9 @@ import {JobDisplay} from "./JobDisplay";
 import { useParams } from "react-router-dom";
 
 const dashboardSegment = {
-  padding: "1em 0em"
+  padding: "1em 0em",
+  margin: "0em 0em",
+  width: "100%"
 };
 
 export const Dashboard: React.FC = () => {
@@ -16,10 +18,10 @@ export const Dashboard: React.FC = () => {
   return (
     <Grid divided="vertically" style={dashboardSegment}>
       <Grid.Row columns={2}>
-        <Grid.Column style={{padding: "1em 1em"}}>
+        <Grid.Column style={{padding: "1em 0em 1em 2em"}}>
           <ProjectDisplay projectId={projectId}/>
         </Grid.Column>
-        <Grid.Column style={{padding: "1em 1em"}}>
+        <Grid.Column style={{padding: "1em 0em 1em 2em"}}>
           <JobDisplay />
         </Grid.Column>
       </Grid.Row>

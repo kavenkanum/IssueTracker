@@ -18,7 +18,7 @@ import { AddPrevJob } from "./AddPrevJob";
 
 export const Routes: React.FC = () => {
   return (
-    <>
+    <div style={{width: "100%", padding: "0em 3em 1em 0em"}}>
       <Switch>
         <Route path="/" exact component={Home} />
         <Route path="/login" exact component={Login} />
@@ -37,6 +37,6 @@ export const Routes: React.FC = () => {
         <Route path="/error" component={NewError} />
         <Route component={NotFound} />
       </Switch>
-    </>
+    </div>
   );
 };

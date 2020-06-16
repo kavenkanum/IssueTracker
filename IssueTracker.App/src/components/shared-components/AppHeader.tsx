@@ -34,14 +34,7 @@ export const AppHeader: React.FC<AppHeaderProps> = (props: AppHeaderProps) => {
 
     return <div className="top-menu">
         <Menu borderless>
-            <Container text>
-                <Menu.Item>
-                    <Image size='mini' src={props.logo} as={Link} to="/" />
-                </Menu.Item>
-                <Menu.Item header>
-                    PugTrack
-                </Menu.Item>
-                <Menu.Menu position='right'>
+                <Menu.Menu position="right">
                     {isLoggedIn ?
                         (
                             <Fragment>
@@ -55,7 +48,6 @@ export const AppHeader: React.FC<AppHeaderProps> = (props: AppHeaderProps) => {
                             </Fragment>
                         )}
                 </Menu.Menu>
-            </Container>
         </Menu>
     </div>
 }

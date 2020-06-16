@@ -1,40 +1,79 @@
-import React, {  } from "react";
-import { Container, Header, Button } from "semantic-ui-react";
+import React from "react";
+import { Container, Header, Button, Image, Dropdown } from "semantic-ui-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/root-reducer";
 import { JobComments } from "./JobComments";
 import { Link } from "react-router-dom";
+import { Status } from "./API";
+import { JobStatusButton } from "./JobStatusButton";
+
+const menuIcon = (
+  <Image
+    src="https://img.icons8.com/carbon-copy/100/000000/menu.png"
+    inline
+    size="mini"
+  />
+);
+
+const dropdownOptions = [
+  { key: "edit", text: "Add previous tasks", href: "/job/addPrevJobs" },
+];
 
 const segmentDisplay = {
-    backgroundColor: "white",
-    border: "1px solid #ddd",
-    height: "600px",
-    margin: "0em 2em"
-  };
+  backgroundColor: "white",
+  border: "1px solid #ddd",
+  margin: "0em 2em",
+  padding: "1em 1em",
+};
 
-  const headerStyle = {
-    "font-size": "20px",
-    padding: "1em 1em"
-  };
-  
+const headerStyle = {
+  fontSize: "20px",
+  display: "inline",
+};
+
 export const JobDisplay = () => {
-  const currentJobDetails = useSelector((state: RootState) => state.job.jobDetails);
-  const currentJobId = useSelector((state: RootState) => state.job.selectedJobId);
-  const prevJobs = useSelector((state:RootState) => state.job.previousJobs);
+  const currentJobDetails = useSelector(
+    (state: RootState) => state.job.jobDetails
+  );
+  const currentJobId = useSelector(
+    (state: RootState) => state.job.selectedJobId
+  );
+  const prevJobs = useSelector((state: RootState) => state.job.previousJobs);
 
-  return (currentJobId !== 0 ? 
-    (<Container style={segmentDisplay}>
+  return currentJobId !== 0 ? (
+    <Container style={segmentDisplay}>
       <Header style={headerStyle}>{currentJobDetails?.name}</Header>
-      <Header>{currentJobDetails?.descritpion}</Header>
-      <Header>Task to do before:</Header>
-      {prevJobs.map(j => (
+      <div className="job-menu">
+        <Image
+          src="https://img.icons8.com/plasticine/100/000000/edit-property.png"
+          inline
+          size="mini"
+          href="/job/editJob"
+          style={{ height: "35px" }}
+        />
+        <Dropdown
+          trigger={menuIcon}
+          options={dropdownOptions}
+          pointing="top right"
+          icon={null}
+        />
+      </div>
+      <div>{currentJobDetails?.description}</div>
+      {prevJobs.length > 0 ? (
+        <Header as="h4">Task to do before:</Header>
+      ) : (
+        <Header as="h4">No prev task required to do before</Header>
+      )}
+      {prevJobs.map((j) => (
         <div>{j.name}</div>
       ))}
-      <Button primary as={Link} to="/job/editJob">Edit task</Button>
-      <Button primary as={Link} to="/job/addPrevJobs">Previous jobs</Button>
-  <p>{currentJobDetails?.descritpion}</p>
-  <p>Comments:</p>
-  <JobComments/>
-    </Container>) : <Container style={segmentDisplay}></Container>
+        <JobStatusButton
+          status={currentJobDetails?.status}
+          jobId={currentJobDetails?.jobId}
+        />
+      <JobComments />
+    </Container>
+  ) : (
+    <Container style={segmentDisplay}></Container>
   );
 };
