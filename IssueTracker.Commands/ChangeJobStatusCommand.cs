@@ -12,10 +12,10 @@ namespace IssueTracker.Commands
 {
     public class ChangeJobStatusCommand : IRequest<Result>
     {
-        public ChangeJobStatusCommand(int jobId, Status requestedStatus)
+        public ChangeJobStatusCommand(int jobId, int requestedStatus)
         {
             JobId = jobId;
-            RequestedStatus = requestedStatus;
+            RequestedStatus = (Status)requestedStatus;
         }
         public int JobId { get; set; }
         //probably i will have to change RequestedStatus to string
