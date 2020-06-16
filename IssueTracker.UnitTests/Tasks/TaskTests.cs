@@ -234,10 +234,11 @@ namespace IssueTracker.UnitTests.Projects
 
             var newPrevJobsId = new List<int>() { 31, 41 };
             var jobsQueue = new List<int>();
+            var failureList = new List<int>();
             jobsQueue.Add(job2.Value.Id);
 
-            var result = job2.Value.CheckPrevJobs(newPrevJobsId, jobsQueue, listOfJobs);
-            result.IsSuccess.Should().BeTrue();
+            var result = job2.Value.CheckPrevJobs(newPrevJobsId, jobsQueue, listOfJobs, failureList);
+            result.Count.Should().Be(0);
         }
 
 
@@ -262,10 +263,11 @@ namespace IssueTracker.UnitTests.Projects
             listOfJobs.Add(job1.Value);
             var newPrevJobsId = new List<int>() { 0, 11, 41 };
             var jobsQueue = new List<int>();
+            var failureList = new List<int>();
             jobsQueue.Add(job2.Value.Id);
 
-            var result = job2.Value.CheckPrevJobs(newPrevJobsId, jobsQueue, listOfJobs);
-            result.IsFailure.Should().BeTrue();
+            var result = job2.Value.CheckPrevJobs(newPrevJobsId, jobsQueue, listOfJobs, failureList);
+            result.Count.Should().BeGreaterThan(0);
         }
     }
 }
