@@ -26,5 +26,17 @@
 }
 
 .top-menu {
-  width: 100vw;
+  width: 100%;
+  padding-right: 1em;
+}
+
+.job-menu {
+  position: absolute;
+  right: 1em;
+  display: inline-block;
+}
+
+.custom-button {
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
