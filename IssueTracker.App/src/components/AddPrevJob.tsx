@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Container,
   Button,
@@ -24,6 +24,7 @@ import * as yup from "yup";
 import { RootState } from "../store/root-reducer";
 import { useSelector } from "react-redux";
 import { getJobs, addPrevJobs } from "./API";
+import { useHistory, Redirect } from "react-router-dom";
 
 type Jobs = {
   jobs: {
@@ -36,10 +37,12 @@ export const AddPrevJob: React.FC = () => {
   const currentJobId = useSelector(
     (state: RootState) => state.job.selectedJobId
   );
-  const currentProjId = useSelector(
+  const currentProjectId = useSelector(
     (state: RootState) => state.project.selectedProjectId
   );
   const [jobs, setJobs] = useState<Jobs["jobs"]>([]);
+  const [submittingStatus, setSubmittingStatus] = useState<number>(0);
+  const isMountedRef = useRef<boolean>();
   const initialValues: Jobs = {
     jobs: jobs.map((j) => ({
       jobId: j.jobId,
@@ -47,6 +50,7 @@ export const AddPrevJob: React.FC = () => {
     })),
   };
 
+  const history = useHistory();
   const dropdownJobs: DropdownItemProps[] = jobs
     .filter((j) => j.jobId !== currentJobId)
     .map((j) => ({
@@ -65,8 +69,14 @@ export const AddPrevJob: React.FC = () => {
         initialValues={initialValues}
         onSubmit={(data, { setSubmitting }) => {
           setSubmitting(true);
-          console.log(data.jobs.flat());
-          addPrevJobs(currentJobId, data.jobs.flat());
+          addPrevJobs(currentJobId, data.jobs.flat())
+            .then(() => {
+              history.push(`/dashboard/${currentProjectId}`);
+            })
+            .catch((err) => {
+              history.push("/error");
+              console.log(`Error found - ${err}`);
+            });
           setSubmitting(false);
         }}
       >
