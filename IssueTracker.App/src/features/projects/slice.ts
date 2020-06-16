@@ -4,6 +4,7 @@ import { getProjects } from "../../components/API";
 
 const initialState: ProjectState = {
   selectedProjectId: 0,
+  selectedProjectName: "",
   loading: false,
 };
 
@@ -22,8 +23,9 @@ const slice = createSlice({
       state.loading = false;
       console.log(action.payload);
     },
-    selectProject(state, action: PayloadAction<number>) {
-      state.selectedProjectId = action.payload;
+    selectProject(state, action: PayloadAction<Project>) {
+      state.selectedProjectId = action.payload.id;
+      state.selectedProjectName = action.payload.name;
     },
   },
 });
@@ -86,6 +88,7 @@ export interface Project {
 
 export interface ProjectState {
   selectedProjectId: number;
+  selectedProjectName: string;
   projectList?: Array<Project>;
   loading: boolean;
 }
