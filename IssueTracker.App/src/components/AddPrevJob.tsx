@@ -41,8 +41,6 @@ export const AddPrevJob: React.FC = () => {
     (state: RootState) => state.project.selectedProjectId
   );
   const [jobs, setJobs] = useState<Jobs["jobs"]>([]);
-  const [submittingStatus, setSubmittingStatus] = useState<number>(0);
-  const isMountedRef = useRef<boolean>();
   const initialValues: Jobs = {
     jobs: jobs.map((j) => ({
       jobId: j.jobId,
@@ -60,7 +58,7 @@ export const AddPrevJob: React.FC = () => {
     }));
 
   useEffect(() => {
-    getJobs(currentProjId).then((resp) => setJobs(resp));
+    getJobs(currentProjectId).then((resp) => setJobs(resp));
   }, []);
 
   return (

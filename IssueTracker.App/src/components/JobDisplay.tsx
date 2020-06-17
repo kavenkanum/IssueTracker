@@ -16,7 +16,7 @@ const menuIcon = (
 );
 
 const dropdownOptions = [
-  { key: "edit", text: "Add previous tasks", href: "/job/addPrevJobs" },
+  { key: "edit", text: "Add previous tasks", as: Link, to: "/job/addPrevJobs" },
 ];
 
 const segmentDisplay = {
