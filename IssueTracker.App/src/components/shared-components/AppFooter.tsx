@@ -3,7 +3,7 @@ import { Container, Image, List, Segment } from "semantic-ui-react";
 
 const footHeaderStyle = {
   position: "absolute",
-  margin: "0em 0em 0em",
+  margin: "0em 0em 0em 0rem",
   padding: "1em 0em",
   bottom: "0",
   width: "100%",

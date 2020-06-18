@@ -8,10 +8,10 @@ import { BrowserRouter } from "react-router-dom";
 
 const myStyleNavBar = {
   background: "#18A999",
-  padding: "1em 0em",
+  padding: "1em 0em"
 };
 const myStyle = {
-  padding: "0em 0em",
+  padding: "0em 0em"
 };
 
 export const Layout: React.FC = () => {
@@ -20,7 +20,7 @@ export const Layout: React.FC = () => {
     <BrowserRouter>
       <div>
         <Grid>
-          <Grid.Row centered>
+          <Grid.Row centered style={{padding: "1em 0rem 0rem 0rem"}}>
             <Grid.Column floated="left" width={3} style={myStyleNavBar}>
               <AppNavbar />
             </Grid.Column>

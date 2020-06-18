@@ -12,7 +12,6 @@ const dashboardSegment = {
 
 export const Dashboard: React.FC = () => {
   const { project } = useParams();
-  //const projectId = useSelector(getProjectId);
   const projectId = (project ? parseInt(project) : 0);
   
   return (
