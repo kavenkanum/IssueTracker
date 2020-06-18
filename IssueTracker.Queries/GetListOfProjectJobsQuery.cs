@@ -24,10 +24,10 @@ namespace IssueTracker.Queries
     }
     public class GetListOfProjectJobsQuery : IRequest<ICollection<ProjectJobDto>>
     {
-        public GetListOfProjectJobsQuery(int projectId, Status status)
+        public GetListOfProjectJobsQuery(int projectId, int status)
         {
             ProjectId = projectId;
-            Status = status;
+            Status = (Status)status;
         }
         public int ProjectId { get; set; }
         public Status Status { get; set; }

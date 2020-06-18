@@ -25,9 +25,9 @@ namespace IssueTracker.Controllers
 
         [HttpGet]
         [Route("projects/{projectId}/jobs")]
-        public async Task<IActionResult> GetJobsOfProject(int projectId)
+        public async Task<IActionResult> GetJobsOfProject(int projectId, int jobsStatus)
         {
-            var jobsQuery = await _mediator.Send(new GetListOfProjectJobsQuery(projectId, Status.None));
+            var jobsQuery = await _mediator.Send(new GetListOfProjectJobsQuery(projectId, jobsStatus));
             return Ok(jobsQuery);
         }
         [HttpPost]
