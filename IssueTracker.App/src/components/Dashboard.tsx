@@ -5,7 +5,7 @@ import {JobDisplay} from "./JobDisplay";
 import { useParams } from "react-router-dom";
 
 const dashboardSegment = {
-  padding: "1em 0em",
+  padding: "0em 0em",
   margin: "0em 0em",
   width: "100%"
 };

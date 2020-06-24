@@ -18,7 +18,7 @@ import { AddPrevJob } from "./AddPrevJob";
 
 export const Routes: React.FC = () => {
   return (
-    <div style={{width: "100%", padding: "0em 3em 1em 0em"}}>
+    <div className="main-display">
       <Switch>
         <Route path="/" exact component={Home} />
         <Route path="/login" exact component={Login} />

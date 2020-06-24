@@ -5,6 +5,7 @@ import {
   Input,
   Dropdown,
   DropdownItemProps,
+  Header,
 } from "semantic-ui-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/root-reducer";
@@ -19,15 +20,60 @@ import {
 } from "./API";
 import Calendar from "react-calendar";
 import moment from "moment";
+import "react-calendar/dist/Calendar.css";
+
+const editJobStyle = {
+  background: "white",
+  padding: "1em",
+  margin: "2em",
+  border: "1px solid #ddd",
+  height: "90%",
+  width: "50%"
+};
+
+const headerStyle = {
+  fontSize: "20px",
+  display: "inline",
+};
+const textInputStyle = {
+  padding: "1em 0em 0em 0em",
+  width: "100%",
+};
+
+const dropdownInputStyle = {
+  padding: "12px 0em 0em 1em",
+  margin: "1em 0em 0em",
+  width: "100%",
+};
+const buttonStyle = {
+  "border-radius": "25px",
+  padding: "1em 5em 1em 5em",
+  margin: "1em 0em 1em 0em",
+  background: "#FF715B",
+  color: "white"
+};
 
 export const EditJob: React.FC = () => {
   const selectedJobId = useSelector(
     (state: RootState) => state.job.selectedJobId
   );
+  const currentJobDetails = useSelector(
+    (state: RootState) => state.job.jobDetails
+  );
   const [usersToAssign, setUsersToAssign] = useState<User[]>([]);
   const [] = useState<DropdownItemProps[]>([]);
   const usersDropdown = (users: User[]): DropdownItemProps[] =>
     users.map((u) => ({ key: u.userId, text: u.fullName, value: u.userId }));
+  const priorityDropdown = [
+    { key: Priority.None, text: Priority[Priority.None], value: Priority.None },
+    { key: Priority.Low, text: Priority[Priority.Low], value: Priority.Low },
+    {
+      key: Priority.Medium,
+      text: Priority[Priority.Medium],
+      value: Priority.Medium,
+    },
+    { key: Priority.High, text: Priority[Priority.High], value: Priority.High },
+  ];
 
   const [editedJobValues, setEditedJobValues] = useState<EditedJob>({
     name: "",
@@ -51,13 +97,14 @@ export const EditJob: React.FC = () => {
   }, []);
 
   return (
-    <Container>
+    <Container style={editJobStyle}>
+      <Header style={headerStyle}>{currentJobDetails?.name}</Header>
       <Formik<EditedJob>
         initialValues={initialValues}
         onSubmit={(value) => {
           let deadline = moment(value.deadline).format();
           let priority = +value.priority;
-          console.log(typeof(priority));
+          console.log(typeof priority);
           editJob(
             value.jobId,
             value.name,
@@ -73,8 +120,8 @@ export const EditJob: React.FC = () => {
             <DescriptionInput initialValues={initialValues} />
             <AssignedUserInput usersDropdown={usersDropdown(usersToAssign)} />
             <CalendarInput />
-            <PriorityInput />
-            <Button>Save</Button>
+            <PriorityInput priorityDropdown={priorityDropdown} />
+            <Button style={buttonStyle}>Save</Button>
           </Form>
         )}
       />
@@ -87,7 +134,7 @@ const DescriptionInput = (props: any) => (
     name="description"
     required
     render={({ field, meta }: any) => (
-      <>
+      <div>
         <Input
           type="text"
           {...field}
@@ -96,9 +143,10 @@ const DescriptionInput = (props: any) => (
               ? props.initialValues?.description
               : "Description"
           }
+          style={textInputStyle}
         />
         {meta.touched && meta.error && meta.error}
-      </>
+      </div>
     )}
   />
 );
@@ -108,10 +156,15 @@ const NameInput = (props: any) => (
     name="name"
     required
     render={({ field, meta }: any) => (
-      <>
-        <Input type="text" {...field} placeholder={props.initialValues?.name} />
+      <div>
+        <Input
+          type="text"
+          {...field}
+          placeholder={props.initialValues?.name}
+          style={textInputStyle}
+        />
         {meta.touched && meta.error && meta.error}
-      </>
+      </div>
     )}
   />
 );
@@ -119,10 +172,14 @@ const NameInput = (props: any) => (
 const CalendarInput = () => (
   <Field name="deadline" type="date">
     {({ field: { value }, form: { setFieldValue } }: any) => (
-      <Calendar
-        value={value}
-        onChange={(date) => setFieldValue("deadline", date)}
-      />
+      <div className="custom-calendar-style">
+        Select a deadline
+        <Calendar
+          value={value}
+          onChange={(date) => setFieldValue("deadline", date)}
+          locale="EN"
+        />
+      </div>
     )}
   </Field>
 );
@@ -136,16 +193,23 @@ const AssignedUserInput = (props: any) => (
         selection
         options={props.usersDropdown}
         onChange={(e, { value }) => setFieldValue("assignedUserId", value)}
+        style={dropdownInputStyle}
       />
     )}
   </Field>
 );
 
-const PriorityInput = () => (
+const PriorityInput = (props: any) => (
   <Field name="priority" as="select" placeholder="Choose Priority">
-        <option value={Priority.None}>{Priority[Priority.None]}</option>
-        <option value={Priority.Low}>{Priority[Priority.Low]}</option>
-        <option value={Priority.Medium}>{Priority[Priority.Medium]}</option>
-        <option value={Priority.High}>{Priority[Priority.High]}</option>
+    {({ form: { setFieldValue } }: any) => (
+      <Dropdown
+        placeholder="Select priority"
+        fluid
+        selection
+        options={props.priorityDropdown}
+        onChange={(e, { value }) => setFieldValue("priority", value)}
+        style={dropdownInputStyle}
+      />
+    )}
   </Field>
 );

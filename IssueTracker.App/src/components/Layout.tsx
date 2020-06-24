@@ -18,9 +18,8 @@ export const Layout: React.FC = () => {
   const logo = "https://img.icons8.com/plasticine/100/000000/dog-footprint.png";
   return (
     <BrowserRouter>
-      <div>
-        <Grid>
-          <Grid.Row centered style={{padding: "1em 0rem 0rem 0rem"}}>
+        <Grid style={{height: "100vh",  margin: "0em"}}>
+          <Grid.Row centered style={{padding: "0em"}}>
             <Grid.Column floated="left" width={3} style={myStyleNavBar}>
               <AppNavbar />
             </Grid.Column>
@@ -31,7 +30,6 @@ export const Layout: React.FC = () => {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-      </div>
     </BrowserRouter>
   );
 };

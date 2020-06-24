@@ -5,6 +5,7 @@ import {
   Menu,
   Visibility,
   MenuItemProps,
+  Header,
 } from "semantic-ui-react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useSelector, connect, useDispatch } from "react-redux";
@@ -18,17 +19,23 @@ const menuStyle = {
   borderRadius: 0,
   boxShadow: "none",
   width: "100%",
-  height: "800px",
   padding: "1em 0em",
+  height: "100%"
 };
 
 const fixedMenuStyle = {
   backgroundColor: "#18A999",
   color: "white",
   position: "relative",
-  width: "100%",
-  "padding-left": "1em"
+  width: "100%"
 };
+
+const addNewProjButtonStyle = {
+  color: "white",
+  fontStyle: "italic",
+  fontWeight: "normal",
+  padding: "0em 0em 0em 1em"
+}
 
 export const AppNavbar: React.FC = (props) => {
   const { project } = useParams();
@@ -62,6 +69,7 @@ export const AppNavbar: React.FC = (props) => {
           />
         )) : null}
       </Menu>
+      <Header style={addNewProjButtonStyle} as={Link} to="/project/add">Add new project</Header>
     </Container>
   );
 };
