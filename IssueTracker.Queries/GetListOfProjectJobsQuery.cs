@@ -21,6 +21,7 @@ namespace IssueTracker.Queries
         public long AssignedUserId { get; set; }
         public Status Status { get; set; }
         public Deadline Deadline { get; set; }
+        public Priority Priority { get; set; }
     }
     public class GetListOfProjectJobsQuery : IRequest<ICollection<ProjectJobDto>>
     {
@@ -54,7 +55,8 @@ namespace IssueTracker.Queries
                 Name = j.Name,
                 Status = j.Status,
                 AssignedUserId = j.AssignedUserId,
-                Deadline = j.Deadline
+                Deadline = j.Deadline,
+                Priority = j.Priority
             }).ToList() as ICollection<ProjectJobDto>;
 
             return Task.FromResult(jobs);

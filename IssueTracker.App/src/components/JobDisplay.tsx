@@ -48,7 +48,8 @@ export const JobDisplay = () => {
           src="https://img.icons8.com/plasticine/100/000000/edit-property.png"
           inline
           size="mini"
-          href="/job/editJob"
+          as={Link}
+          to="/job/editJob"
           style={{ height: "35px" }}
         />
         <Dropdown

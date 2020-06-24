@@ -57,9 +57,9 @@ export const AddPrevJob: React.FC = () => {
       key: j.jobId,
     }));
 
-  useEffect(() => {
-    getJobs(currentProjectId).then((resp) => setJobs(resp));
-  }, []);
+  // useEffect(() => {
+  //   getJobs(currentProjectId).then((resp) => setJobs(resp));
+  // }, []);
 
   return (
     <Container>
