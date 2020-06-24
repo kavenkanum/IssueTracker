@@ -63,7 +63,7 @@ namespace IssueTracker.Controllers
             }) as IActionResult : NotFound(); 
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("jobs/{jobId}/edit")]
         public async Task<IActionResult> EditJob(EditJobModel model)
         {
@@ -105,7 +105,7 @@ namespace IssueTracker.Controllers
             return Ok(assignUserResult);
         }
 
-        [HttpPost]
+        [HttpPatch]
         [Route("jobs/{jobId}/changeJobStatus")]
         public async Task<IActionResult> ChangeJobStatus(ChangeJobStatusModel model)
         {

@@ -43,6 +43,7 @@ export interface Job {
   assignedUserID: number;
   status: Status;
   deadline: Date;
+  priority: Priority;
 }
 
 export interface PreviousJob {
@@ -117,7 +118,7 @@ export const editJob = (
   const token = localStorage.getItem("accessToken");
 
   return fetch(`https://localhost:5001/jobs/${jobId}/edit`, {
-    method: "POST",
+    method: "PUT",
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
@@ -139,7 +140,7 @@ export const changeJobStatus = (
 ): Promise<void> => {
   const token = localStorage.getItem("accessToken");
 return fetch(`https://localhost:5001/jobs/${jobId}/changeJobStatus`, {
-  method: "POST",
+  method: "PATCH",
   headers: {
     Authorization: "Bearer " + token,
     "Content-Type": "application/json",
