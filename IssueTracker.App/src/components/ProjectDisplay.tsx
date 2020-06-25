@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Header, Menu, Label, Button } from "semantic-ui-react";
 import { Job, getJobs, getUsersFromProject, User, Status } from "./API";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import slice, { loadJobDetails } from "../features/jobs/slice";
 import { RootState } from "../store/root-reducer";
@@ -9,6 +9,7 @@ import { UserInitials } from "./elements/UserInitials";
 import { JobsFilter } from "./JobsFilter";
 import { PriorityIcon } from "./elements/PriorityIcon";
 import { StatusIcon } from "./elements/StatusIcon";
+import { loadProject } from "../features/projects/slice";
 
 const headerStyle = {
   display: "inline",
@@ -34,19 +35,24 @@ export const ProjectDisplay = (props: any) => {
   const [jobsStatus, setJobsStatus] = useState<Status>(Status.None);
   const [users, setUsers] = useState<Array<User>>([]);
   const dispatch = useDispatch();
+  const history = useHistory();
   const currentProjectName = useSelector(
     (state: RootState) => state.project.selectedProjectName
   );
   const handleItemClick = (jobId: number) => {
     setActiveItem(jobId);
     dispatch(slice.actions.selectJob(jobId));
-    dispatch(loadJobDetails(jobId));
+    history.push(`/dashboard/${props.projectId}/${jobId}`);
   };
 
   useEffect(() => {
     getJobs(props.projectId, jobsStatus).then((resp) => setJobs(resp));
-    getUsersFromProject(props.projectId).then((resp) => setUsers(resp));
   }, [props.projectId, jobsStatus]);
+
+  useEffect(() => {
+    getUsersFromProject(props.projectId).then((resp) => setUsers(resp));
+    dispatch(loadProject(props.projectId));
+  }, [props.projectId]);
 
   return (
     <Container style={segmentDisplay}>

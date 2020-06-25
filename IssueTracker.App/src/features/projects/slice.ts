@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppThunk, history } from "../../store";
-import { getProjects } from "../../components/API";
+import { getProjects, getProject } from "../../components/API";
 
 const initialState: ProjectState = {
   selectedProjectId: 0,
@@ -24,6 +24,7 @@ const slice = createSlice({
       console.log(action.payload);
     },
     selectProject(state, action: PayloadAction<Project>) {
+      state.loading = false;
       state.selectedProjectId = action.payload.id;
       state.selectedProjectName = action.payload.name;
     },
@@ -31,6 +32,18 @@ const slice = createSlice({
 });
 
 export default slice;
+
+export const loadProject = (projectId: number): AppThunk => async (
+  dispatch
+) => {
+  dispatch(slice.actions.requestStarted());
+  try {
+    const project = await getProject(projectId);
+    dispatch(slice.actions.selectProject(project));
+  } catch (ex) {
+    dispatch(slice.actions.requestFailed(ex.response));
+  }
+};
 
 export const loadProjects = (): AppThunk => async (dispatch) => {
   dispatch(slice.actions.requestStarted());

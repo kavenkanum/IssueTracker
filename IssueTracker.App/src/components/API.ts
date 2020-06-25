@@ -61,6 +61,17 @@ export const getProjects = (): Promise<Project[]> => {
   }).then((response) => response.json());
 };
 
+export const getProject = (projectId: number): Promise<Project> => {
+  const token = localStorage.getItem("accessToken");
+  
+  return fetch(`https://localhost:5001/projects/${projectId}`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  }).then((response) => response.json());
+
+}
+
 export const addProject = (name: string): Promise<number> => {
   const token = localStorage.getItem("accessToken");
 
@@ -87,10 +98,10 @@ const jobsStatusStringified = JSON.stringify({jobsStatus});
   }).then((response) => response.json());
 };
 
-export const getJob = (jobId: number): Promise<Job> => {
+export const getJob = (jobId: number, projectId: number): Promise<Job> => {
   const token = localStorage.getItem("accessToken");
 
-  return fetch(`https://localhost:5001/jobs/${jobId}`, {
+  return fetch(`https://localhost:5001/jobs/${jobId}?projectId=${projectId}`, {
     headers: {
       Authorization: "Bearer " + token,
     },
