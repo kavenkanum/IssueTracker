@@ -21,6 +21,7 @@ import {
 import Calendar from "react-calendar";
 import moment from "moment";
 import "react-calendar/dist/Calendar.css";
+import { useHistory } from "react-router-dom";
 
 const editJobStyle = {
   background: "white",
@@ -48,7 +49,7 @@ const dropdownInputStyle = {
 const buttonStyle = {
   "border-radius": "25px",
   padding: "1em 5em 1em 5em",
-  margin: "1em 0em 1em 0em",
+  margin: "1em 1em 1em 0em",
   background: "#FF715B",
   color: "white"
 };
@@ -60,8 +61,9 @@ export const EditJob: React.FC = () => {
   const currentJobDetails = useSelector(
     (state: RootState) => state.job.jobDetails
   );
+  const currentProjectId = useSelector((state: RootState) => state.project.selectedProjectId)
   const [usersToAssign, setUsersToAssign] = useState<User[]>([]);
-  const [] = useState<DropdownItemProps[]>([]);
+  const history = useHistory();
   const usersDropdown = (users: User[]): DropdownItemProps[] =>
     users.map((u) => ({ key: u.userId, text: u.fullName, value: u.userId }));
   const priorityDropdown = [
@@ -98,13 +100,14 @@ export const EditJob: React.FC = () => {
 
   return (
     <Container style={editJobStyle}>
+      
+    <Header style={headerStyle}>CURRENT PROJ ID {currentProjectId}</Header>
       <Header style={headerStyle}>{currentJobDetails?.name}</Header>
       <Formik<EditedJob>
         initialValues={initialValues}
         onSubmit={(value) => {
           let deadline = moment(value.deadline).format();
           let priority = +value.priority;
-          console.log(typeof priority);
           editJob(
             value.jobId,
             value.name,
@@ -112,7 +115,8 @@ export const EditJob: React.FC = () => {
             value.assignedUserId,
             deadline,
             priority
-          ).then((resp) => resp);
+          ).then((resp) => resp);      
+          history.push(`/dashboard/${currentProjectId}/${selectedJobId}`);
         }}
         render={() => (
           <Form>
@@ -121,7 +125,7 @@ export const EditJob: React.FC = () => {
             <AssignedUserInput usersDropdown={usersDropdown(usersToAssign)} />
             <CalendarInput />
             <PriorityInput priorityDropdown={priorityDropdown} />
-            <Button style={buttonStyle}>Save</Button>
+            <Button style={buttonStyle}>Save</Button><Button style={buttonStyle} onClick={() => history.push(`/dashboard/${currentProjectId}/${selectedJobId}`)}>Back</Button>
           </Form>
         )}
       />
