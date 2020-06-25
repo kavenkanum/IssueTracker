@@ -31,6 +31,7 @@ export const Routes: React.FC = () => {
         <Route path="/project/add" exact component={AddProject} />
         <Route path="/dashboard" exact component={Dashboard} />
         <Route path="/dashboard/:project" exact component={Dashboard} />
+        <Route path="/dashboard/:project/:job" exact component={Dashboard} />
         <Route path="/job/addJob" exact component={AddJob} />
         <Route path="/job/editJob" exact component={EditJob} />
         <Route path="/job/addPrevJobs" exact component={AddPrevJob} />

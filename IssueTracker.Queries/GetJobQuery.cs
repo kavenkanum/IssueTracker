@@ -27,11 +27,13 @@ namespace IssueTracker.Queries
     }
     public class GetJobQuery : IRequest<Result<JobDto>>
     {
-        public GetJobQuery(int jobId)
+        public GetJobQuery(int jobId, int projectId)
         {
             JobId = jobId;
+            ProjectId = projectId;
         }
         public int JobId { get; set; }
+        public int ProjectId { get; set; }
     }
 
     public class GetJobQueryHandler : IRequestHandler<GetJobQuery, Result<JobDto>>
@@ -43,10 +45,10 @@ namespace IssueTracker.Queries
         }
         public async Task<Result<JobDto>> Handle(GetJobQuery request, CancellationToken cancellationToken)
         {
-            Maybe<Job> job = await _queryDbContext.Jobs.FirstOrDefaultAsync(j => j.Id == request.JobId);
-
+            Maybe<Job> job = await _queryDbContext.Jobs.FirstOrDefaultAsync(j => j.Id == request.JobId && j.ProjectId == request.ProjectId);
+             
             return job
-                .ToResult($"Unable to find job with id {request.JobId}.")
+                .ToResult($"Unable to find job with id {request.JobId} or project with id: {request.ProjectId} doesn't contain job with id: {request.JobId}.")
                 .OnSuccess(job => new JobDto()
                 {
                     JobId = job.Id,

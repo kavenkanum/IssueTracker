@@ -21,7 +21,7 @@ export const Dashboard: React.FC = () => {
           <ProjectDisplay projectId={projectId}/>
         </Grid.Column>
         <Grid.Column style={{padding: "1em 0em 1em 2em"}}>
-          <JobDisplay />
+          <JobDisplay projectId={projectId}/>
         </Grid.Column>
       </Grid.Row>
     </Grid>

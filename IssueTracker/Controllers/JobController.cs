@@ -40,10 +40,10 @@ namespace IssueTracker.Controllers
 
         [HttpGet]
         [Route("jobs/{jobId}")]
-        public async Task<IActionResult> GetJob(int jobId)
+        public async Task<IActionResult> GetJob(int jobId, int projectId)
         {
-            var jobQuery = await _mediator.Send(new GetJobQuery(jobId));
-            return Ok(jobQuery.Value);
+            var jobQuery = await _mediator.Send(new GetJobQuery(jobId, projectId));
+            return jobQuery.IsSuccess ? Ok(jobQuery.Value) as IActionResult : BadRequest(jobQuery.Error);
         }
 
         [HttpGet]

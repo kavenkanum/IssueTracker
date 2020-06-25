@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Header, Button, Image, Dropdown } from "semantic-ui-react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/root-reducer";
 import { JobComments } from "./JobComments";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Status } from "./API";
 import { JobStatusButton } from "./JobStatusButton";
+import slice, { loadJobDetails } from "../features/jobs/slice";
 
 const menuIcon = (
   <Image
@@ -31,7 +32,7 @@ const headerStyle = {
   display: "inline",
 };
 
-export const JobDisplay = () => {
+export const JobDisplay = (props: any) => {
   const currentJobDetails = useSelector(
     (state: RootState) => state.job.jobDetails
   );
@@ -39,6 +40,13 @@ export const JobDisplay = () => {
     (state: RootState) => state.job.selectedJobId
   );
   const prevJobs = useSelector((state: RootState) => state.job.previousJobs);
+  const dispatch = useDispatch();
+  const { job } = useParams();
+  const jobId = job ? parseInt(job) : 0;
+
+  useEffect(() => {
+    dispatch(loadJobDetails(jobId, props.projectId));
+  }, [jobId]);
 
   return currentJobId !== 0 ? (
     <Container style={segmentDisplay}>
