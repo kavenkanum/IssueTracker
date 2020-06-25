@@ -18,7 +18,7 @@ namespace IssueTracker.Domain.Language.ValueObjects
             if (!deadlineDate.HasValue)
                 return Result.Ok(Maybe<Deadline>.None);
 
-            return Result.Create(deadlineDate > currentDate.AddDays(1), "Deadline cannot be earlier than now")
+            return Result.Create(deadlineDate.Value.Date > currentDate.Date, "Deadline cannot be earlier than now")
                 .OnSuccess(() => Maybe<Deadline>.From(new Deadline(deadlineDate.Value)));
         }
     }
