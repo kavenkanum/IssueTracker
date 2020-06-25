@@ -15,6 +15,7 @@ namespace IssueTracker.Policies
     public class DeleteJobRequirement : IAuthorizationRequirement
     {
         public int JobId { get; set; }
+        public int ProjectId { get; set; }
     }
 
     public class DeleteJobRequirementHandler : AuthorizationHandler<DeleteJobRequirement>
@@ -38,7 +39,7 @@ namespace IssueTracker.Policies
             }
             else
             {
-                var jobResult = await _mediator.Send(new GetJobQuery(requirement.JobId));
+                var jobResult = await _mediator.Send(new GetJobQuery(requirement.JobId, requirement.ProjectId));
 
                 //var jobResult = await _queryDbContext.Jobs.FirstOrDefaultAsync(j => j.Id == requirement.JobId);
                 var userAssignToJobResult = jobResult.Value.AssignedUserID.ToString();
