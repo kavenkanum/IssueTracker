@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { AppThunk, history } from "../../store";
+import { AppThunk } from "../../store";
 import { getProjects, getProject } from "../../components/API";
 
 const initialState: ProjectState = {

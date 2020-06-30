@@ -5,6 +5,8 @@ import { AppFooter } from "./shared-components/AppFooter";
 import { AppNavbar } from "./shared-components/AppNavbar";
 import { Container, Grid } from "semantic-ui-react";
 import { BrowserRouter } from "react-router-dom";
+import { ConnectedRouter } from 'connected-react-router'
+import {history} from "../store/root-reducer";
 
 const myStyleNavBar = {
   background: "#18A999",
@@ -17,7 +19,7 @@ const myStyle = {
 export const Layout: React.FC = () => {
   const logo = "https://img.icons8.com/plasticine/100/000000/dog-footprint.png";
   return (
-    <BrowserRouter>
+    <ConnectedRouter history={history}>
         <Grid style={{height: "100vh",  margin: "0em"}}>
           <Grid.Row centered style={{padding: "0em"}}>
             <Grid.Column floated="left" width={3} style={myStyleNavBar}>
@@ -30,6 +32,6 @@ export const Layout: React.FC = () => {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-    </BrowserRouter>
+    </ConnectedRouter >
   );
 };

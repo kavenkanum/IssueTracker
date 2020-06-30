@@ -40,8 +40,6 @@ export const persistor = persistStore(store);
 
 export default store;
 
-export { history };
-
 /** Loads app initial state */
 export const loadApp = (): AppThunk => async (dispatch) => {
   // const todayIso = DateTime.local().toISODate();

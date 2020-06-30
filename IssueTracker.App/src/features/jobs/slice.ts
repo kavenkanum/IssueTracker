@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { AppThunk, history } from "../../store";
+import { AppThunk } from "../../store";
+import { history } from "../../store/root-reducer";
 import {
   getJob,
   Job,
@@ -8,8 +9,9 @@ import {
   PreviousJob,
   getPrevJobs,
 } from "../../components/API";
-import projectSlice from "../projects/slice"
+import projectSlice from "../projects/slice";
 import { useHistory } from "react-router-dom";
+import { push } from 'connected-react-router'
 
 const initialState: JobState = {
   selectedJobId: 0,
@@ -51,7 +53,10 @@ const slice = createSlice({
 
 export default slice;
 
-export const loadJobDetails = (jobId: number, projectId: number): AppThunk => async (dispatch) => {
+export const loadJobDetails = (
+  jobId: number,
+  projectId: number
+): AppThunk => async (dispatch) => {
   dispatch(slice.actions.requestStarted());
   try {
     const jobDetails = await getJob(jobId, projectId);
@@ -62,7 +67,7 @@ export const loadJobDetails = (jobId: number, projectId: number): AppThunk => as
     );
   } catch (ex) {
     dispatch(slice.actions.requestFailed(ex.response));
-    
+    dispatch(push(`/dashboard/${projectId}`));
   }
 };
 
