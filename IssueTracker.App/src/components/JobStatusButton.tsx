@@ -39,6 +39,6 @@ const FinishButton = (props: any) => {
 
 const FinishedJobElement = () => {
   return (
-    <Segment style={{width: "7em"}}>Done task</Segment>
+    <Segment style={{width: "100%", textAlign: "center", padding: "0.5em", background: "#F4F5F6", fontWeight: "bold"}}>Task completed</Segment>
   )
 }

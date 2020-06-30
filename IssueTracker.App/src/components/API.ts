@@ -42,7 +42,7 @@ export interface Job {
   description: string;
   assignedUserID: number;
   status: Status;
-  deadline: Date;
+  deadlineDate: Date;
   priority: Priority;
 }
 

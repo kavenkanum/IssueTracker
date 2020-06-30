@@ -21,7 +21,7 @@ namespace IssueTracker.Queries
         public string Name { get; set; }
         public string Description { get; set; }
         public long AssignedUserID { get; set; }
-        public Deadline Deadline { get; set; }
+        public DateTime? DeadlineDate { get; set; }
         public DateTime DateOfCreate { get; set; }
         public Status Status { get; set; }
     }
@@ -55,7 +55,7 @@ namespace IssueTracker.Queries
                     Name = job.Name,
                     Description = job.Description,
                     AssignedUserID = job.AssignedUserId,
-                    Deadline = job.Deadline,
+                    DeadlineDate = job.Deadline?.DeadlineDate,
                     DateOfCreate = job.DateOfCreate,
                     Status = job.Status
                 });
