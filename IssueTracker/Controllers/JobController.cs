@@ -89,6 +89,14 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
+        [Route("jobs/{jobId}/availablePrevJobs")]
+        public async Task<IActionResult> GetAvailablePrevJobs(int jobId)
+        {
+            var availablePrevJobsResult = await _mediator.Send(new GetAvailablePrevJobsQuery(jobId));
+            return Ok(availablePrevJobsResult);
+        }
+
+        [HttpGet]
         [Route("jobs/{jobId}/prevJobs")]
         public async Task<IActionResult> GetPrevJobs(int jobId)
         {
