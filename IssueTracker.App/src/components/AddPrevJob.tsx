@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Container,
   Button,
@@ -8,10 +8,12 @@ import {
   Checkbox,
   Radio,
   Item,
+  Header,
+  List
 } from "semantic-ui-react";
-import { Select, MenuItem } from "@material-ui/core";
 import {
   Formik,
+  Form,
   Field,
   FieldArray,
   SharedRenderProps,
@@ -23,7 +25,8 @@ import {
 import * as yup from "yup";
 import { RootState } from "../store/root-reducer";
 import { useSelector } from "react-redux";
-import { getJobs, addPrevJobs } from "./API";
+import { getJobs, addPrevJobs, getAvailablePrevJobs } from "./API";
+import { useHistory, Redirect } from "react-router-dom";
 
 type Jobs = {
   jobs: {
@@ -32,11 +35,30 @@ type Jobs = {
   }[];
 };
 
+const addPrevjobsStyle = {
+  background: "white",
+  padding: "1em",
+  margin: "2em",
+  border: "1px solid #ddd",
+  height: "90%",
+  width: "50%"
+};
+
+const buttonStyle = {
+  "border-radius": "25px",
+  padding: "1em 5em 1em 5em",
+  marginTop: "1em",
+  background: "#FF715B",
+  color: "white"
+};
+
 export const AddPrevJob: React.FC = () => {
   const currentJobId = useSelector(
     (state: RootState) => state.job.selectedJobId
   );
-  const currentProjId = useSelector(
+  const currentJobDetails = useSelector((state: RootState) => state.job.jobDetails);
+  const prevJobs = useSelector((state: RootState) => state.job.previousJobs);
+  const currentProjectId = useSelector(
     (state: RootState) => state.project.selectedProjectId
   );
   const [jobs, setJobs] = useState<Jobs["jobs"]>([]);
@@ -47,8 +69,8 @@ export const AddPrevJob: React.FC = () => {
     })),
   };
 
+  const history = useHistory();
   const dropdownJobs: DropdownItemProps[] = jobs
-    .filter((j) => j.jobId !== currentJobId)
     .map((j) => ({
       text: j.name,
       value: j.jobId,
@@ -56,22 +78,43 @@ export const AddPrevJob: React.FC = () => {
     }));
 
   useEffect(() => {
-    getJobs(currentProjId).then((resp) => setJobs(resp));
+    getAvailablePrevJobs(currentJobId).then((resp) => setJobs(resp));
   }, []);
 
   return (
-    <Container>
+    <Container style={addPrevjobsStyle}>
+    <Header>Add previous jobs</Header>
+    <Header as="h4" style={{margin: "1em 0em 0em 0em"}}>{currentJobDetails?.name}</Header>
+    {prevJobs.length > 0 ? (
+        <Header as="h5" style={{margin: "1em 0em 0em 0em"}}>Task to do before:</Header>
+      ) : (
+        <Header as="h5" style={{margin: "1em 0em 0em 0em"}}>No prev task required to do before</Header>
+      )}
+      <List>
+        {prevJobs.map((j) => (
+          <List.Item>
+            <List.Icon name="chevron right" />
+            <List.Content>{j.name}</List.Content>
+          </List.Item>
+        ))}
+      </List>
       <Formik<Jobs>
         initialValues={initialValues}
         onSubmit={(data, { setSubmitting }) => {
           setSubmitting(true);
-          console.log(data.jobs.flat());
-          addPrevJobs(currentJobId, data.jobs.flat());
+          addPrevJobs(currentJobId, data.jobs.flat())
+            .then(() => {
+              history.push(`/dashboard/${currentProjectId}`);
+            })
+            .catch((err) => {
+              history.push("/error");
+              console.log(`Error found - ${err}`);
+            });
           setSubmitting(false);
         }}
       >
         {({ values, isSubmitting, handleSubmit }) => (
-          <form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit}>
             <FieldArray name="jobs">
               {(arrayHelpers) => (
                 <div>
@@ -88,12 +131,11 @@ export const AddPrevJob: React.FC = () => {
                 </div>
               )}
             </FieldArray>
-            <Button disabled={isSubmitting} type="submit">
+            <Button disabled={isSubmitting} type="submit" style={buttonStyle}>
               Submit
             </Button>
-            <pre>{JSON.stringify(values, null, 2)}</pre>
-            <pre>JOBS {JSON.stringify(values.jobs.flat(), null, 2)}</pre>
-          </form>
+                  <p>{JSON.stringify(values)}</p>
+          </Form>
         )}
       </Formik>
     </Container>

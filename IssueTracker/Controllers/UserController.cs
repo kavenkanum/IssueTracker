@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using IssueTracker.Commands;
 using IssueTracker.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IssueTracker.Controllers
 {
@@ -17,11 +18,12 @@ namespace IssueTracker.Controllers
         {
             _mediator = mediator;
         }
+
         [HttpGet]
-        [Route("users")]
-        public async Task<IActionResult> GetUsers()
+        [Route("{projectId}/users")]
+        public async Task<IActionResult> GetUsersFromProject(int projectId)
         {
-            var usersQuery = await _mediator.Send(new GetUsersQuery());
+            var usersQuery = await _mediator.Send(new GetUsersFromProjectQuery(projectId));
             return Ok(usersQuery);
         }
 

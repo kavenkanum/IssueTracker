@@ -9,7 +9,7 @@ export const JobComments = () => {
   const commentList = useSelector((state: RootState) => state.job.commentsList);
 
   return (
-    <Container style={{ padding: "10px" }}>
+    <Container style={{ padding: "1em 0em" }}>
       <Comment.Group threaded>
         <Header as="h3" dividing>
           Comments

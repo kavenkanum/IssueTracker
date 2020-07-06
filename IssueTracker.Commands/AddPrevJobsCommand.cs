@@ -42,12 +42,17 @@ namespace IssueTracker.Commands
                 {
                     return Result.Fail($"Cannot find job with id: {startsAfterJobId} to assign it as a previous job.");
                 }
+                if (currentJobResult.Value.StartsAfterJobs.Any(j => j.StartsAfterJobId == startsAfterJobId))
+                    return Result.Fail($"Cannot add previous job with id: {startsAfterJobId}, because there is already that previous job.");
             }
 
             var allJobsWithPrevJobs = _jobRepository.GetJobsWithPrevJobs(currentJobResult.Value.ProjectId).Result;
             var jobsQueue = new List<int>();
             var failureList = new List<int>();
             jobsQueue.Add(request.JobId);
+
+            
+
 
             var prevJobsResult = currentJobResult.Value.CheckPrevJobs(request.StartsAfterJobsId, jobsQueue, allJobsWithPrevJobs, failureList);
             if (prevJobsResult.Any())

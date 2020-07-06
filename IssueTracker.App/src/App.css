@@ -21,10 +21,42 @@
   color: #09d3ac;
 }
 
+.main-row {
+  height: 100vh;
+  padding: 0em;
+  margin: 0em;
+}
+
 .main-display {
-  min-height: calc(100vh - 500px);
+  min-height: calc(100vh - 137px);
+  padding-top: 1em;
+  padding-right: 2em;
+  margin-bottom: 0em;
 }
 
 .top-menu {
-  width: 100vw;
+  width: 100%;
+}
+
+.job-menu {
+  position: absolute;
+  right: 1em;
+  display: inline-block;
+}
+
+.custom-button {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.jobs-menu-icons {
+  position: absolute;
+  display: inline;
+  right: 1em;
+  bottom: 0em;
+}
+
+.custom-calendar-style {
+  margin-top: 1em;
+  font-style: italic;
 }

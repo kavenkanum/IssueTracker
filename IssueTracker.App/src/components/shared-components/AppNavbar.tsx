@@ -5,30 +5,37 @@ import {
   Menu,
   Visibility,
   MenuItemProps,
+  Header,
 } from "semantic-ui-react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useSelector, connect, useDispatch } from "react-redux";
 import slice, {loadProjects, Project} from "../../features/projects/slice";
 import { RootState } from "../../store/root-reducer";
 import jobSlice from "../../features/jobs/slice";
+import {AppLogo} from "../AppLogo";
 
 const menuStyle = {
   border: "none",
   borderRadius: 0,
   boxShadow: "none",
-  transition: "box-shadow 0.5s ease, padding 0.5s ease",
-  width: "90%",
-  height: "800px",
-  backgroundColor: "white",
+  width: "100%",
   padding: "1em 0em",
+  height: "100%"
 };
 
 const fixedMenuStyle = {
-  backgroundColor: "#fff",
-  border: "1px solid #ddd",
-  boxShadow: "0px 3px 5px rgba(0, 0, 0, 0.2)",
-  width: "100%",
+  backgroundColor: "#18A999",
+  color: "white",
+  position: "relative",
+  width: "100%"
 };
+
+const addNewProjButtonStyle = {
+  color: "white",
+  fontStyle: "italic",
+  fontWeight: "normal",
+  padding: "0em 0em 0em 1em"
+}
 
 export const AppNavbar: React.FC = (props) => {
   const { project } = useParams();
@@ -42,13 +49,14 @@ export const AppNavbar: React.FC = (props) => {
   }, []);
 
   const handleItemClick = (el: Project) => {
-    dispatch(slice.actions.selectProject(el.id));
+    dispatch(slice.actions.selectProject(el));
     dispatch(jobSlice.actions.removeSelectedJob());
     history.push(`/dashboard/${el.id}`);
   };
 
   return (
     <Container style={menuStyle}>
+      <AppLogo/>
       <Menu pointing vertical style={fixedMenuStyle}>
         {projects ? projects.map((p) => (
           <Menu.Item
@@ -57,9 +65,11 @@ export const AppNavbar: React.FC = (props) => {
             index={p.id}
             active={projectId === p.id}
             onClick={() => handleItemClick(p)}
+            style={{color: "white"}}
           />
         )) : null}
       </Menu>
+      <Header style={addNewProjButtonStyle} as={Link} to="/project/add">Add new project</Header>
     </Container>
   );
 };

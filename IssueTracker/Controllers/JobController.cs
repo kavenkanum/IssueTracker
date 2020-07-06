@@ -25,9 +25,9 @@ namespace IssueTracker.Controllers
 
         [HttpGet]
         [Route("projects/{projectId}/jobs")]
-        public async Task<IActionResult> GetJobsOfProject(int projectId)
+        public async Task<IActionResult> GetJobsOfProject(int projectId, int jobsStatus)
         {
-            var jobsQuery = await _mediator.Send(new GetListOfProjectJobsQuery(projectId, Status.New));
+            var jobsQuery = await _mediator.Send(new GetListOfProjectJobsQuery(projectId, jobsStatus));
             return Ok(jobsQuery);
         }
         [HttpPost]
@@ -40,10 +40,10 @@ namespace IssueTracker.Controllers
 
         [HttpGet]
         [Route("jobs/{jobId}")]
-        public async Task<IActionResult> GetJob(int jobId)
+        public async Task<IActionResult> GetJob(int jobId, int projectId)
         {
-            var jobQuery = await _mediator.Send(new GetJobQuery(jobId));
-            return Ok(jobQuery.Value);
+            var jobQuery = await _mediator.Send(new GetJobQuery(jobId, projectId));
+            return jobQuery.IsSuccess ? Ok(jobQuery.Value) as IActionResult : BadRequest(jobQuery.Error);
         }
 
         [HttpGet]
@@ -60,10 +60,10 @@ namespace IssueTracker.Controllers
                 Deadline = result.Value.Deadline,
                 Priority = (int)result.Value.Priority,
                 AssignedUserId = result.Value.AssignedUserID
-            }) as IActionResult : NotFound();
+            }) as IActionResult : NotFound(); 
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("jobs/{jobId}/edit")]
         public async Task<IActionResult> EditJob(EditJobModel model)
         {
@@ -85,15 +85,23 @@ namespace IssueTracker.Controllers
         public async Task<IActionResult> AddPrevJobs(AddPrevJobsModel model)
         {
             var prevJobsToAdd = await _mediator.Send(new AddPrevJobsCommand(model.JobId, model.PrevJobsId.ToList()));
-            return Ok(prevJobsToAdd);
+            return prevJobsToAdd.IsSuccess ? Ok(true) : BadRequest(prevJobsToAdd.Error) as IActionResult;
+        }
+
+        [HttpGet]
+        [Route("jobs/{jobId}/availablePrevJobs")]
+        public async Task<IActionResult> GetAvailablePrevJobs(int jobId)
+        {
+            var availablePrevJobsResult = await _mediator.Send(new GetAvailablePrevJobsQuery(jobId));
+            return Ok(availablePrevJobsResult);
         }
 
         [HttpGet]
         [Route("jobs/{jobId}/prevJobs")]
         public async Task<IActionResult> GetPrevJobs(int jobId)
         {
-            var prevJobsResult = await _mediator.Send(new GetPrevJobsQuery(jobId));
-            return Ok(prevJobsResult);
+            var prevJobsQuery = await _mediator.Send(new GetPrevJobsQuery(jobId));
+            return Ok(prevJobsQuery);
         }
 
         [HttpPost]
@@ -103,6 +111,14 @@ namespace IssueTracker.Controllers
             var assignUserResult = await _mediator.Send(new AssignUserCommand(jobId, userId));
 
             return Ok(assignUserResult);
+        }
+
+        [HttpPatch]
+        [Route("jobs/{jobId}/changeJobStatus")]
+        public async Task<IActionResult> ChangeJobStatus(ChangeJobStatusModel model)
+        {
+            var changeJobStatusResult = await _mediator.Send(new ChangeJobStatusCommand(model.JobId, model.RequestedStatus));
+            return changeJobStatusResult.IsSuccess ? Ok(true) : BadRequest(changeJobStatusResult.Error) as IActionResult;
         }
 
         //public async Task<IActionResult> DeleteJob(int jobId)
@@ -123,5 +139,10 @@ namespace IssueTracker.Controllers
     {
         public int JobId { get; set; }
         public int[] PrevJobsId { get; set; }
+    }
+    public class ChangeJobStatusModel
+    {
+        public int JobId { get; set; }
+        public int RequestedStatus { get; set; }
     }
 }
