@@ -25,7 +25,7 @@ import {
 import * as yup from "yup";
 import { RootState } from "../store/root-reducer";
 import { useSelector } from "react-redux";
-import { getJobs, addPrevJobs } from "./API";
+import { getJobs, addPrevJobs, getAvailablePrevJobs } from "./API";
 import { useHistory, Redirect } from "react-router-dom";
 
 type Jobs = {
@@ -71,16 +71,15 @@ export const AddPrevJob: React.FC = () => {
 
   const history = useHistory();
   const dropdownJobs: DropdownItemProps[] = jobs
-    .filter((j) => j.jobId !== currentJobId)
     .map((j) => ({
       text: j.name,
       value: j.jobId,
       key: j.jobId,
     }));
 
-  // useEffect(() => {
-  //   getJobs(currentProjectId).then((resp) => setJobs(resp));
-  // }, []);
+  useEffect(() => {
+    getAvailablePrevJobs(currentJobId).then((resp) => setJobs(resp));
+  }, []);
 
   return (
     <Container style={addPrevjobsStyle}>
@@ -135,6 +134,7 @@ export const AddPrevJob: React.FC = () => {
             <Button disabled={isSubmitting} type="submit" style={buttonStyle}>
               Submit
             </Button>
+                  <p>{JSON.stringify(values)}</p>
           </Form>
         )}
       </Formik>

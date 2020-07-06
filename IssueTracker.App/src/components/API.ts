@@ -47,7 +47,7 @@ export interface Job {
 }
 
 export interface PreviousJob {
-  prevJobId: number;
+  jobId: number;
   name: string;
 }
 
@@ -188,6 +188,16 @@ export const addPrevJobs = (
     },
     body: JSON.stringify({ jobId, prevJobsId }),
   }).then((resp) => resp.json());
+};
+
+export const getAvailablePrevJobs = (jobId: number): Promise<PreviousJob[]> => {
+  const token = localStorage.getItem("accessToken");
+
+  return fetch(`https://localhost:5001/jobs/${jobId}/availablePrevJobs`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  }).then((response) => response.json());
 };
 
 export const getPrevJobs = (jobId: number): Promise<PreviousJob[]> => {
