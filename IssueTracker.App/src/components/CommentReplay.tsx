@@ -1,5 +1,5 @@
 import React, { useState, FormEvent } from "react";
-import { Form, Button, TextAreaProps } from "semantic-ui-react";
+import { Form, TextAreaProps } from "semantic-ui-react";
 import { addComment } from "./API";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/root-reducer";

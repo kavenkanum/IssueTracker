@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Image, List, Segment } from "semantic-ui-react";
+import { Container, Image, List } from "semantic-ui-react";
 
 const footHeaderStyle = {
   margin: "0em 0em 0em 0em",

@@ -3,7 +3,7 @@ import { Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
 const buttonStyle = {
-  "border-radius": "25px",
+  borderRadius: "25px",
   padding: "1em 5em 1em 5em",
   background: "#FF715B",
 };

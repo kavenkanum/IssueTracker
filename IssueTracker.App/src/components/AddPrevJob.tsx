@@ -1,32 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Button,
   Dropdown,
   DropdownItemProps,
-  Input,
-  Checkbox,
-  Radio,
-  Item,
   Header,
-  List
+  List,
 } from "semantic-ui-react";
-import {
-  Formik,
-  Form,
-  Field,
-  FieldArray,
-  SharedRenderProps,
-  FieldArrayRenderProps,
-  FieldAttributes,
-  useField,
-  FieldConfig,
-} from "formik";
-import * as yup from "yup";
+import { Formik, Form, FieldArray } from "formik";
 import { RootState } from "../store/root-reducer";
 import { useSelector } from "react-redux";
-import { getJobs, addPrevJobs, getAvailablePrevJobs } from "./API";
-import { useHistory, Redirect } from "react-router-dom";
+import { addPrevJobs, getAvailablePrevJobs } from "./API";
+import { useHistory } from "react-router-dom";
 
 type Jobs = {
   jobs: {
@@ -41,22 +26,24 @@ const addPrevjobsStyle = {
   margin: "2em",
   border: "1px solid #ddd",
   height: "90%",
-  width: "50%"
+  width: "50%",
 };
 
 const buttonStyle = {
-  "border-radius": "25px",
+  borderRadius: "25px",
   padding: "1em 5em 1em 5em",
   marginTop: "1em",
   background: "#FF715B",
-  color: "white"
+  color: "white",
 };
 
 export const AddPrevJob: React.FC = () => {
   const currentJobId = useSelector(
     (state: RootState) => state.job.selectedJobId
   );
-  const currentJobDetails = useSelector((state: RootState) => state.job.jobDetails);
+  const currentJobDetails = useSelector(
+    (state: RootState) => state.job.jobDetails
+  );
   const prevJobs = useSelector((state: RootState) => state.job.previousJobs);
   const currentProjectId = useSelector(
     (state: RootState) => state.project.selectedProjectId
@@ -70,12 +57,11 @@ export const AddPrevJob: React.FC = () => {
   };
 
   const history = useHistory();
-  const dropdownJobs: DropdownItemProps[] = jobs
-    .map((j) => ({
-      text: j.name,
-      value: j.jobId,
-      key: j.jobId,
-    }));
+  const dropdownJobs: DropdownItemProps[] = jobs.map((j) => ({
+    text: j.name,
+    value: j.jobId,
+    key: j.jobId,
+  }));
 
   useEffect(() => {
     getAvailablePrevJobs(currentJobId).then((resp) => setJobs(resp));
@@ -83,12 +69,18 @@ export const AddPrevJob: React.FC = () => {
 
   return (
     <Container style={addPrevjobsStyle}>
-    <Header>Add previous jobs</Header>
-    <Header as="h4" style={{margin: "1em 0em 0em 0em"}}>{currentJobDetails?.name}</Header>
-    {prevJobs.length > 0 ? (
-        <Header as="h5" style={{margin: "1em 0em 0em 0em"}}>Task to do before:</Header>
+      <Header>Add previous jobs</Header>
+      <Header as="h4" style={{ margin: "1em 0em 0em 0em" }}>
+        {currentJobDetails?.name}
+      </Header>
+      {prevJobs.length > 0 ? (
+        <Header as="h5" style={{ margin: "1em 0em 0em 0em" }}>
+          Task to do before:
+        </Header>
       ) : (
-        <Header as="h5" style={{margin: "1em 0em 0em 0em"}}>No prev task required to do before</Header>
+        <Header as="h5" style={{ margin: "1em 0em 0em 0em" }}>
+          No prev task required to do before
+        </Header>
       )}
       <List>
         {prevJobs.map((j) => (
@@ -134,7 +126,7 @@ export const AddPrevJob: React.FC = () => {
             <Button disabled={isSubmitting} type="submit" style={buttonStyle}>
               Submit
             </Button>
-                  <p>{JSON.stringify(values)}</p>
+            <p>{JSON.stringify(values)}</p>
           </Form>
         )}
       </Formik>

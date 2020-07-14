@@ -10,6 +10,8 @@ using IssueTracker.Models;
 using CSharpFunctionalExtensions;
 using IssueTracker.Domain.Language;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace IssueTracker.Controllers
 {
@@ -52,12 +54,14 @@ namespace IssueTracker.Controllers
         {
             var result = await _mediator.Send(new GetJobToEditQuery(jobId));
 
+            var deadlineAfterSerialization = result.Value.Deadline.HasValue ? result.Value.Deadline.Value.ToString("yyyy-MM-ddTHH:mm:ss") : "";
+
             return result.IsSuccess ? Ok(new EditJobModel()
             {
                 JobId = result.Value.JobId,
                 Name = result.Value.Name,
                 Description = result.Value.Description,
-                Deadline = result.Value.Deadline,
+                Deadline = deadlineAfterSerialization,
                 Priority = (int)result.Value.Priority,
                 AssignedUserId = result.Value.AssignedUserID
             }) as IActionResult : NotFound(); 
@@ -69,7 +73,7 @@ namespace IssueTracker.Controllers
         {
             var jobToEditResult = await _mediator.Send(new EditJobCommand(model.JobId, model.Name, model.Description, model.AssignedUserId, model.Deadline, model.Priority));
 
-            return Ok(jobToEditResult);
+            return jobToEditResult.IsSuccess ? Ok(jobToEditResult) as IActionResult : BadRequest(jobToEditResult.Error);
         }
 
         [HttpGet]

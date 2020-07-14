@@ -13,6 +13,7 @@ import {
 } from "formik";
 import { addProject} from "./API";
 import {Project} from "../features/projects/slice";
+import { useHistory } from "react-router-dom";
 
 const addProjStyle = {
   background: "white",
@@ -24,7 +25,7 @@ const addProjStyle = {
 };
 
 const buttonStyle = {
-  "border-radius": "25px",
+  borderRadius: "25px",
   padding: "1em 5em 1em 5em",
   background: "#FF715B",
   color: "white"
@@ -33,6 +34,7 @@ const buttonStyle = {
 export const AddProject: React.FC = () => {
   const initialValues: Project = { id: 0, name: "" };
   const [newProjectId, setNewProjectId] = useState<number>();
+  const history = useHistory();
 
   return (
     <Container style={addProjStyle}>
@@ -41,6 +43,7 @@ export const AddProject: React.FC = () => {
           initialValues={initialValues}
           onSubmit={(value) => {
             addProject(value.name).then((resp) => setNewProjectId(resp));
+            history.push("/dashboard");
           }}
           render={() => (
             <Form>
@@ -60,7 +63,6 @@ export const AddProject: React.FC = () => {
                   )}
                 />
                 <Button style={buttonStyle}>Save</Button>
-                <div>{JSON.stringify(newProjectId)}</div>
               </SemanticForm>
             </Form>
           )}

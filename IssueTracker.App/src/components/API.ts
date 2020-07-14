@@ -1,5 +1,4 @@
 import { Project } from "../features/projects/slice";
-import jwt_decode from "jwt-decode";
 
 export enum Priority {
   None,
@@ -32,7 +31,7 @@ export interface EditedJob {
   name: string;
   description: string;
   assignedUserId: number;
-  deadline: Date;
+  deadline: Date | null;
   priority: Priority;
 }
 

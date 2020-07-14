@@ -1,6 +1,6 @@
 import React from "react";
-import { Status, Priority } from "../API";
-import { Container, Header, Button, Image, Dropdown } from "semantic-ui-react";
+import { Status } from "../API";
+import { Image } from "semantic-ui-react";
 
 //status new https://i.ibb.co/p4PH1K7/icons8-survey-100.png
 // status inprogress https://img.icons8.com/plasticine/100/000000/task.png
