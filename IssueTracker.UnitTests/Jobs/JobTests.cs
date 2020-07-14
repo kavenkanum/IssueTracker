@@ -15,15 +15,15 @@ using Xunit;
 namespace IssueTracker.UnitTests.Projects
 {
 
-    public class TaskTests
+    public class JobTests
     {
         [Fact]
-        public void ShouldCreateTask()
+        public void ShouldCreateJob()
         {
             var dateOfCreate = DateTime.Now;
-            var task = Job.Create("Some task", dateOfCreate);
+            var job = Job.Create("Some task", dateOfCreate);
 
-            task.IsSuccess.Should().BeTrue();
+            job.IsSuccess.Should().BeTrue();
         }
 
         [Fact]
@@ -31,39 +31,21 @@ namespace IssueTracker.UnitTests.Projects
         {
             var dateOfCreate = DateTime.Now;
             var project = Project.Create("Some project");
-            var task = Job.Create("Some task", dateOfCreate);
-            project.Value.AddJob(task.Value);
+            var job = Job.Create("Some task", dateOfCreate);
+            project.Value.AddJob(job.Value);
 
-            task.IsSuccess.Should().BeTrue();
+            job.IsSuccess.Should().BeTrue();
             project.IsSuccess.Should().BeTrue();
             project.Value.Jobs.Count.Should().Be(1);
         }
 
         [Fact]
-        public void ShoultAddTaskToProjectCommand()
-        {
-            //var projectRepositoryMock = new Mock<IProjectRepository>();
-            //var project = Project.Create("Some project");
-            //projectRepositoryMock.Setup(r => r.GetAsync(It.IsAny<int>()))
-            //    .Returns(() => System.Threading.Tasks.Task.FromResult(Maybe<Project>.From(project.Value)));
-
-      
-            //var handler = new CreateJobCommandHandler(projectRepositoryMock.Object);
-
-            //var createTask = new CreateJobCommand(1, "dupa");
-            //var task = handler.Handle(createTask, default);
-
-            //task.Result.IsSuccess.Should().BeTrue();
-            //project.Value.Jobs.Count.Should().Be(1);
-        }
-
-        [Fact]
-        public void ShouldNotCreateTaskWithEmptyName()
+        public void ShouldNotCreateJobWithEmptyName()
         {
             var dateOfCreate = DateTime.Now;
-            var task = Job.Create(string.Empty, dateOfCreate);
+            var job = Job.Create(string.Empty, dateOfCreate);
 
-            task.IsSuccess.Should().BeFalse();
+            job.IsSuccess.Should().BeFalse();
         }
         [Fact]
         public void ShouldBeNewStatusInNewJob()
@@ -146,38 +128,6 @@ namespace IssueTracker.UnitTests.Projects
             var result = job.Value.EditProperties(name, description, deadline.Value, userId, priority);
 
             result.IsSuccess.Should().BeFalse();
-        }
-
-        [Fact]
-        public void ShouldNotSetDeadline()
-        {
-            var currentDate = DateTime.Now;
-            var newDeadline = DateTime.Now.AddDays(-1);
-
-            var deadline = Deadline.CreateOptional(newDeadline, currentDate);
-
-            deadline.IsSuccess.Should().BeFalse();
-        }
-
-        [Fact]
-        public void ShouldNotSetDeadlineAtTheSameDay()
-        {
-            var currentDate = DateTime.Now;
-            var newDeadline = DateTime.Now;
-
-            var deadline = Deadline.CreateOptional(newDeadline, currentDate);
-
-            deadline.IsSuccess.Should().BeFalse();
-        }
-        [Fact]
-        public void ShouldSetDeadline()
-        {
-            var currentDate = DateTime.Now;
-            var newDeadline = DateTime.Now.AddDays(+1);
-
-            var deadline = Deadline.CreateOptional(newDeadline, currentDate);
-
-            deadline.IsSuccess.Should().BeTrue();
         }
 
         [Fact]
