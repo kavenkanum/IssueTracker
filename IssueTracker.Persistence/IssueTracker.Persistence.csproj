@@ -11,6 +11,8 @@
     <Compile Remove="Migrations\20200426150108_ChangeUserIdToLong.Designer.cs" />
     <Compile Remove="Migrations\20200426152948_ChangeUserIdToLong.cs" />
     <Compile Remove="Migrations\20200426152948_ChangeUserIdToLong.Designer.cs" />
+    <Compile Remove="Migrations\20200520081801_NewEntityStartsAfterJob.cs" />
+    <Compile Remove="Migrations\20200520081801_NewEntityStartsAfterJob.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

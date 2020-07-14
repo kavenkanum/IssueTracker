@@ -4,6 +4,7 @@ import {
   Input,
   Button,
   Form as SemanticForm,
+  Header,
 } from "semantic-ui-react";
 import {
   Formik,
@@ -12,19 +13,37 @@ import {
 } from "formik";
 import { addProject} from "./API";
 import {Project} from "../features/projects/slice";
+import { useHistory } from "react-router-dom";
+
+const addProjStyle = {
+  background: "white",
+  padding: "1em",
+  margin: "2em",
+  border: "1px solid #ddd",
+  height: "90%",
+  width: "50%"
+};
+
+const buttonStyle = {
+  borderRadius: "25px",
+  padding: "1em 5em 1em 5em",
+  background: "#FF715B",
+  color: "white"
+};
 
 export const AddProject: React.FC = () => {
   const initialValues: Project = { id: 0, name: "" };
   const [newProjectId, setNewProjectId] = useState<number>();
+  const history = useHistory();
 
   return (
-    <Container>
-      <div style={{ maxWidth: "33%" }}>
-        <h1>Add new project</h1>
+    <Container style={addProjStyle}>
+        <Header>Add new project</Header>
         <Formik<Project>
           initialValues={initialValues}
           onSubmit={(value) => {
             addProject(value.name).then((resp) => setNewProjectId(resp));
+            history.push("/dashboard");
           }}
           render={() => (
             <Form>
@@ -43,13 +62,11 @@ export const AddProject: React.FC = () => {
                     </SemanticForm.Field>
                   )}
                 />
-                <Button>Save</Button>
-                <div>{JSON.stringify(newProjectId)}</div>
+                <Button style={buttonStyle}>Save</Button>
               </SemanticForm>
             </Form>
           )}
         />
-      </div>
     </Container>
   );
 };

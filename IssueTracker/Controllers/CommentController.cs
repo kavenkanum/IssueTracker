@@ -31,7 +31,7 @@ namespace IssueTracker.Controllers
         public async Task<IActionResult> AddComment([FromBody]NewCommentModel newComment)
         {
             var newCommentResult = await _mediator.Send(new CreateCommentCommand(newComment.JobId, newComment.Description));
-            return newCommentResult.IsSuccess ? Ok() : BadRequest(newCommentResult.Error) as IActionResult;
+            return newCommentResult.IsSuccess ? Ok(newCommentResult.Value) : BadRequest(newCommentResult.Error) as IActionResult;
         }
     }
 

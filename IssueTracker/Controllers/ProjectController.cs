@@ -61,7 +61,7 @@ namespace IssueTracker.Controllers
 
         [Route("projects/{projectId}")]
         [HttpGet]
-        public async Task<IActionResult> GetProject([FromQuery]int projectId)
+        public async Task<IActionResult> GetProject(int projectId)
         {
             var projectQuery = await _mediator.Send(new GetProjectQuery(projectId));
             return projectQuery.IsSuccess ?
