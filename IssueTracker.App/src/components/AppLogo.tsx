@@ -3,8 +3,8 @@ import { Header, Image } from "semantic-ui-react";
 
 const appLogoStyle = {
   color: "white",
-  "font-family": "Lucida Console, Courier, monospace",
-  "padding-left": "10px"
+  fontFamily: "Lucida Console, Courier, monospace",
+  paddingLeft: "10px"
 };
 
 export const AppLogo: React.FC = () => {

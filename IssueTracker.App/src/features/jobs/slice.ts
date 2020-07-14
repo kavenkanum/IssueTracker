@@ -1,6 +1,5 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk } from "../../store";
-import { history } from "../../store/root-reducer";
 import {
   getJob,
   Job,
@@ -9,9 +8,7 @@ import {
   PreviousJob,
   getPrevJobs,
 } from "../../components/API";
-import projectSlice from "../projects/slice";
-import { useHistory } from "react-router-dom";
-import { push } from 'connected-react-router'
+import { push } from "connected-react-router";
 
 const initialState: JobState = {
   selectedJobId: 0,

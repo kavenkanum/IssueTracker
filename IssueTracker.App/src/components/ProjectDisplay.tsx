@@ -3,7 +3,7 @@ import { Container, Header, Menu, Label, Button } from "semantic-ui-react";
 import { Job, getJobs, getUsersFromProject, User, Status } from "./API";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import slice, { loadJobDetails } from "../features/jobs/slice";
+import slice from "../features/jobs/slice";
 import { RootState } from "../store/root-reducer";
 import { UserInitials } from "./elements/UserInitials";
 import { JobsFilter } from "./JobsFilter";
@@ -62,14 +62,14 @@ export const ProjectDisplay = (props: any) => {
         </Header>
         <div className="job-menu">
           {users.map((u) => (
-            <UserInitials fullName={u.fullName} />
+            <UserInitials key={u.userId} fullName={u.fullName} />
           ))}
         </div>
       </div>
       <Button primary as={Link} to="/job/addJob" style={buttonStyle}>
         Add task
       </Button>
-      <Menu vertical style={{ width: "100%", "margin-top": "2em" }}>
+      <Menu vertical style={{ width: "100%", marginTop: "2em" }}>
         {jobs?.map((j) => (
           <Menu.Item
             key={j.jobId}

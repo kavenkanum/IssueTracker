@@ -1,6 +1,6 @@
 import React from "react";
 import { Priority } from "../API";
-import { Container, Header, Button, Image, Dropdown } from "semantic-ui-react";
+import { Image } from "semantic-ui-react";
 
 // medium priority https://ibb.co/DDYTVVP
 

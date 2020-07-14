@@ -6,7 +6,7 @@ import { JobComments } from "./JobComments";
 import { Link, useParams } from "react-router-dom";
 import { Status } from "./API";
 import { JobStatusButton } from "./JobStatusButton";
-import slice, { loadJobDetails } from "../features/jobs/slice";
+import { loadJobDetails } from "../features/jobs/slice";
 import moment from "moment";
 
 const menuIcon = (
@@ -44,7 +44,6 @@ export const JobDisplay = (props: any) => {
   const dispatch = useDispatch();
   const { job } = useParams();
   const jobId = job ? parseInt(job) : 0;
-  const dupa = "wednesday";
 
   useEffect(() => {
     dispatch(loadJobDetails(jobId, props.projectId));
@@ -89,9 +88,9 @@ export const JobDisplay = (props: any) => {
       )}
       <List>
         {prevJobs.map((j) => (
-          <List.Item>
-            <List.Icon name="chevron right" />
-            <List.Content>{j.name}</List.Content>
+          <List.Item key={j.jobId}>
+            <List.Icon key={j.jobId} name="chevron right" />
+            <List.Content key={j.jobId}>{j.name}</List.Content>
           </List.Item>
         ))}
       </List>
