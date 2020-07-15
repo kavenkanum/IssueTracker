@@ -18,6 +18,7 @@ namespace IssueTracker.UnitTests.Projects
 
     public class JobTests
     {
+        #region Create job
         [Fact]
         public void ShouldCreateJob()
         {
@@ -26,6 +27,16 @@ namespace IssueTracker.UnitTests.Projects
 
             job.IsSuccess.Should().BeTrue();
         }
+
+        [Fact]
+        public void ShouldNotCreateJobWithEmptyName()
+        {
+            var dateOfCreate = DateTime.Now;
+            var job = Job.Create(string.Empty, dateOfCreate);
+
+            job.IsSuccess.Should().BeFalse();
+        }
+        #endregion
 
         [Fact]
         public void ShouldAddJobToProject()
@@ -40,14 +51,7 @@ namespace IssueTracker.UnitTests.Projects
             project.Value.Jobs.Count.Should().Be(1);
         }
 
-        [Fact]
-        public void ShouldNotCreateJobWithEmptyName()
-        {
-            var dateOfCreate = DateTime.Now;
-            var job = Job.Create(string.Empty, dateOfCreate);
 
-            job.IsSuccess.Should().BeFalse();
-        }
         [Fact]
         public void ShouldBeNewStatusInNewJob()
         {
@@ -71,6 +75,7 @@ namespace IssueTracker.UnitTests.Projects
             job.Value.Deadline.Should().Be(deadline.Value.Value);
         }
 
+        #region StartJob method
         [Fact]
         public void ShouldStartJob()
         {
@@ -81,6 +86,29 @@ namespace IssueTracker.UnitTests.Projects
             job.Value.Status.Should().Be(expectedStatus);
         }
 
+        [Fact]
+        public void ShouldNotStartJobWhenInProgressStatus()
+        {
+            var currentDate = DateTime.Now;
+            var job = Job.Create("Test Job", currentDate);
+            job.Value.StartJob();
+            //we have inprogress status now, we should not change it in progress again
+            job.Value.StartJob().IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ShouldNotStartJobWhenInDoneStatus()
+        {
+            var currentDate = DateTime.Now;
+            var job = Job.Create("Test Job", currentDate);
+            job.Value.StartJob();
+            job.Value.FinishJob();
+            //we have done status now, we should not change it in progress 
+            job.Value.StartJob().IsSuccess.Should().BeFalse();
+        }
+        #endregion
+
+        #region HinishJob method
         [Fact]
         public void ShouldFinishJob()
         {
@@ -99,7 +127,9 @@ namespace IssueTracker.UnitTests.Projects
             var result = job.Value.FinishJob();
             result.IsSuccess.Should().BeFalse();
         }
+        #endregion
 
+        #region EditJob method
         [Fact]
         public void ShouldEditJobWithNullInputProperties()
         {
@@ -130,7 +160,9 @@ namespace IssueTracker.UnitTests.Projects
 
             result.IsSuccess.Should().BeFalse();
         }
+        #endregion
 
+        #region DeleteJob method
         [Fact]
         public void ShouldDeleteJob()
         {
@@ -172,7 +204,59 @@ namespace IssueTracker.UnitTests.Projects
 
             job.Value.Delete(user).IsSuccess.Should().BeFalse();
         }
+        #endregion
 
+        [Fact]
+        public void ShouldAddComment()
+        {
+            var currentTime = DateTime.Now;
+            var comment = Comment.Create("Some description", 5, 123, currentTime);
+            var job = Job.Create("Test Job", currentTime);
+            job.Value.AddComment(comment.Value);
+
+            job.Value.Comments.Count.Should().Be(1);
+        }
+
+        #region ChangeName method
+        [Fact]
+        public void ShouldChangeNameInNewStatus()
+        {
+            var currentTime = DateTime.Now;
+            var job = Job.Create("Test Job", currentTime);
+
+            job.Value.ChangeName("new name").IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ShouldNotChangeNameInProgressStatus()
+        {
+            var currentTime = DateTime.Now;
+            var job = Job.Create("Test Job", currentTime);
+            job.Value.StartJob();
+
+            job.Value.ChangeName("new name").IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ShouldNotChangeNameInDoneStatus()
+        {
+            var currentTime = DateTime.Now;
+            var job = Job.Create("Test Job", currentTime);
+            job.Value.StartJob();
+            job.Value.FinishJob();
+
+            job.Value.ChangeName("new name").IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ShouldNotChangeNameToEmptyString()
+        {
+            var currentTime = DateTime.Now;
+            var job = Job.Create("Test Job", currentTime);
+
+            job.Value.ChangeName("").IsSuccess.Should().BeFalse();
+        }
+        #endregion
         [Fact]
         public void ShouldCreatePrevJobs()
         {
