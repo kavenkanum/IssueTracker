@@ -13,12 +13,17 @@ namespace IssueTracker.Domain.Language
             { "admin", new List<Permission>()
             {
                 Permission.DeleteJob,
-                Permission.AssignUsersToJob
+                Permission.AssignUsersToJob,
+                Permission.AddJob
             }},
             { "manager", new List<Permission>()
             {
                 Permission.DeleteJob,
                 Permission.AssignUsersToJob,
+                Permission.AddJob
+            } },
+            { "user", new List<Permission>()
+            {
                 Permission.AddJob
             } }
         };

@@ -9,6 +9,7 @@ using IssueTracker.Domain.Repositories;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading;
 using Xunit;
 
@@ -27,7 +28,7 @@ namespace IssueTracker.UnitTests.Projects
         }
 
         [Fact]
-        public void ShouldAddTaskToProject()
+        public void ShouldAddJobToProject()
         {
             var dateOfCreate = DateTime.Now;
             var project = Project.Create("Some project");
@@ -128,6 +129,48 @@ namespace IssueTracker.UnitTests.Projects
             var result = job.Value.EditProperties(name, description, deadline.Value, userId, priority);
 
             result.IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ShouldDeleteJob()
+        {
+            //creating current user with role admin
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, "Bob"),
+                new Claim(ClaimTypes.Role, "admin"),
+                new Claim(ClaimTypes.NameIdentifier, "12345")
+            };
+            var identity = new ClaimsIdentity(claims);
+            var claimsPrincipal = new ClaimsPrincipal(identity);
+            var user = new CurrentUser(claimsPrincipal);
+
+            //create a new job\var currentDate = DateTime.Now;
+            var currentDate = DateTime.Now;
+            var job = Job.Create("Test Job", currentDate);
+
+            job.Value.Delete(user).IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ShouldNotDeleteJob()
+        {
+            //creating current user with role user (has no permission to delete job)
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, "Bob"),
+                new Claim(ClaimTypes.Role, "user"),
+                new Claim(ClaimTypes.NameIdentifier, "12345")
+            };
+            var identity = new ClaimsIdentity(claims);
+            var claimsPrincipal = new ClaimsPrincipal(identity);
+            var user = new CurrentUser(claimsPrincipal);
+
+            //create a new job\var currentDate = DateTime.Now;
+            var currentDate = DateTime.Now;
+            var job = Job.Create("Test Job", currentDate);
+
+            job.Value.Delete(user).IsSuccess.Should().BeFalse();
         }
 
         [Fact]
