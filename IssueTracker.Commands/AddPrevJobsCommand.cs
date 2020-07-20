@@ -49,14 +49,6 @@ namespace IssueTracker.Commands
                 var failedJobsId = string.Join(" ", failedJobsResult);
                 return Result.Fail($"Cannot find job(s) with id: [{failedJobsId}] to assign it(they) as a previous job(s).");
             }
-                
-            foreach (var startsAfterJobId in request.StartsAfterJobsId)
-            {
-                if (_jobRepository.GetAsync(startsAfterJobId).Result.HasNoValue)
-                {
-                    return Result.Fail($"Cannot find job with id: {startsAfterJobId} to assign it as a previous job.");
-                }
-            }
 
             var allJobsWithPrevJobs = _jobRepository.GetJobsWithPrevJobs(currentJobResult.Value.ProjectId).Result;
             var result = currentJobResult.Value.AddPreviousJobs(currentJobResult.Value, request.StartsAfterJobsId, allJobsWithPrevJobs);      
