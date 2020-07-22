@@ -257,6 +257,7 @@ namespace IssueTracker.UnitTests.Projects
             job.Value.ChangeName("").IsSuccess.Should().BeFalse();
         }
         #endregion
+
         [Fact]
         public void ShouldCreatePrevJobs()
         {
@@ -278,73 +279,26 @@ namespace IssueTracker.UnitTests.Projects
         {
             var currentDate = DateTime.Now;
             var job = Job.Create("Test Job", currentDate);
+            var listOfJobs = new List<Job>();
             var prevJobsId = new List<int>() { 1, 2 };
-            var prevJobs = new List<StartsAfterJob>();
 
-            foreach (var prevJobId in prevJobsId)
-            {
-                prevJobs.Add(StartsAfterJob.Create(prevJobId).Value);
-            }
-            job.Value.AddPreviousJobs(prevJobs);
+            job.Value.AddPreviousJobs(job.Value, prevJobsId, listOfJobs);
 
             job.Value.StartsAfterJobs.Count.Should().Be(2);
         }
 
         [Fact]
-        public void CheckPrevJobsShouldSuccess()
+        public void ShouldNotAddPrevJobsToJob()
         {
             var currentDate = DateTime.Now;
-            var job1 = Job.Create("Test Job", currentDate);
-
+            var job = Job.Create("Test Job", currentDate);
             var listOfJobs = new List<Job>();
-            listOfJobs.Add(job1.Value);
+            var prevJobsId = new List<int>() { 0, 2 };
 
-            var job2 = Job.Create("Test Job2", currentDate);
-            var prevJobsId = new List<int>() { 11, 21 };
-            var prevJobs = new List<StartsAfterJob>();
+            var result = job.Value.AddPreviousJobs(job.Value, prevJobsId, listOfJobs);
 
-            foreach (var prevJobId in prevJobsId)
-            {
-                prevJobs.Add(StartsAfterJob.Create(prevJobId).Value);
-            }
-            job1.Value.AddPreviousJobs(prevJobs);
-
-            var newPrevJobsId = new List<int>() { 31, 41 };
-            var jobsQueue = new List<int>();
-            var failureList = new List<int>();
-            jobsQueue.Add(job2.Value.Id);
-
-            var result = job2.Value.CheckPrevJobs(newPrevJobsId, jobsQueue, listOfJobs, failureList);
-            result.Count.Should().Be(0);
+            result.IsSuccess.Should().BeFalse();
         }
 
-
-        [Fact]
-        public void CheckPrevJobsShouldFail()
-        {
-            var currentDate = DateTime.Now;
-            var job1 = Job.Create("Test Job", currentDate);
-
-            var listOfJobs = new List<Job>();
-            
-
-            var job2 = Job.Create("Test Job2", currentDate);
-            var prevJobsId = new List<int>() { 11, 21 };
-            var prevJobs = new List<StartsAfterJob>();
-
-            foreach (var prevJobId in prevJobsId)
-            {
-                prevJobs.Add(StartsAfterJob.Create(prevJobId).Value);
-            }
-            job1.Value.AddPreviousJobs(prevJobs);
-            listOfJobs.Add(job1.Value);
-            var newPrevJobsId = new List<int>() { 0, 11, 41 };
-            var jobsQueue = new List<int>();
-            var failureList = new List<int>();
-            jobsQueue.Add(job2.Value.Id);
-
-            var result = job2.Value.CheckPrevJobs(newPrevJobsId, jobsQueue, listOfJobs, failureList);
-            result.Count.Should().BeGreaterThan(0);
-        }
     }
 }

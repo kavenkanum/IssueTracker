@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.6" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="Moq" Version="4.13.1" />
     <PackageReference Include="xunit" Version="2.4.0" />
@@ -18,6 +19,8 @@
   <ItemGroup>
     <ProjectReference Include="..\IssueTracker.Commands\IssueTracker.Commands.csproj" />
     <ProjectReference Include="..\IssueTracker.Domain\IssueTracker.Domain.csproj" />
+    <ProjectReference Include="..\IssueTracker.Persistence\IssueTracker.Persistence.csproj" />
+    <ProjectReference Include="..\IssueTracker.Queries\IssueTracker.Queries.csproj" />
   </ItemGroup>
 
 </Project>
