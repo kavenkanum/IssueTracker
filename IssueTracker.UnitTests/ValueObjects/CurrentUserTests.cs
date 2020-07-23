@@ -33,7 +33,7 @@ namespace IssueTracker.UnitTests.ValueObjects
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, "Bob"),
-                new Claim(ClaimTypes.Role, "manager"),
+                new Claim(ClaimTypes.Role, "user"),
                 new Claim(ClaimTypes.NameIdentifier, "12345")
             };
             var identity = new ClaimsIdentity(claims);
@@ -41,7 +41,7 @@ namespace IssueTracker.UnitTests.ValueObjects
 
             var user = new CurrentUser(claimsPrincipal);
             
-            user.HasPermission(Permission.AddJob).Should().BeFalse();
+            user.HasPermission(Permission.DeleteJob).Should().BeFalse();
         }
 
         [Fact]
