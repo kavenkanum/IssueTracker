@@ -12,6 +12,7 @@ namespace IssueTracker.Domain.Repositories
         Task<Maybe<Job>> GetAsync(int jobId);
         Task<List<Job>> GetJobsWithPrevJobs(int projectId);
         Task<Result<int>> SaveAsync(Job job);
+        Task<List<Job>> GetManyAsync(int[] jobsId);
         Result Delete(Job job);
 
     }

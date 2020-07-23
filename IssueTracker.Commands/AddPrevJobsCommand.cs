@@ -36,38 +36,24 @@ namespace IssueTracker.Commands
             if (currentJobResult.HasNoValue)
                 return Result.Fail($"Cannot find job with id: {request.JobId}.");
 
-            foreach (var startsAfterJobId in request.StartsAfterJobsId)
+            var startsAfterJobIdResults = _jobRepository.GetManyAsync(request.StartsAfterJobsId.ToArray());
+
+            if (startsAfterJobIdResults.Result.Count != request.StartsAfterJobsId.Count)
             {
-                if (_jobRepository.GetAsync(startsAfterJobId).Result.HasNoValue)
+                var failedJobsResult = new List<string>();
+                foreach (var j in startsAfterJobIdResults.Result)
                 {
-                    return Result.Fail($"Cannot find job with id: {startsAfterJobId} to assign it as a previous job.");
+                    if(request.StartsAfterJobsId.Contains(j.Id)) 
+                        failedJobsResult.Add(j.Id.ToString());
                 }
-                if (currentJobResult.Value.StartsAfterJobs.Any(j => j.StartsAfterJobId == startsAfterJobId))
-                    return Result.Fail($"Cannot add previous job with id: {startsAfterJobId}, because there is already that previous job.");
+                var failedJobsId = string.Join(" ", failedJobsResult);
+                return Result.Fail($"Cannot find job(s) with id: [{failedJobsId}] to assign it(they) as a previous job(s).");
             }
 
             var allJobsWithPrevJobs = _jobRepository.GetJobsWithPrevJobs(currentJobResult.Value.ProjectId).Result;
-            var jobsQueue = new List<int>();
-            var failureList = new List<int>();
-            jobsQueue.Add(request.JobId);
+            var result = currentJobResult.Value.AddPreviousJobs(currentJobResult.Value, request.StartsAfterJobsId, allJobsWithPrevJobs);      
 
-            
-
-
-            var prevJobsResult = currentJobResult.Value.CheckPrevJobs(request.StartsAfterJobsId, jobsQueue, allJobsWithPrevJobs, failureList);
-            if (prevJobsResult.Any())
-                return Result.Fail($"Infinite loop, at job/jobs id: {string.Join(", ", prevJobsResult.ToArray())}.");
-
-            var startsAfterJobsResult = new List<StartsAfterJob>();
-
-            foreach (var startsAfterJobId in request.StartsAfterJobsId)
-            {
-                StartsAfterJob.Create(startsAfterJobId).OnSuccess(startAfterJobResult => startsAfterJobsResult.Add(startAfterJobResult));
-            }
-
-            return await Result.Create(startsAfterJobsResult.Count == request.StartsAfterJobsId.Count, "Couldn't create one or more StartsAfterJob.")
-                    .OnSuccess(() => currentJobResult.Value.AddPreviousJobs(startsAfterJobsResult))
-                    .OnSuccess(() => _jobRepository.SaveAsync(currentJobResult.Value));
+            return await result.OnSuccess(() => _jobRepository.SaveAsync(currentJobResult.Value));
         }
     }
 }

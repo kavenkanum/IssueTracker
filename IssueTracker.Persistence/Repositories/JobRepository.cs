@@ -29,9 +29,20 @@ namespace IssueTracker.Persistence.Repositories
             return await _issueTrackerDbContext.Jobs.Include(j => j.Comments).Include(j => j.StartsAfterJobs).FirstOrDefaultAsync(j => j.Id == jobId);
         }
 
+        public async Task<List<Job>> GetManyAsync(int[] jobsId)
+        {
+            IQueryable<Job> jobsList = new List<Job>().AsQueryable();
+            foreach (var jobId in jobsId)
+            {
+                jobsList = _issueTrackerDbContext.Jobs.Include(j => j.Comments).Include(j => j.StartsAfterJobs).Where(j => j.Id == jobId);
+            }
+
+            return await jobsList.ToListAsync();
+        }
+
         public async Task<List<Job>> GetJobsWithPrevJobs(int projectId)
         {
-            return await _issueTrackerDbContext.Jobs.Include(j => j.StartsAfterJobs).Where(j => j.StartsAfterJobs.Any() && j.ProjectId == projectId).Select(j => j).ToListAsync();
+            return await _issueTrackerDbContext.Jobs.Include(j => j.StartsAfterJobs).Where(j => j.StartsAfterJobs.Any() && j.ProjectId == projectId).ToListAsync();
         }
 
         public async Task<Result<int>> SaveAsync(Job job)

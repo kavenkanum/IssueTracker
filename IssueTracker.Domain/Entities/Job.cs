@@ -160,16 +160,40 @@ namespace IssueTracker.Domain.Entities
             JobDeleted = true;
             return Result.Ok();
         }
-
-        public void AddPreviousJobs(List<StartsAfterJob> startsAfterJobs)
+        //List<StartsAfterJob> startsAfterJobs
+        public Result AddPreviousJobs(Job currentJob, List<int> startsAfterJobsId, List<Job> allJobsWithPrevJobs)
         {
-            foreach (var startsAfterJob in startsAfterJobs)
+            var jobsQueue = new List<int>();
+            var failureList = new List<int>();
+            jobsQueue.Add(currentJob.Id);
+
+            foreach (var startsAfterJobId in startsAfterJobsId)
+            {
+                if (currentJob.StartsAfterJobs.Any(j => j.StartsAfterJobId == startsAfterJobId))
+                    return Result.Fail($"Cannot add previous job with id: {startsAfterJobId}, because there is already that previous job.");
+            }
+
+            var prevJobsResult = Job.CheckPrevJobs(startsAfterJobsId, jobsQueue, allJobsWithPrevJobs, failureList);
+            if (prevJobsResult.Any())
+                return Result.Fail($"Infinite loop, at job/jobs id: {string.Join(", ", prevJobsResult.ToArray())}.");
+
+            var startsAfterJobsResult = new List<StartsAfterJob>();
+            foreach (var startsAfterJobId in startsAfterJobsId)
+            {
+                StartsAfterJob.Create(startsAfterJobId).OnSuccess(startAfterJobResult => startsAfterJobsResult.Add(startAfterJobResult));
+            }
+            if (startsAfterJobsResult.Count != startsAfterJobsId.Count)
+                return Result.Fail("Couldn't create one or more StartsAfterJob.");
+
+            foreach (var startsAfterJob in startsAfterJobsResult)
             {
                 StartsAfterJobs.Add(startsAfterJob);
             }
+
+            return Result.Ok();
         }
 
-        public List<int> CheckPrevJobs(List<int> startsAfter, List<int> jobsQueue, List<Job> allJobsWithPrevJobs, List<int> failureList)
+        private static List<int> CheckPrevJobs(List<int> startsAfter, List<int> jobsQueue, List<Job> allJobsWithPrevJobs, List<int> failureList)
         {
             //any fail will be added to the failureList -> after end of recuperation if there is anything in that list it means that we have infinite loop. 
             //List also will contain job/jobs id which cause that loop.
