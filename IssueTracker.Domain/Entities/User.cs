@@ -17,6 +17,7 @@ namespace IssueTracker.Domain.Entities
         public string FullName { get; private set; }
         public string Email { get; private set; }
         public List<Job> AssignedTasks { get; set; }
+        public List<LoggedTime> LoggedTimes { get; set; }
 
         public static Result<User> Create(long userId, string fullName, string email)
         {

@@ -5,6 +5,7 @@ using Stateless;
 using Stateless.Graph;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace IssueTracker.Domain.Entities
@@ -54,8 +55,14 @@ namespace IssueTracker.Domain.Entities
         public Priority Priority { get; private set; }
         public List<Comment> Comments { get; set; }
         public List<StartsAfterJob> StartsAfterJobs { get; set; }
-        public bool JobDeleted { get; set; }
-        public long CreatorId { get; set; }
+        public bool JobDeleted { get; private set; }
+        public long CreatorId { get; private set; }
+        public int EstimatedTime { get; private set; }
+        public DateTime? StartedDate { get; private set; }
+        public DateTime? FinishedDate { get; private set; }
+        public List<LoggedTime> TotalLoggedTime { get; set; }
+        [NotMapped]
+        public double RemainingTime { get; private set; }
 
         public static Result<Job> Create(string name, DateTime dateOfCreate)
         {
