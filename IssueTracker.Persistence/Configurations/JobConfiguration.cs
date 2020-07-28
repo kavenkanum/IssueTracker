@@ -16,6 +16,12 @@ namespace IssueTracker.Persistence.Configurations
                     .Property(d => d.DeadlineDate)
                     .HasColumnName("Deadline");
             });
+
+            builder.HasOne<User>()
+                .WithMany(u => u.AssignedTasks)
+                .HasForeignKey(j => j.AssignedUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
