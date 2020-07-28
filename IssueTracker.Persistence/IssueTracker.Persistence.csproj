@@ -13,6 +13,12 @@
     <Compile Remove="Migrations\20200426152948_ChangeUserIdToLong.Designer.cs" />
     <Compile Remove="Migrations\20200520081801_NewEntityStartsAfterJob.cs" />
     <Compile Remove="Migrations\20200520081801_NewEntityStartsAfterJob.Designer.cs" />
+    <Compile Remove="Migrations\20200723173300_EstimatedTimeColumnAndTable.cs" />
+    <Compile Remove="Migrations\20200723173300_EstimatedTimeColumnAndTable.Designer.cs" />
+    <Compile Remove="Migrations\20200724122313_NewLoggedTimeColumnAndJobProperties.cs" />
+    <Compile Remove="Migrations\20200724122313_NewLoggedTimeColumnAndJobProperties.Designer.cs" />
+    <Compile Remove="Migrations\20200724123411_NewLoggedTimeColumnAndJobProperties.cs" />
+    <Compile Remove="Migrations\20200724123411_NewLoggedTimeColumnAndJobProperties.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,10 +40,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IssueTracker.Domain\IssueTracker.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Configurations\" />
   </ItemGroup>
 
 </Project>
